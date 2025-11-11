@@ -562,7 +562,7 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
                       </span>
                       {task.due_date && (
                         <span className="text-xs text-gray-500">
-                          Due: {new Date(task.due_date).toLocaleDateString()}
+                          Due: {new Date(task.due_date).toLocaleDateString('en-GB')}
                         </span>
                       )}
                       {task.category === 'habit' && task.streak > 0 && (
