@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "AI-powered goal setting and task management app - Because every goal needs a purpose!",
   "scripts": {
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:functions\"",
     "dev:client": "cd client && npm run dev",
-    "dev:server": "cd server && npm run dev",
-    "build": "cd client && npm run build",
-    "install:all": "npm install && cd client && npm install && cd ../server && npm install"
+    "dev:functions": "netlify functions:serve --port 9999",
+    "build": "cd client && npm run dev",
+    "install:all": "npm install && cd client && npm install && cd netlify/functions && npm install"
   },
   "keywords": ["goal-setting", "task-management", "ai"],
   "author": "",

@@ -307,6 +307,7 @@ function App() {
             setShowNewGoalModal(false);
           }}
           userId={user?.id}
+          goals={goals}
         />
       )}
     </div>
@@ -696,20 +697,24 @@ function CalendarView({ goals, currentDate, setCurrentDate }) {
 }
 
 // New Goal Modal Component
-function NewGoalModal({ onClose, onGoalCreated, userId }) {
+function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Initial greeting
+    const greeting = goals && goals.length > 0
+      ? "Hello! I'm Purpoise, your goal-setting assistant. I can see you have some existing goals. Would you like to create a new goal or modify an existing one?"
+      : "Hello! I'm Purpoise, your goal-setting assistant. What goal would you like to work towards?";
+
     setMessages([
       {
         role: 'assistant',
-        content: "Hello! I'm Purpoise, your goal-setting assistant. What goal would you like to work towards?",
+        content: greeting,
       },
     ]);
-  }, []);
+  }, [goals]);
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -723,14 +728,25 @@ function NewGoalModal({ onClose, onGoalCreated, userId }) {
     try {
       const response = await axios.post(`${API_URL}/chat`, {
         messages: newMessages,
+        goals: goals || [],
       });
 
       const data = response.data;
 
       if (data.isFinal) {
-        // Create the goal in Supabase
-        await createGoal(data.plan);
-        onGoalCreated();
+        if (data.action === 'create') {
+          // Create new goal
+          await createGoal(data.plan);
+          onGoalCreated();
+        } else if (data.action === 'update') {
+          // Update existing goal
+          await updateGoal(data.goalTitle, data.updates);
+          onGoalCreated();
+        } else {
+          // Backward compatibility - if no action specified, assume create
+          await createGoal(data.plan);
+          onGoalCreated();
+        }
       } else {
         setMessages([...newMessages, { role: 'assistant', content: data.question }]);
       }
@@ -796,6 +812,89 @@ function NewGoalModal({ onClose, onGoalCreated, userId }) {
       }
     } catch (error) {
       console.error('Error creating goal:', error);
+      throw error;
+    }
+  };
+
+  const updateGoal = async (goalTitle, updates) => {
+    try {
+      // Find the goal by title
+      const goal = goals.find(g => g.title === goalTitle);
+      if (!goal) {
+        throw new Error(`Goal not found: ${goalTitle}`);
+      }
+
+      // Update goal metadata if provided
+      if (updates.title || updates.description) {
+        const { error } = await supabase
+          .from('goals')
+          .update({
+            ...(updates.title && { title: updates.title }),
+            ...(updates.description && { description: updates.description }),
+          })
+          .eq('id', goal.id);
+        if (error) throw error;
+      }
+
+      // Add new tasks
+      if (updates.addTasks && updates.addTasks.length > 0) {
+        for (const taskUpdate of updates.addTasks) {
+          const stage = goal.stages[taskUpdate.stageIndex];
+          if (!stage) continue;
+
+          const { error } = await supabase
+            .from('tasks')
+            .insert({
+              stage_id: stage.id,
+              text: taskUpdate.task.text,
+              category: taskUpdate.task.category,
+              completed: false,
+              due_date: taskUpdate.task.dueDate || null,
+              order_index: stage.tasks.length,
+              streak: 0,
+            });
+          if (error) throw error;
+        }
+      }
+
+      // Remove tasks
+      if (updates.removeTasks && updates.removeTasks.length > 0) {
+        for (const removal of updates.removeTasks) {
+          const stage = goal.stages[removal.stageIndex];
+          if (!stage) continue;
+          const task = stage.tasks[removal.taskIndex];
+          if (!task) continue;
+
+          const { error } = await supabase
+            .from('tasks')
+            .delete()
+            .eq('id', task.id);
+          if (error) throw error;
+        }
+      }
+
+      // Update existing tasks
+      if (updates.updateTasks && updates.updateTasks.length > 0) {
+        for (const taskUpdate of updates.updateTasks) {
+          const stage = goal.stages[taskUpdate.stageIndex];
+          if (!stage) continue;
+          const task = stage.tasks[taskUpdate.taskIndex];
+          if (!task) continue;
+
+          const { error } = await supabase
+            .from('tasks')
+            .update({
+              ...(taskUpdate.updates.text && { text: taskUpdate.updates.text }),
+              ...(taskUpdate.updates.category && { category: taskUpdate.updates.category }),
+              ...(taskUpdate.updates.completed !== undefined && { completed: taskUpdate.updates.completed }),
+              ...(taskUpdate.updates.dueDate && { due_date: taskUpdate.updates.dueDate }),
+            })
+            .eq('id', task.id);
+          if (error) throw error;
+        }
+      }
+    } catch (error) {
+      console.error('Error updating goal:', error);
       throw error;
     }
   };

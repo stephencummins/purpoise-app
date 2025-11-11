@@ -15,7 +15,7 @@
   status = 200
 
 [dev]
-  command = "npm run dev:client"
-  port = 3000
-  targetPort = 3000
+  port = 9999
+  targetPort = 5173
+  autoLaunch = false
   functions = "netlify/functions"
