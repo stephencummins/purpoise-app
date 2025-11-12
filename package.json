@@ -9,10 +9,17 @@
     "build": "cd client && npm run dev",
     "install:all": "npm install && cd client && npm install && cd netlify/functions && npm install"
   },
-  "keywords": ["goal-setting", "task-management", "ai"],
+  "keywords": [
+    "goal-setting",
+    "task-management",
+    "ai"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.81.1"
   }
 }
