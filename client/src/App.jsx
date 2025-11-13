@@ -387,26 +387,17 @@ function WeatherWidget() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // Get user's location
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              const { latitude, longitude } = position.coords;
+        // Southend-on-Sea, Essex, UK coordinates
+        const latitude = 51.55;
+        const longitude = 0.7833;
 
-              // Free weather API - Open-Meteo (no API key needed)
-              const response = await axios.get(
-                `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day&timezone=auto`
-              );
+        // Free weather API - Open-Meteo (no API key needed)
+        const response = await axios.get(
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day&timezone=Europe/London`
+        );
 
-              setWeather(response.data);
-              setLoading(false);
-            },
-            (error) => {
-              console.error('Geolocation error:', error);
-              setLoading(false);
-            }
-          );
-        }
+        setWeather(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Weather fetch error:', error);
         setLoading(false);
