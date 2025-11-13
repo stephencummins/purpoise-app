@@ -1,14 +1,28 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Create Sidhe Supabase client for tarot cards
-const sidheSupabase = createClient(
-  import.meta.env.VITE_SIDHE_SUPABASE_URL,
-  import.meta.env.VITE_SIDHE_SUPABASE_ANON_KEY
-);
+// Get or create Sidhe Supabase client for tarot cards
+function getSidheSupabase() {
+  const url = import.meta.env.VITE_SIDHE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SIDHE_SUPABASE_ANON_KEY;
+
+  if (!url || !key) {
+    console.error('Sidhe Supabase credentials not configured');
+    return null;
+  }
+
+  return createClient(url, key);
+}
 
 // Get daily cards using deterministic seed based on date
 export async function getDailyCards() {
   try {
+    const sidheSupabase = getSidheSupabase();
+
+    if (!sidheSupabase) {
+      console.error('Cannot fetch tarot cards: Sidhe database not configured');
+      return [];
+    }
+
     const today = new Date().toISOString().split('T')[0];
     const seed = hashDate(today);
 
