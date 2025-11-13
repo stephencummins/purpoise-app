@@ -383,7 +383,7 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
     const isStartOfWeek = dayOfWeek >= 0 && dayOfWeek <= 2; // Sun-Tue
 
     const allTasks = goals.flatMap(g =>
-      g.stages?.flatMap(s => s.tasks.map(t => ({ ...t, goalTitle: g.title }))) || []
+      g.stages?.flatMap(s => s.tasks.map(t => ({ ...t, goalTitle: g.title, goal: g }))) || []
     );
 
     if (isStartOfWeek) {
@@ -434,10 +434,16 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
             {digest.tasks.map((task, idx) => (
               <li key={idx} className="flex items-start space-x-2">
                 <span className="text-vintage-orange font-bold">•</span>
-                <div>
+                <button
+                  onClick={() => {
+                    setSelectedGoal(task.goal);
+                    setView('goal-detail');
+                  }}
+                  className="text-left hover:text-vintage-orange transition-colors"
+                >
                   <span className="font-medium">{task.text}</span>
                   <span className="text-sm text-gray-600 ml-2">({task.goalTitle})</span>
-                </div>
+                </button>
               </li>
             ))}
           </ul>
