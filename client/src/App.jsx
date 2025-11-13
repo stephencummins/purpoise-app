@@ -576,6 +576,18 @@ function WeatherWidget() {
 
 // Dashboard View Component
 function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats }) {
+  const [dailyCards, setDailyCards] = useState([]);
+  const [cardsLoading, setCardsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCards = async () => {
+      const cards = await getDailyCards();
+      setDailyCards(cards);
+      setCardsLoading(false);
+    };
+    loadCards();
+  }, []);
+
   const getWeeklyDigest = () => {
     const today = new Date();
     const dayOfWeek = today.getDay();
@@ -626,8 +638,6 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
   const dailyTasks = recurringGoal?.stages?.find(s => s.name === 'Daily Tasks')?.tasks || [];
   const weeklyTasks = recurringGoal?.stages?.find(s => s.name === 'Weekly Tasks')?.tasks || [];
 
-  // Get daily tarot cards
-  const dailyCards = getDailyCards();
   const positions = ['Past', 'Present', 'Future'];
 
   return (
@@ -636,32 +646,43 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
       <WeatherWidget />
 
       {/* Daily Tarot Widget */}
-      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
-        <h2 className="text-2xl font-serif font-bold mb-4 flex items-center text-dark-brown">
-          <Sparkles className="w-6 h-6 mr-2 text-purple-600" />
-          Daily Tarot Guidance
-        </h2>
-        <p className="text-sm text-gray-600 mb-4">
-          {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {dailyCards.map((card, index) => (
-            <div key={index} className="bg-white rounded-lg p-4 border-2 border-purple-200 hover:border-purple-400 transition-colors">
-              <div className="text-center mb-3">
-                <div className="text-5xl mb-2">{card.emoji}</div>
-                <h3 className="font-semibold text-purple-900">{positions[index]}</h3>
-                <p className="text-sm font-bold text-dark-brown mt-1">{card.name}</p>
+      {!cardsLoading && dailyCards.length > 0 && (
+        <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
+          <h2 className="text-2xl font-serif font-bold mb-4 flex items-center text-dark-brown">
+            <Sparkles className="w-6 h-6 mr-2 text-purple-600" />
+            Daily Tarot Guidance
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {dailyCards.map((card, index) => (
+              <div key={index} className="bg-white rounded-lg p-4 border-2 border-purple-200 hover:border-purple-400 transition-colors">
+                <div className="text-center mb-3">
+                  {card.image_url ? (
+                    <img
+                      src={card.image_url}
+                      alt={card.name}
+                      className="w-full h-48 object-contain mb-2 rounded"
+                    />
+                  ) : (
+                    <div className="text-5xl mb-2">🎴</div>
+                  )}
+                  <h3 className="font-semibold text-purple-900">{positions[index]}</h3>
+                  <p className="text-sm font-bold text-dark-brown mt-1">{card.name}</p>
+                  {card.suit && <p className="text-xs text-gray-500">{card.suit}</p>}
+                </div>
+                <p className="text-sm text-gray-700 leading-relaxed italic">
+                  {card.meaning || card.celtic_meaning || 'A message for you today'}
+                </p>
               </div>
-              <p className="text-sm text-gray-700 leading-relaxed italic">
-                {card.meaning}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 mt-4 text-center">
+            Celtic Seasonal Tarot from Sídhe • Cards refresh daily
+          </p>
         </div>
-        <p className="text-xs text-gray-500 mt-4 text-center">
-          These cards refresh daily and are shared with all Purpoise users for collective guidance
-        </p>
-      </div>
+      )}
 
       {/* Recurring Tasks Widget */}
       {recurringGoal && (
