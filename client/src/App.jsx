@@ -391,9 +391,9 @@ function WeatherWidget() {
         const latitude = 51.55;
         const longitude = 0.7833;
 
-        // Free weather API - Open-Meteo (no API key needed)
+        // Fetch daily forecast (3 days to include weekend on Friday)
         const response = await axios.get(
-          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day&timezone=Europe/London`
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,sunshine_duration&timezone=Europe/London&forecast_days=3`
         );
 
         setWeather(response.data);
@@ -419,64 +419,100 @@ function WeatherWidget() {
 
   if (!weather) return null;
 
-  const { current } = weather;
-  const temp = Math.round(current.temperature_2m);
-  const cloudCover = current.cloud_cover;
-  const precipitation = current.precipitation;
-  const isDay = current.is_day;
-  const currentHour = new Date().getHours();
-  const timeOfDay = currentHour < 12 ? 'Morning' : currentHour < 18 ? 'Afternoon' : 'Evening';
+  const { daily } = weather;
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 = Sunday, 5 = Friday
+  const isFriday = dayOfWeek === 5;
+
+  // Helper to format day name
+  const getDayName = (dateString, index) => {
+    if (index === 0) return 'Today';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB', { weekday: 'long' });
+  };
+
+  // Calculate sunshine percentage from duration (seconds to hours, max ~12 hours of daylight)
+  const getSunshinePercent = (seconds) => {
+    const hours = seconds / 3600;
+    return Math.min(100, Math.round((hours / 12) * 100));
+  };
+
+  // Show today + weekend on Friday, otherwise just today
+  const daysToShow = isFriday ? [0, 1, 2] : [0];
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-orange-50 rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {/* Temperature */}
-        <div className="flex items-center space-x-2">
-          <div className="p-2 bg-white rounded-lg">
-            <Sun className="w-6 h-6 text-orange-500" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-dark-brown">{temp}°C</div>
-            <div className="text-sm text-gray-600">Temperature</div>
-          </div>
-        </div>
+      <div className="space-y-4">
+        {daysToShow.map((dayIndex) => {
+          const tempMax = Math.round(daily.temperature_2m_max[dayIndex]);
+          const tempMin = Math.round(daily.temperature_2m_min[dayIndex]);
+          const rain = daily.precipitation_sum[dayIndex];
+          const sunshine = getSunshinePercent(daily.sunshine_duration[dayIndex]);
+          const dayName = getDayName(daily.time[dayIndex], dayIndex);
 
-        {/* Cloud Cover / Sunshine */}
-        <div className="flex items-center space-x-2">
-          <div className="p-2 bg-white rounded-lg">
-            {cloudCover < 30 ? (
-              <Sun className="w-6 h-6 text-yellow-500" />
-            ) : (
-              <Cloud className="w-6 h-6 text-gray-500" />
-            )}
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-dark-brown">{100 - cloudCover}%</div>
-            <div className="text-sm text-gray-600">Sunshine</div>
-          </div>
-        </div>
+          return (
+            <div key={dayIndex}>
+              {daysToShow.length > 1 && (
+                <h3 className="text-lg font-semibold text-dark-brown mb-2">{dayName}</h3>
+              )}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {/* Temperature */}
+                <div className="flex items-center space-x-2">
+                  <div className="p-2 bg-white rounded-lg">
+                    <Sun className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-dark-brown">{tempMax}°C</div>
+                    <div className="text-sm text-gray-600">High ({tempMin}°C low)</div>
+                  </div>
+                </div>
 
-        {/* Rain */}
-        <div className="flex items-center space-x-2">
-          <div className="p-2 bg-white rounded-lg">
-            <CloudRain className="w-6 h-6 text-blue-500" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-dark-brown">{precipitation}mm</div>
-            <div className="text-sm text-gray-600">Rain</div>
-          </div>
-        </div>
+                {/* Sunshine */}
+                <div className="flex items-center space-x-2">
+                  <div className="p-2 bg-white rounded-lg">
+                    {sunshine > 50 ? (
+                      <Sun className="w-6 h-6 text-yellow-500" />
+                    ) : (
+                      <Cloud className="w-6 h-6 text-gray-500" />
+                    )}
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-dark-brown">{sunshine}%</div>
+                    <div className="text-sm text-gray-600">Sunshine</div>
+                  </div>
+                </div>
 
-        {/* Time of Day */}
-        <div className="flex items-center space-x-2">
-          <div className="p-2 bg-white rounded-lg">
-            <Clock className="w-6 h-6 text-purple-500" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-dark-brown">{timeOfDay}</div>
-            <div className="text-sm text-gray-600">{new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</div>
-          </div>
-        </div>
+                {/* Rain */}
+                <div className="flex items-center space-x-2">
+                  <div className="p-2 bg-white rounded-lg">
+                    <CloudRain className="w-6 h-6 text-blue-500" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-dark-brown">{rain.toFixed(1)}mm</div>
+                    <div className="text-sm text-gray-600">Rain</div>
+                  </div>
+                </div>
+
+                {/* Time of Day (only for today) */}
+                {dayIndex === 0 && (
+                  <div className="flex items-center space-x-2">
+                    <div className="p-2 bg-white rounded-lg">
+                      <Clock className="w-6 h-6 text-purple-500" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-dark-brown">
+                        {today.getHours() < 12 ? 'Morning' : today.getHours() < 18 ? 'Afternoon' : 'Evening'}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {today.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
