@@ -14,6 +14,10 @@ import {
   X,
   Send,
   Loader2,
+  Cloud,
+  CloudRain,
+  Sun,
+  Clock,
 } from 'lucide-react';
 
 // Initialize Supabase
@@ -375,6 +379,118 @@ function App() {
   );
 }
 
+// Weather Widget Component
+function WeatherWidget() {
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        // Get user's location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              const { latitude, longitude } = position.coords;
+
+              // Free weather API - Open-Meteo (no API key needed)
+              const response = await axios.get(
+                `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day&timezone=auto`
+              );
+
+              setWeather(response.data);
+              setLoading(false);
+            },
+            (error) => {
+              console.error('Geolocation error:', error);
+              setLoading(false);
+            }
+          );
+        }
+      } catch (error) {
+        console.error('Weather fetch error:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchWeather();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-5 h-5 animate-spin text-vintage-orange" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!weather) return null;
+
+  const { current } = weather;
+  const temp = Math.round(current.temperature_2m);
+  const cloudCover = current.cloud_cover;
+  const precipitation = current.precipitation;
+  const isDay = current.is_day;
+  const currentHour = new Date().getHours();
+  const timeOfDay = currentHour < 12 ? 'Morning' : currentHour < 18 ? 'Afternoon' : 'Evening';
+
+  return (
+    <div className="bg-gradient-to-r from-blue-50 to-orange-50 rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Temperature */}
+        <div className="flex items-center space-x-2">
+          <div className="p-2 bg-white rounded-lg">
+            <Sun className="w-6 h-6 text-orange-500" />
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-dark-brown">{temp}°C</div>
+            <div className="text-sm text-gray-600">Temperature</div>
+          </div>
+        </div>
+
+        {/* Cloud Cover / Sunshine */}
+        <div className="flex items-center space-x-2">
+          <div className="p-2 bg-white rounded-lg">
+            {cloudCover < 30 ? (
+              <Sun className="w-6 h-6 text-yellow-500" />
+            ) : (
+              <Cloud className="w-6 h-6 text-gray-500" />
+            )}
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-dark-brown">{100 - cloudCover}%</div>
+            <div className="text-sm text-gray-600">Sunshine</div>
+          </div>
+        </div>
+
+        {/* Rain */}
+        <div className="flex items-center space-x-2">
+          <div className="p-2 bg-white rounded-lg">
+            <CloudRain className="w-6 h-6 text-blue-500" />
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-dark-brown">{precipitation}mm</div>
+            <div className="text-sm text-gray-600">Rain</div>
+          </div>
+        </div>
+
+        {/* Time of Day */}
+        <div className="flex items-center space-x-2">
+          <div className="p-2 bg-white rounded-lg">
+            <Clock className="w-6 h-6 text-purple-500" />
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-dark-brown">{timeOfDay}</div>
+            <div className="text-sm text-gray-600">{new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Dashboard View Component
 function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats }) {
   const getWeeklyDigest = () => {
@@ -424,6 +540,9 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
 
   return (
     <div className="space-y-8">
+      {/* Weather Widget */}
+      <WeatherWidget />
+
       {/* Weekly Digest */}
       <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-6">
         <h2 className="text-2xl font-serif font-bold mb-4">
