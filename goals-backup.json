@@ -1,0 +1,782 @@
+[
+  {
+    "id": "7e6ca6d1-eeeb-444c-829e-4cb20dc1d70b",
+    "user_id": "ca32ae82-f352-403b-822e-6d29c1d355c5",
+    "title": "Promote 'The Lemon Book' Before Christmas",
+    "description": "Secure a Reddit AMA, Mark Pack podcast appearance, and LibDem website feature to boost initial sales.",
+    "rag_status": "green",
+    "created_at": "2025-11-11T22:10:59.628464+00:00",
+    "updated_at": "2025-11-11T22:10:59.628464+00:00",
+    "stages": [
+      {
+        "id": "5e496f26-05fc-4184-b210-2f29ad30b6e8",
+        "goal_id": "7e6ca6d1-eeeb-444c-829e-4cb20dc1d70b",
+        "name": "Reddit AMA",
+        "order_index": 0,
+        "created_at": "2025-11-11T22:10:59.760048+00:00",
+        "tasks": [
+          {
+            "id": "50137fc5-869c-4ad6-bb85-7275d917bb11",
+            "stage_id": "5e496f26-05fc-4184-b210-2f29ad30b6e8",
+            "text": "Research relevant subreddits for AMAs (political commentary, book discussions).",
+            "category": "research",
+            "completed": false,
+            "due_date": "2025-11-18",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:10:59.865825+00:00",
+            "updated_at": "2025-11-11T22:25:59.183908+00:00"
+          },
+          {
+            "id": "065758b2-e311-44a8-a60f-1ad43350f432",
+            "stage_id": "5e496f26-05fc-4184-b210-2f29ad30b6e8",
+            "text": "Draft a compelling AMA proposal highlighting the book's relevance and your expertise.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2025-11-18",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:10:59.865825+00:00",
+            "updated_at": "2025-11-11T22:25:59.274231+00:00"
+          },
+          {
+            "id": "54e66599-c439-4481-9893-c949256ff689",
+            "stage_id": "5e496f26-05fc-4184-b210-2f29ad30b6e8",
+            "text": "Contact subreddit moderators to pitch the AMA and schedule a date.",
+            "category": "collaboration",
+            "completed": false,
+            "due_date": "2025-11-18",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 2,
+            "created_at": "2025-11-11T22:10:59.865825+00:00",
+            "updated_at": "2025-11-11T22:25:59.358326+00:00"
+          },
+          {
+            "id": "71c555b3-63ca-48ae-af42-6c8a5eac5c66",
+            "stage_id": "5e496f26-05fc-4184-b210-2f29ad30b6e8",
+            "text": "Prepare answers to frequently asked questions and potential challenging questions.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2025-11-18",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 3,
+            "created_at": "2025-11-11T22:10:59.865825+00:00",
+            "updated_at": "2025-11-11T22:25:59.533246+00:00"
+          },
+          {
+            "id": "2afb7aa6-db8c-4918-8850-706b1ed6c91c",
+            "stage_id": "5e496f26-05fc-4184-b210-2f29ad30b6e8",
+            "text": "Conduct the AMA and actively engage with participants.",
+            "category": "action",
+            "completed": false,
+            "due_date": "2025-11-18",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 4,
+            "created_at": "2025-11-11T22:10:59.865825+00:00",
+            "updated_at": "2025-11-11T22:25:59.620631+00:00"
+          }
+        ]
+      },
+      {
+        "id": "76296916-bcd0-4ab1-9222-2f6b609bcb7b",
+        "goal_id": "7e6ca6d1-eeeb-444c-829e-4cb20dc1d70b",
+        "name": "Mark Pack Podcast Appearance",
+        "order_index": 1,
+        "created_at": "2025-11-11T22:10:59.94842+00:00",
+        "tasks": [
+          {
+            "id": "97d6e649-992f-47d6-a560-ec31e0a49a43",
+            "stage_id": "76296916-bcd0-4ab1-9222-2f6b609bcb7b",
+            "text": "Research Mark Pack's podcast and identify relevant episodes.",
+            "category": "research",
+            "completed": false,
+            "due_date": "2024-11-15",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:11:00.10361+00:00",
+            "updated_at": "2025-11-11T22:11:00.10361+00:00"
+          },
+          {
+            "id": "77748b26-e72c-489f-b37f-ccb425f84a8f",
+            "stage_id": "76296916-bcd0-4ab1-9222-2f6b609bcb7b",
+            "text": "Craft a personalized email pitching your book and suggesting potential discussion points.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2024-11-22",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:11:00.10361+00:00",
+            "updated_at": "2025-11-11T22:11:00.10361+00:00"
+          },
+          {
+            "id": "366d67cf-1dda-4968-9b6d-85d59972d7ae",
+            "stage_id": "76296916-bcd0-4ab1-9222-2f6b609bcb7b",
+            "text": "Follow up with Mark Pack to schedule a recording session.",
+            "category": "collaboration",
+            "completed": false,
+            "due_date": "2024-11-29",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 2,
+            "created_at": "2025-11-11T22:11:00.10361+00:00",
+            "updated_at": "2025-11-11T22:11:00.10361+00:00"
+          },
+          {
+            "id": "b3b34f39-5b2e-43a3-b102-e69056b9990b",
+            "stage_id": "76296916-bcd0-4ab1-9222-2f6b609bcb7b",
+            "text": "Prepare talking points and rehearse your interview.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2024-12-06",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 3,
+            "created_at": "2025-11-11T22:11:00.10361+00:00",
+            "updated_at": "2025-11-11T22:11:00.10361+00:00"
+          },
+          {
+            "id": "c8f44491-6fba-4f64-bd77-8aa6fdfe641c",
+            "stage_id": "76296916-bcd0-4ab1-9222-2f6b609bcb7b",
+            "text": "Record the podcast episode.",
+            "category": "action",
+            "completed": false,
+            "due_date": "2024-12-13",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 4,
+            "created_at": "2025-11-11T22:11:00.10361+00:00",
+            "updated_at": "2025-11-11T22:11:00.10361+00:00"
+          }
+        ]
+      },
+      {
+        "id": "ce90d019-dbfc-4e49-9a92-8923d4ffaa45",
+        "goal_id": "7e6ca6d1-eeeb-444c-829e-4cb20dc1d70b",
+        "name": "LibDem Website Feature",
+        "order_index": 2,
+        "created_at": "2025-11-11T22:11:00.171256+00:00",
+        "tasks": [
+          {
+            "id": "5e8d6fce-fb93-4a8d-9986-34edac7dd183",
+            "stage_id": "ce90d019-dbfc-4e49-9a92-8923d4ffaa45",
+            "text": "Identify relevant sections of the LibDem website (e.g., news, opinion, books).",
+            "category": "research",
+            "completed": false,
+            "due_date": "2024-11-15",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:11:00.248691+00:00",
+            "updated_at": "2025-11-11T22:11:00.248691+00:00"
+          },
+          {
+            "id": "189b0b2d-80aa-4e98-b2b0-88a9ee40464d",
+            "stage_id": "ce90d019-dbfc-4e49-9a92-8923d4ffaa45",
+            "text": "Develop a concise and compelling pitch for a website feature, highlighting the book's connection to LibDem values.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2024-11-22",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:11:00.248691+00:00",
+            "updated_at": "2025-11-11T22:11:00.248691+00:00"
+          },
+          {
+            "id": "b9338639-f117-4b1c-a92e-17f21bcfdef6",
+            "stage_id": "ce90d019-dbfc-4e49-9a92-8923d4ffaa45",
+            "text": "Contact relevant individuals within the LibDem organization (e.g., communications team, website editors).",
+            "category": "collaboration",
+            "completed": false,
+            "due_date": "2024-11-29",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 2,
+            "created_at": "2025-11-11T22:11:00.248691+00:00",
+            "updated_at": "2025-11-11T22:11:00.248691+00:00"
+          },
+          {
+            "id": "18779e25-cdb7-45a2-b133-3bce7f67bfae",
+            "stage_id": "ce90d019-dbfc-4e49-9a92-8923d4ffaa45",
+            "text": "Provide the website team with necessary materials (book summary, author bio, cover image).",
+            "category": "action",
+            "completed": false,
+            "due_date": "2024-12-06",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 3,
+            "created_at": "2025-11-11T22:11:00.248691+00:00",
+            "updated_at": "2025-11-11T22:11:00.248691+00:00"
+          },
+          {
+            "id": "9fe7f9e2-5128-43eb-b2d6-d31b56d2c308",
+            "stage_id": "ce90d019-dbfc-4e49-9a92-8923d4ffaa45",
+            "text": "Follow up with the website team and ensure the feature is published.",
+            "category": "collaboration",
+            "completed": false,
+            "due_date": "2024-12-13",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 4,
+            "created_at": "2025-11-11T22:11:00.248691+00:00",
+            "updated_at": "2025-11-11T22:11:00.248691+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "4fccac04-8a62-413e-922a-31df48d461c4",
+    "user_id": "ca32ae82-f352-403b-822e-6d29c1d355c5",
+    "title": "Promote Sidhe Tarot Site for Sales",
+    "description": "Increase sales by promoting the Sidhe Tarot site before the New Year, focusing on offering a free 'Year Ahead' reading.",
+    "rag_status": "green",
+    "created_at": "2025-11-11T22:13:03.88044+00:00",
+    "updated_at": "2025-11-11T22:13:03.88044+00:00",
+    "stages": [
+      {
+        "id": "e4ea357c-0672-40f2-94fe-323b1bd97f5c",
+        "goal_id": "4fccac04-8a62-413e-922a-31df48d461c4",
+        "name": "Market Research & Platform Selection",
+        "order_index": 0,
+        "created_at": "2025-11-11T22:13:03.943937+00:00",
+        "tasks": [
+          {
+            "id": "7034a9fe-5c52-4e2f-a1d8-b695aac5456a",
+            "stage_id": "e4ea357c-0672-40f2-94fe-323b1bd97f5c",
+            "text": "Research potential platforms for promotion (e.g., social media, tarot forums, blogs, paid advertising).",
+            "category": "research",
+            "completed": false,
+            "due_date": "2023-11-15",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:13:03.998193+00:00",
+            "updated_at": "2025-11-11T22:13:03.998193+00:00"
+          },
+          {
+            "id": "909afa91-688a-4dc3-bb6e-4c64bd6d5374",
+            "stage_id": "e4ea357c-0672-40f2-94fe-323b1bd97f5c",
+            "text": "Analyze target audience and their online behavior to select the most effective platforms.",
+            "category": "research",
+            "completed": false,
+            "due_date": "2023-11-20",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:13:03.998193+00:00",
+            "updated_at": "2025-11-11T22:13:03.998193+00:00"
+          }
+        ]
+      },
+      {
+        "id": "7100dcce-238c-45ce-89e2-64f60e3b5600",
+        "goal_id": "4fccac04-8a62-413e-922a-31df48d461c4",
+        "name": "Content Creation & Free Offering",
+        "order_index": 1,
+        "created_at": "2025-11-11T22:13:04.044251+00:00",
+        "tasks": [
+          {
+            "id": "4786e798-f6fd-4b44-bbf3-5aab5e9c4a46",
+            "stage_id": "7100dcce-238c-45ce-89e2-64f60e3b5600",
+            "text": "Develop a compelling marketing message highlighting the benefits of the Sidhe Tarot site.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2023-11-25",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:13:04.087705+00:00",
+            "updated_at": "2025-11-11T22:13:04.087705+00:00"
+          },
+          {
+            "id": "7de0bf0e-56e0-4bf0-9e61-73dbc775551a",
+            "stage_id": "7100dcce-238c-45ce-89e2-64f60e3b5600",
+            "text": "Create a free 'Year Ahead' tarot reading offer to attract new users.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2023-12-01",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:13:04.087705+00:00",
+            "updated_at": "2025-11-11T22:13:04.087705+00:00"
+          },
+          {
+            "id": "ee46901d-0548-4cbb-af0a-c9bf14522d1e",
+            "stage_id": "7100dcce-238c-45ce-89e2-64f60e3b5600",
+            "text": "Design visually appealing promotional materials (images, videos) for selected platforms.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2023-12-05",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 2,
+            "created_at": "2025-11-11T22:13:04.087705+00:00",
+            "updated_at": "2025-11-11T22:13:04.087705+00:00"
+          }
+        ]
+      },
+      {
+        "id": "42641cd2-7838-4b69-b129-4fe2c90c0a16",
+        "goal_id": "4fccac04-8a62-413e-922a-31df48d461c4",
+        "name": "Promotion & Engagement",
+        "order_index": 2,
+        "created_at": "2025-11-11T22:13:04.132503+00:00",
+        "tasks": [
+          {
+            "id": "3b0bfc8a-c715-430b-a8fc-88fa1b3f30fe",
+            "stage_id": "42641cd2-7838-4b69-b129-4fe2c90c0a16",
+            "text": "Launch promotional campaigns on chosen platforms.",
+            "category": "action",
+            "completed": false,
+            "due_date": "2023-12-10",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:13:04.177307+00:00",
+            "updated_at": "2025-11-11T22:13:04.177307+00:00"
+          },
+          {
+            "id": "270c151b-6144-463c-8abc-6735c1b17d8f",
+            "stage_id": "42641cd2-7838-4b69-b129-4fe2c90c0a16",
+            "text": "Engage with potential customers by responding to comments and messages.",
+            "category": "collaboration",
+            "completed": false,
+            "due_date": "2023-12-15",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:13:04.177307+00:00",
+            "updated_at": "2025-11-11T22:13:04.177307+00:00"
+          },
+          {
+            "id": "baf72704-7382-4d3a-ac65-628472ad6f75",
+            "stage_id": "42641cd2-7838-4b69-b129-4fe2c90c0a16",
+            "text": "Monitor campaign performance and adjust strategies as needed.",
+            "category": "research",
+            "completed": false,
+            "due_date": "2023-12-20",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 2,
+            "created_at": "2025-11-11T22:13:04.177307+00:00",
+            "updated_at": "2025-11-11T22:13:04.177307+00:00"
+          }
+        ]
+      },
+      {
+        "id": "002c564b-7050-4097-8a95-5d957b615b70",
+        "goal_id": "4fccac04-8a62-413e-922a-31df48d461c4",
+        "name": "Analysis & Refinement",
+        "order_index": 3,
+        "created_at": "2025-11-11T22:13:04.222975+00:00",
+        "tasks": [
+          {
+            "id": "3a5f5cc3-8a54-444a-b8ad-400899ae2794",
+            "stage_id": "002c564b-7050-4097-8a95-5d957b615b70",
+            "text": "Analyze campaign results (website traffic, sign-ups, sales).",
+            "category": "research",
+            "completed": false,
+            "due_date": "2023-12-27",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:13:04.264835+00:00",
+            "updated_at": "2025-11-11T22:13:04.264835+00:00"
+          },
+          {
+            "id": "97c3b2ee-f28b-4d9a-bfff-998ad0d51980",
+            "stage_id": "002c564b-7050-4097-8a95-5d957b615b70",
+            "text": "Identify successful strategies and areas for improvement.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2023-12-30",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:13:04.264835+00:00",
+            "updated_at": "2025-11-11T22:13:04.264835+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "6ba17bff-0e72-48be-a9de-441bbe0d2291",
+    "user_id": "ca32ae82-f352-403b-822e-6d29c1d355c5",
+    "title": "Implement New Features on Sidhe Tarot Site",
+    "description": "Add new features to increase user engagement and monetization opportunities on the Sidhe Tarot website.",
+    "rag_status": "green",
+    "created_at": "2025-11-11T22:17:22.844682+00:00",
+    "updated_at": "2025-11-11T22:17:22.844682+00:00",
+    "stages": [
+      {
+        "id": "6d521104-c442-44fe-90cd-81797cc0787f",
+        "goal_id": "6ba17bff-0e72-48be-a9de-441bbe0d2291",
+        "name": "Planning & Design",
+        "order_index": 0,
+        "created_at": "2025-11-11T22:17:22.932453+00:00",
+        "tasks": [
+          {
+            "id": "db5b7d54-f425-4a2e-a8b3-62fbd5b338d8",
+            "stage_id": "6d521104-c442-44fe-90cd-81797cc0787f",
+            "text": "Define detailed specifications for the free daily three-card reading sign-up and trial process.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2024-11-08",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:17:22.983517+00:00",
+            "updated_at": "2025-11-11T22:17:22.983517+00:00"
+          },
+          {
+            "id": "f64b0fa8-dbba-4151-8beb-588817d40afe",
+            "stage_id": "6d521104-c442-44fe-90cd-81797cc0787f",
+            "text": "Design the prompt for users to purchase the daily readings after the 7-day trial.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2024-11-11",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:17:22.983517+00:00",
+            "updated_at": "2025-11-11T22:17:22.983517+00:00"
+          },
+          {
+            "id": "0bd94ec9-8bc9-4e31-a43f-b6fc26e81fb4",
+            "stage_id": "6d521104-c442-44fe-90cd-81797cc0787f",
+            "text": "Outline the functionality for the premium monthly Celtic Cross Reading and Platinum edition features.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2024-11-13",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 2,
+            "created_at": "2025-11-11T22:17:22.983517+00:00",
+            "updated_at": "2025-11-11T22:17:22.983517+00:00"
+          },
+          {
+            "id": "b2b0aa2d-1840-4679-9883-b5dfa5e7dbc0",
+            "stage_id": "6d521104-c442-44fe-90cd-81797cc0787f",
+            "text": "Design the user interface for saving readings, including storage and retrieval mechanisms.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2024-11-15",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 3,
+            "created_at": "2025-11-11T22:17:22.983517+00:00",
+            "updated_at": "2025-11-11T22:17:22.983517+00:00"
+          },
+          {
+            "id": "2ebdc57a-ffc6-4aa5-afba-acb45b4025ef",
+            "stage_id": "6d521104-c442-44fe-90cd-81797cc0787f",
+            "text": "Develop the 'Temperature Reading' logic (Positive or Warning) and associated text.",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2024-11-18",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 4,
+            "created_at": "2025-11-11T22:17:22.983517+00:00",
+            "updated_at": "2025-11-11T22:17:22.983517+00:00"
+          }
+        ]
+      },
+      {
+        "id": "80ab8628-d976-4b1a-b8ef-4586b7b5e839",
+        "goal_id": "6ba17bff-0e72-48be-a9de-441bbe0d2291",
+        "name": "Development & Implementation",
+        "order_index": 1,
+        "created_at": "2025-11-11T22:17:23.041403+00:00",
+        "tasks": [
+          {
+            "id": "3ed37b4a-2e52-49b1-8d5a-6c03a92e72a6",
+            "stage_id": "80ab8628-d976-4b1a-b8ef-4586b7b5e839",
+            "text": "Implement the free daily three-card reading sign-up and trial process.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2024-11-25",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:17:23.088487+00:00",
+            "updated_at": "2025-11-11T22:17:23.088487+00:00"
+          },
+          {
+            "id": "09bd4dfc-2550-440a-aa1b-c126cd902720",
+            "stage_id": "80ab8628-d976-4b1a-b8ef-4586b7b5e839",
+            "text": "Integrate the payment gateway for purchasing the continued daily readings and monthly Celtic Cross reading",
+            "category": "work",
+            "completed": false,
+            "due_date": "2024-12-02",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:17:23.088487+00:00",
+            "updated_at": "2025-11-11T22:17:23.088487+00:00"
+          },
+          {
+            "id": "c82e6726-5f85-4e13-b9b9-264291e7f3db",
+            "stage_id": "80ab8628-d976-4b1a-b8ef-4586b7b5e839",
+            "text": "Develop the functionality to save readings with user accounts.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2024-12-09",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 2,
+            "created_at": "2025-11-11T22:17:23.088487+00:00",
+            "updated_at": "2025-11-11T22:17:23.088487+00:00"
+          },
+          {
+            "id": "1c738c16-0a13-4654-b510-b35fc8dbd0d0",
+            "stage_id": "80ab8628-d976-4b1a-b8ef-4586b7b5e839",
+            "text": "Implement the 'Temperature Reading' feature for each card reading.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2024-12-16",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 3,
+            "created_at": "2025-11-11T22:17:23.088487+00:00",
+            "updated_at": "2025-11-11T22:17:23.088487+00:00"
+          }
+        ]
+      },
+      {
+        "id": "599dd00d-6041-4dfa-ad11-666a0d8f5946",
+        "goal_id": "6ba17bff-0e72-48be-a9de-441bbe0d2291",
+        "name": "Testing & Deployment",
+        "order_index": 2,
+        "created_at": "2025-11-11T22:17:23.138216+00:00",
+        "tasks": [
+          {
+            "id": "7cd5e2ed-dab2-4ad0-b4c0-139311501570",
+            "stage_id": "599dd00d-6041-4dfa-ad11-666a0d8f5946",
+            "text": "Thoroughly test all new features to ensure functionality and usability.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2024-12-23",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:17:23.185027+00:00",
+            "updated_at": "2025-11-11T22:17:23.185027+00:00"
+          },
+          {
+            "id": "b25c02b3-fbaa-40df-8b05-68deb0f30faa",
+            "stage_id": "599dd00d-6041-4dfa-ad11-666a0d8f5946",
+            "text": "Deploy the updated features to the live Sidhe Tarot site.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2024-12-27",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 1,
+            "created_at": "2025-11-11T22:17:23.185027+00:00",
+            "updated_at": "2025-11-11T22:17:23.185027+00:00"
+          },
+          {
+            "id": "3ec3037b-58ae-4692-a88e-b79538be1c7d",
+            "stage_id": "599dd00d-6041-4dfa-ad11-666a0d8f5946",
+            "text": "Monitor user feedback and address any issues after deployment.",
+            "category": "research",
+            "completed": false,
+            "due_date": "2024-12-31",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 2,
+            "created_at": "2025-11-11T22:17:23.185027+00:00",
+            "updated_at": "2025-11-11T22:17:23.185027+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "373b21a2-c32b-4102-ab09-1938dbf55cee",
+    "user_id": "ca32ae82-f352-403b-822e-6d29c1d355c5",
+    "title": "Create and Launch 'Bundle' App",
+    "description": "Develop an application that integrates with Google Drive and Outlook to analyse Family Court case files, summarise key issues, timeline, key people, recommendations, and decisions, and launch it by the end of the year.",
+    "rag_status": "green",
+    "created_at": "2025-11-11T22:34:01.147737+00:00",
+    "updated_at": "2025-11-11T22:34:01.147737+00:00",
+    "stages": [
+      {
+        "id": "7d787c37-d051-4bd7-9e6e-d026222219f3",
+        "goal_id": "373b21a2-c32b-4102-ab09-1938dbf55cee",
+        "name": "Set up Site",
+        "order_index": 0,
+        "created_at": "2025-11-11T22:34:01.208327+00:00",
+        "tasks": [
+          {
+            "id": "8b4ad240-396c-4a29-84bf-6525f0d6feaf",
+            "stage_id": "7d787c37-d051-4bd7-9e6e-d026222219f3",
+            "text": "Set up the basic website/application framework.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2025-11-25",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:34:01.268384+00:00",
+            "updated_at": "2025-11-11T22:34:01.268384+00:00"
+          }
+        ]
+      },
+      {
+        "id": "6567363f-5427-4a1f-b551-e94dbbc307ca",
+        "goal_id": "373b21a2-c32b-4102-ab09-1938dbf55cee",
+        "name": "Implement Authentication",
+        "order_index": 1,
+        "created_at": "2025-11-11T22:34:01.334689+00:00",
+        "tasks": [
+          {
+            "id": "1c5eb46a-7233-4b71-a0a9-b3f3cac614cb",
+            "stage_id": "6567363f-5427-4a1f-b551-e94dbbc307ca",
+            "text": "Develop secure authentication protocols for accessing Google Drive and Outlook.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2025-12-09",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:34:01.395785+00:00",
+            "updated_at": "2025-11-11T22:34:01.395785+00:00"
+          }
+        ]
+      },
+      {
+        "id": "b76f8088-b731-4c46-85e3-b4be449a373a",
+        "goal_id": "373b21a2-c32b-4102-ab09-1938dbf55cee",
+        "name": "Email & Attachment Extraction",
+        "order_index": 2,
+        "created_at": "2025-11-11T22:34:01.457564+00:00",
+        "tasks": [
+          {
+            "id": "88f9c4b4-04b0-4799-902d-a226b2d18f1c",
+            "stage_id": "b76f8088-b731-4c46-85e3-b4be449a373a",
+            "text": "Configure email forwarding and attachment extraction mechanism.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2025-12-23",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:34:01.526428+00:00",
+            "updated_at": "2025-11-11T22:34:01.526428+00:00"
+          }
+        ]
+      },
+      {
+        "id": "57d90e1a-2eb8-49a4-8cd7-a2a8e5d4fd9b",
+        "goal_id": "373b21a2-c32b-4102-ab09-1938dbf55cee",
+        "name": "File Analysis and Summarisation",
+        "order_index": 3,
+        "created_at": "2025-11-11T22:34:01.58969+00:00",
+        "tasks": [
+          {
+            "id": "f19544f1-40b8-4c4d-865a-c7446b78aeb1",
+            "stage_id": "57d90e1a-2eb8-49a4-8cd7-a2a8e5d4fd9b",
+            "text": "Develop the core analysis engine to process case files and generate summaries.",
+            "category": "work",
+            "completed": false,
+            "due_date": "2025-12-31",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-11T22:34:01.651904+00:00",
+            "updated_at": "2025-11-11T22:34:01.651904+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fa2447e3-a505-4032-a042-b9530c879785",
+    "user_id": "ca32ae82-f352-403b-822e-6d29c1d355c5",
+    "title": "Promote Songs 4 Stars",
+    "description": "Promote the Songs 4 Stars app (app.custe.studio) to charities.",
+    "rag_status": "green",
+    "created_at": "2025-11-12T20:29:31.965969+00:00",
+    "updated_at": "2025-11-12T20:29:31.965969+00:00",
+    "stages": [
+      {
+        "id": "6bb00f75-47c8-48d9-90e3-b49747399c72",
+        "goal_id": "fa2447e3-a505-4032-a042-b9530c879785",
+        "name": "Testing",
+        "order_index": 0,
+        "created_at": "2025-11-12T20:29:32.076576+00:00",
+        "tasks": [
+          {
+            "id": "0019813b-85de-4d42-a6aa-c21a0de86502",
+            "stage_id": "6bb00f75-47c8-48d9-90e3-b49747399c72",
+            "text": "Perform initial testing of Songs 4 Stars app",
+            "category": "action",
+            "completed": false,
+            "due_date": "2026-01-15",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-12T20:29:32.190632+00:00",
+            "updated_at": "2025-11-12T20:29:32.190632+00:00"
+          }
+        ]
+      },
+      {
+        "id": "7876f6dc-0c1a-4c40-81ea-140951bb3932",
+        "goal_id": "fa2447e3-a505-4032-a042-b9530c879785",
+        "name": "Press Release",
+        "order_index": 1,
+        "created_at": "2025-11-12T20:29:32.280811+00:00",
+        "tasks": [
+          {
+            "id": "79662bf1-a997-4bf0-81c7-94f04164a9b0",
+            "stage_id": "7876f6dc-0c1a-4c40-81ea-140951bb3932",
+            "text": "Write a pitch/press release for charities",
+            "category": "thought",
+            "completed": false,
+            "due_date": "2026-01-22",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-12T20:29:32.35391+00:00",
+            "updated_at": "2025-11-12T20:29:32.35391+00:00"
+          }
+        ]
+      },
+      {
+        "id": "7f04aab6-febc-4c71-b0ab-a018a9c7baef",
+        "goal_id": "fa2447e3-a505-4032-a042-b9530c879785",
+        "name": "Charity Outreach",
+        "order_index": 2,
+        "created_at": "2025-11-12T20:29:32.425734+00:00",
+        "tasks": [
+          {
+            "id": "21f74267-1c30-4f37-9878-27c643384ffe",
+            "stage_id": "7f04aab6-febc-4c71-b0ab-a018a9c7baef",
+            "text": "Send press release to relevant charities",
+            "category": "action",
+            "completed": false,
+            "due_date": "2026-01-31",
+            "streak": 0,
+            "last_completed_date": null,
+            "order_index": 0,
+            "created_at": "2025-11-12T20:29:32.502655+00:00",
+            "updated_at": "2025-11-12T20:29:32.502655+00:00"
+          }
+        ]
+      }
+    ]
+  }
+]

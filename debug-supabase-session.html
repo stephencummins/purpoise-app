@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Supabase Session</title>
+</head>
+<body>
+    <h1>Supabase Session Debug</h1>
+    <pre id="output"></pre>
+
+    <script>
+        // Check localStorage for Supabase session
+        const output = document.getElementById('output');
+        let debugInfo = 'LocalStorage Keys:\n';
+
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.includes('supabase')) {
+                debugInfo += `\n${key}:\n`;
+                const value = localStorage.getItem(key);
+                try {
+                    const parsed = JSON.parse(value);
+                    debugInfo += JSON.stringify(parsed, null, 2);
+                } catch {
+                    debugInfo += value;
+                }
+                debugInfo += '\n';
+            }
+        }
+
+        output.textContent = debugInfo;
+    </script>
+</body>
+</html>

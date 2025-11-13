@@ -18,6 +18,7 @@ import {
   CloudRain,
   Sun,
   Clock,
+  Repeat,
 } from 'lucide-react';
 
 // Initialize Supabase
@@ -147,8 +148,61 @@ function App() {
       );
 
       setGoals(goalsWithDetails);
+
+      // Auto-reset recurring tasks
+      await resetRecurringTasks(goalsWithDetails);
     } catch (error) {
       console.error('Error loading goals:', error);
+    }
+  };
+
+  const resetRecurringTasks = async (goals) => {
+    try {
+      const recurringGoal = goals.find(g => g.title.includes('Recurring Tasks'));
+      if (!recurringGoal) return;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayStr = today.toISOString().split('T')[0];
+      const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+
+      for (const stage of recurringGoal.stages || []) {
+        const isDaily = stage.name.toLowerCase().includes('daily');
+        const isWeekly = stage.name.toLowerCase().includes('weekly');
+
+        for (const task of stage.tasks || []) {
+          if (!task.completed || !task.last_completed_date) continue;
+
+          const lastCompleted = new Date(task.last_completed_date);
+          lastCompleted.setHours(0, 0, 0, 0);
+          const lastCompletedStr = lastCompleted.toISOString().split('T')[0];
+
+          let shouldReset = false;
+
+          if (isDaily && lastCompletedStr < todayStr) {
+            // Reset daily tasks if last completed before today
+            shouldReset = true;
+          } else if (isWeekly) {
+            // Reset weekly tasks based on day mentioned in task text
+            const taskText = task.text.toLowerCase();
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const taskDay = days.findIndex(day => taskText.includes(day));
+
+            if (taskDay !== -1 && dayOfWeek === taskDay && lastCompletedStr < todayStr) {
+              shouldReset = true;
+            }
+          }
+
+          if (shouldReset) {
+            await supabase
+              .from('tasks')
+              .update({ completed: false })
+              .eq('id', task.id);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error resetting recurring tasks:', error);
     }
   };
 
@@ -565,10 +619,85 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
 
   const digest = getWeeklyDigest();
 
+  // Get recurring tasks
+  const recurringGoal = goals.find(g => g.title.includes('Recurring Tasks'));
+  const dailyTasks = recurringGoal?.stages?.find(s => s.name === 'Daily Tasks')?.tasks || [];
+  const weeklyTasks = recurringGoal?.stages?.find(s => s.name === 'Weekly Tasks')?.tasks || [];
+
   return (
     <div className="space-y-8">
       {/* Weather Widget */}
       <WeatherWidget />
+
+      {/* Recurring Tasks Widget */}
+      {recurringGoal && (
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-serif font-bold flex items-center">
+              <Repeat className="w-6 h-6 mr-2 text-vintage-orange" />
+              Recurring Tasks
+            </h2>
+            <button
+              onClick={() => onSelectGoal(recurringGoal)}
+              className="text-sm px-3 py-1 bg-vintage-orange text-white rounded-lg hover:bg-opacity-90 transition-colors"
+            >
+              Manage
+            </button>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Daily Tasks */}
+            <div>
+              <h3 className="font-semibold text-lg mb-3 flex items-center">
+                <Sun className="w-5 h-5 mr-2 text-orange-500" />
+                Daily
+              </h3>
+              <div className="space-y-2">
+                {dailyTasks.map((task, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center space-x-3 p-2 bg-white rounded-lg"
+                  >
+                    {task.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    ) : (
+                      <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                    )}
+                    <span className={task.completed ? 'line-through text-gray-400' : ''}>
+                      {task.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Weekly Tasks */}
+            <div>
+              <h3 className="font-semibold text-lg mb-3 flex items-center">
+                <CalendarIcon className="w-5 h-5 mr-2 text-blue-500" />
+                Weekly
+              </h3>
+              <div className="space-y-2">
+                {weeklyTasks.map((task, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center space-x-3 p-2 bg-white rounded-lg"
+                  >
+                    {task.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    ) : (
+                      <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                    )}
+                    <span className={task.completed ? 'line-through text-gray-400' : ''}>
+                      {task.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Weekly Digest */}
       <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-6">
