@@ -435,10 +435,7 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
               <li key={idx} className="flex items-start space-x-2">
                 <span className="text-vintage-orange font-bold">•</span>
                 <button
-                  onClick={() => {
-                    setSelectedGoal(task.goal);
-                    setView('goal-detail');
-                  }}
+                  onClick={() => onSelectGoal(task.goal)}
                   className="text-left hover:text-vintage-orange transition-colors"
                 >
                   <span className="font-medium">{task.text}</span>
