@@ -95,7 +95,8 @@ function App() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin
+          redirectTo: window.location.origin,
+          scopes: 'https://www.googleapis.com/auth/calendar.readonly'
         }
       });
       if (error) throw error;
@@ -574,6 +575,103 @@ function WeatherWidget() {
   );
 }
 
+// Calendar Widget Component
+function CalendarWidget() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchCalendarEvents();
+  }, []);
+
+  const fetchCalendarEvents = async () => {
+    try {
+      // Get the current session to retrieve the provider token
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.provider_token) {
+        console.log('No Google provider token found');
+        setLoading(false);
+        return;
+      }
+
+      // Get today's date range
+      const now = new Date();
+      const todayStart = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+      const todayEnd = new Date(now.setHours(23, 59, 59, 999)).toISOString();
+
+      // Fetch calendar events from Google Calendar API
+      const response = await axios.get(
+        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+        {
+          headers: {
+            Authorization: `Bearer ${session.provider_token}`
+          },
+          params: {
+            timeMin: todayStart,
+            timeMax: todayEnd,
+            singleEvents: true,
+            orderBy: 'startTime',
+            maxResults: 10
+          }
+        }
+      );
+
+      setEvents(response.data.items || []);
+      setLoading(false);
+    } catch (error) {
+      console.error('Calendar fetch error:', error);
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-5 h-5 animate-spin text-vintage-orange" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error || events.length === 0) return null;
+
+  const formatTime = (dateTime) => {
+    if (!dateTime) return 'All day';
+    const date = new Date(dateTime);
+    return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  return (
+    <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
+      <h2 className="text-xl font-serif font-bold mb-3 flex items-center text-dark-brown">
+        <CalendarIcon className="w-5 h-5 mr-2 text-green-600" />
+        Today's Calendar
+      </h2>
+      <div className="space-y-2">
+        {events.map((event, index) => (
+          <div key={index} className="bg-white rounded-lg p-3 border-l-4 border-green-500">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="font-semibold text-dark-brown">{event.summary}</h3>
+                {event.location && (
+                  <p className="text-sm text-gray-600 mt-1">{event.location}</p>
+                )}
+              </div>
+              <div className="text-sm text-gray-600 ml-4 whitespace-nowrap">
+                {formatTime(event.start?.dateTime || event.start?.date)}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Dashboard View Component
 function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats }) {
   const [dailyCards, setDailyCards] = useState([]);
@@ -644,6 +742,9 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
     <div className="space-y-8">
       {/* Weather Widget */}
       <WeatherWidget />
+
+      {/* Calendar Widget */}
+      <CalendarWidget />
 
       {/* Daily Tarot Widget */}
       {!cardsLoading && dailyCards.length > 0 && (
