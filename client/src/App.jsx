@@ -655,7 +655,7 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
           <p className="text-sm text-gray-600 mb-4">
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {dailyCards.map((card, index) => (
               <div key={index} className="bg-white rounded-lg p-4 border-2 border-purple-200 hover:border-purple-400 transition-colors">
                 <div className="text-center mb-3">
@@ -672,12 +672,23 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
                   <p className="text-sm font-bold text-dark-brown mt-1">{card.name}</p>
                   {card.suit && <p className="text-xs text-gray-500">{card.suit}</p>}
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed italic">
-                  {card.meaning || card.celtic_meaning || 'A message for you today'}
-                </p>
               </div>
             ))}
           </div>
+
+          {/* Overall Interpretation */}
+          <div className="bg-white rounded-lg p-6 border-2 border-purple-300">
+            <h3 className="font-serif font-bold text-lg text-purple-900 mb-3">Today's Celtic Interpretation</h3>
+            <div className="space-y-3 text-gray-700 leading-relaxed">
+              <p>
+                <span className="font-semibold text-purple-800">Your journey through the day:</span> {dailyCards[0]?.celtic_meaning || dailyCards[0]?.meaning} This influence from your past shapes the energy you carry into this moment.
+              </p>
+              <p>
+                <span className="font-semibold text-purple-800">Present moment guidance:</span> {dailyCards[1]?.celtic_meaning || dailyCards[1]?.meaning} As you move forward, {dailyCards[2]?.celtic_meaning || dailyCards[2]?.meaning} Trust in the wisdom of the Celtic seasons and let these energies guide your path today.
+              </p>
+            </div>
+          </div>
+
           <p className="text-xs text-gray-500 mt-4 text-center">
             Celtic Seasonal Tarot from Sídhe • Cards refresh daily
           </p>
