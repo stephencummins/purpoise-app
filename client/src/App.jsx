@@ -590,8 +590,11 @@ function CalendarWidget() {
       // Get the current session to retrieve the provider token
       const { data: { session } } = await supabase.auth.getSession();
 
+      console.log('Session provider_token:', session?.provider_token ? 'exists' : 'missing');
+      console.log('Session provider_refresh_token:', session?.provider_refresh_token ? 'exists' : 'missing');
+
       if (!session?.provider_token) {
-        console.log('No Google provider token found');
+        console.log('No Google provider token found - please sign out and sign in again');
         setLoading(false);
         return;
       }
