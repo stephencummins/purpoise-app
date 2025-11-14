@@ -96,7 +96,9 @@ function App() {
         provider: 'google',
         options: {
           redirectTo: window.location.origin,
-          scopes: 'https://www.googleapis.com/auth/calendar.readonly'
+          // Calendar scope commented out - requires Google verification
+          // Uncomment after adding test users or completing verification:
+          // scopes: 'https://www.googleapis.com/auth/calendar.readonly'
         }
       });
       if (error) throw error;
