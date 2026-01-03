@@ -20,6 +20,8 @@ import {
   Clock,
   Repeat,
   Sparkles,
+  Newspaper,
+  ExternalLink,
 } from 'lucide-react';
 import { getDailyCards } from './tarotData';
 
@@ -337,6 +339,17 @@ function App() {
                   <CalendarIcon className="w-5 h-5 inline-block mr-1" />
                   Calendar
                 </button>
+                <button
+                  onClick={() => setView('news')}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    view === 'news'
+                      ? 'bg-vintage-orange text-white'
+                      : 'text-dark-brown hover:bg-gray-100'
+                  }`}
+                >
+                  <Newspaper className="w-5 h-5 inline-block mr-1" />
+                  News
+                </button>
               </nav>
 
               {user ? (
@@ -383,7 +396,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="w-full px-6 py-8">
         {view === 'dashboard' && (
           <DashboardView
             goals={goals}
@@ -418,6 +431,8 @@ function App() {
             setCurrentDate={setCurrentDate}
           />
         )}
+
+        {view === 'news' && <NewsView />}
       </main>
 
       {/* New Goal Modal */}
@@ -498,79 +513,72 @@ function WeatherWidget() {
   const daysToShow = isFriday ? [0, 1, 2] : [0];
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-orange-50 rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
-      <div className="space-y-4">
-        {daysToShow.map((dayIndex) => {
-          const tempMax = Math.round(daily.temperature_2m_max[dayIndex]);
-          const tempMin = Math.round(daily.temperature_2m_min[dayIndex]);
-          const rain = daily.precipitation_sum[dayIndex];
-          const sunshine = getSunshinePercent(daily.sunshine_duration[dayIndex]);
-          const dayName = getDayName(daily.time[dayIndex], dayIndex);
+    <div className="space-y-3">
+      {daysToShow.map((dayIndex) => {
+        const tempMax = Math.round(daily.temperature_2m_max[dayIndex]);
+        const tempMin = Math.round(daily.temperature_2m_min[dayIndex]);
+        const rain = daily.precipitation_sum[dayIndex];
+        const sunshine = getSunshinePercent(daily.sunshine_duration[dayIndex]);
+        const dayName = getDayName(daily.time[dayIndex], dayIndex);
 
-          return (
-            <div key={dayIndex}>
-              {daysToShow.length > 1 && (
-                <h3 className="text-lg font-semibold text-dark-brown mb-2">{dayName}</h3>
-              )}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {/* Temperature */}
+        return (
+          <div key={dayIndex} className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-gold-500/30">
+            {daysToShow.length > 1 && (
+              <h3 className="text-sm font-semibold text-white mb-2">{dayName}</h3>
+            )}
+            <div className="space-y-2">
+              {/* Temperature */}
+              <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className="p-2 bg-white rounded-lg">
-                    <Sun className="w-6 h-6 text-orange-500" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-dark-brown">{tempMax}°C</div>
-                    <div className="text-sm text-gray-600">High ({tempMin}°C low)</div>
-                  </div>
+                  <Sun className="w-4 h-4 text-gold-300" />
+                  <span className="text-xs text-gold-200">Temp</span>
                 </div>
-
-                {/* Sunshine */}
-                <div className="flex items-center space-x-2">
-                  <div className="p-2 bg-white rounded-lg">
-                    {sunshine > 50 ? (
-                      <Sun className="w-6 h-6 text-yellow-500" />
-                    ) : (
-                      <Cloud className="w-6 h-6 text-gray-500" />
-                    )}
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-dark-brown">{sunshine}%</div>
-                    <div className="text-sm text-gray-600">Sunshine</div>
-                  </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-white">{tempMax}°C</div>
+                  <div className="text-xs text-gold-200">Low {tempMin}°C</div>
                 </div>
-
-                {/* Rain */}
-                <div className="flex items-center space-x-2">
-                  <div className="p-2 bg-white rounded-lg">
-                    <CloudRain className="w-6 h-6 text-blue-500" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-dark-brown">{rain.toFixed(1)}mm</div>
-                    <div className="text-sm text-gray-600">Rain</div>
-                  </div>
-                </div>
-
-                {/* Time of Day (only for today) */}
-                {dayIndex === 0 && (
-                  <div className="flex items-center space-x-2">
-                    <div className="p-2 bg-white rounded-lg">
-                      <Clock className="w-6 h-6 text-purple-500" />
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-dark-brown">
-                        {today.getHours() < 12 ? 'Morning' : today.getHours() < 18 ? 'Afternoon' : 'Evening'}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {today.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
+
+              {/* Sunshine */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  {sunshine > 50 ? (
+                    <Sun className="w-4 h-4 text-gold-300" />
+                  ) : (
+                    <Cloud className="w-4 h-4 text-gold-300" />
+                  )}
+                  <span className="text-xs text-gold-200">Sun</span>
+                </div>
+                <div className="text-lg font-bold text-white">{sunshine}%</div>
+              </div>
+
+              {/* Rain */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <CloudRain className="w-4 h-4 text-gold-300" />
+                  <span className="text-xs text-gold-200">Rain</span>
+                </div>
+                <div className="text-lg font-bold text-white">{rain.toFixed(1)}mm</div>
+              </div>
+
+              {/* Time (only for today) */}
+              {dayIndex === 0 && (
+                <div className="flex items-center justify-between pt-2 border-t border-turquoise-600">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-gold-300" />
+                    <span className="text-xs text-gold-200">
+                      {today.getHours() < 12 ? 'Morning' : today.getHours() < 18 ? 'Afternoon' : 'Evening'}
+                    </span>
+                  </div>
+                  <div className="text-sm font-semibold text-white">
+                    {today.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              )}
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -649,22 +657,22 @@ function CalendarWidget() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
-      <h2 className="text-xl font-serif font-bold mb-3 flex items-center text-dark-brown">
-        <CalendarIcon className="w-5 h-5 mr-2 text-green-600" />
-        Today's Calendar
-      </h2>
+    <div>
+      <h3 className="text-sm font-semibold text-white mb-3 flex items-center">
+        <CalendarIcon className="w-4 h-4 mr-2 text-gold-300" />
+        Events
+      </h3>
       <div className="space-y-2">
         {events.map((event, index) => (
-          <div key={index} className="bg-white rounded-lg p-3 border-l-4 border-green-500">
+          <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border-l-2 border-gold-500">
             <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <h3 className="font-semibold text-dark-brown">{event.summary}</h3>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-white text-sm truncate">{event.summary}</h4>
                 {event.location && (
-                  <p className="text-sm text-gray-600 mt-1">{event.location}</p>
+                  <p className="text-xs text-gold-200 mt-1 truncate">{event.location}</p>
                 )}
               </div>
-              <div className="text-sm text-gray-600 ml-4 whitespace-nowrap">
+              <div className="text-xs text-gold-200 ml-2 whitespace-nowrap">
                 {formatTime(event.start?.dateTime || event.start?.date)}
               </div>
             </div>
@@ -675,10 +683,229 @@ function CalendarWidget() {
   );
 }
 
+// Newspaper Carousel Component
+function NewspaperCarousel() {
+  const [newspapers, setNewspapers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchNewspapers = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/newspapers`);
+        // Filter to only show available newspapers
+        const available = (response.data.newspapers || []).filter(n => n.available && n.pdfLink);
+        setNewspapers(available);
+        setLoading(false);
+      } catch (error) {
+        console.error('Newspaper fetch error:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchNewspapers();
+  }, []);
+
+  const nextNewspaper = () => {
+    setCurrentIndex((prev) => (prev + 1) % newspapers.length);
+  };
+
+  const prevNewspaper = () => {
+    setCurrentIndex((prev) => (prev - 1 + newspapers.length) % newspapers.length);
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-gradient-to-br from-chocolate-800 to-chocolate-900 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin text-gold-500" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!newspapers.length) return null;
+
+  const current = newspapers[currentIndex];
+
+  return (
+    <div className="bg-gradient-to-br from-chocolate-800 to-chocolate-900 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+      <h2 className="text-xl font-serif font-bold mb-4 flex items-center text-white">
+        <Newspaper className="w-5 h-5 mr-2 text-gold-300" />
+        Today's Papers
+      </h2>
+
+      <div className="relative">
+        {/* Carousel navigation */}
+        <div className="flex items-center justify-between mb-4">
+          <button
+            onClick={prevNewspaper}
+            className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-gold-300 transition-colors"
+            disabled={newspapers.length <= 1}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-white">{current.name}</h3>
+            <p className="text-sm text-gold-200">{current.date}</p>
+          </div>
+
+          <button
+            onClick={nextNewspaper}
+            className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-gold-300 transition-colors"
+            disabled={newspapers.length <= 1}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Newspaper cover */}
+        <div className="bg-white/5 rounded-lg p-4 mb-4">
+          {current.coverImage ? (
+            <img
+              src={current.coverImage}
+              alt={`${current.name} cover`}
+              className="w-full h-auto rounded shadow-lg"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-64 bg-white/10 rounded">
+              <Newspaper className="w-16 h-16 text-gold-300/50" />
+            </div>
+          )}
+        </div>
+
+        {/* View link */}
+        {current.pdfLink && (
+          <a
+            href={current.pdfLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-gold-600 hover:bg-gold-700 text-white font-semibold rounded-lg transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            View Latest Issue
+          </a>
+        )}
+
+        {/* Carousel dots */}
+        {newspapers.length > 1 && (
+          <div className="flex justify-center gap-2 mt-4">
+            {newspapers.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === currentIndex ? 'bg-gold-500' : 'bg-white/30'
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// News View Component
+function NewsView() {
+  const [newspapers, setNewspapers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNewspapers = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/newspapers`);
+        const available = (response.data.newspapers || []).filter(n => n.available && n.pdfLink);
+        setNewspapers(available);
+        setLoading(false);
+      } catch (error) {
+        console.error('Newspaper fetch error:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchNewspapers();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin text-gold-500" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      <div className="max-w-7xl mx-auto px-6 mb-8">
+        <h1 className="text-4xl font-serif font-bold text-chocolate-900 mb-2">Today's News</h1>
+        <p className="text-chocolate-600">Click on any cover to read the full edition • Scroll to browse →</p>
+      </div>
+
+      {/* Horizontal Scrolling Carousel */}
+      <div className="w-full overflow-x-auto scrollbar-hide">
+        <div className="flex gap-8 px-6 pb-8 min-w-max">
+          {newspapers.map((paper, index) => (
+            <div
+              key={index}
+              className="flex-shrink-0 w-[600px]"
+            >
+              {/* Clickable Cover Image - Large */}
+              <a
+                href={paper.pdfLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-gradient-to-br from-chocolate-800 to-chocolate-900 rounded-lg shadow-2xl border-2 border-gold-500 overflow-hidden cursor-pointer hover:shadow-3xl hover:border-gold-400 transition-all"
+              >
+                <div className="relative bg-chocolate-700 h-[800px] flex items-center justify-center p-6">
+                  {paper.coverImage ? (
+                    <img
+                      src={paper.coverImage}
+                      alt={`${paper.name} cover`}
+                      className="w-full h-full object-contain hover:scale-[1.02] transition-transform"
+                    />
+                  ) : (
+                    <Newspaper className="w-32 h-32 text-gold-300/30" />
+                  )}
+                </div>
+
+                {/* Info Bar */}
+                <div className="p-6 bg-gradient-to-r from-chocolate-900 to-chocolate-800">
+                  <h3 className="text-2xl font-serif font-bold text-white mb-2">
+                    {paper.name}
+                  </h3>
+                  <p className="text-gold-200 flex items-center gap-2">
+                    <CalendarIcon className="w-4 h-4" />
+                    {paper.date}
+                  </p>
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="max-w-7xl mx-auto px-6 mt-4">
+        <p className="text-sm text-chocolate-400 text-center flex items-center justify-center gap-2">
+          <ChevronLeft className="w-4 h-4" />
+          Scroll horizontally to browse all newspapers
+          <ChevronRight className="w-4 h-4" />
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // Dashboard View Component
 function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats }) {
   const [dailyCards, setDailyCards] = useState([]);
   const [cardsLoading, setCardsLoading] = useState(true);
+  const [weatherExpanded, setWeatherExpanded] = useState(false);
+  const [showTarot, setShowTarot] = useState(true);
 
   useEffect(() => {
     const loadCards = async () => {
@@ -742,234 +969,331 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
   const positions = ['Past', 'Present', 'Future'];
 
   return (
-    <div className="space-y-8">
-      {/* Weather Widget */}
-      <WeatherWidget />
-
-      {/* Calendar Widget */}
-      <CalendarWidget />
-
-      {/* Daily Tarot Widget */}
-      {!cardsLoading && dailyCards.length > 0 && (
-        <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
-          <h2 className="text-2xl font-serif font-bold mb-4 flex items-center text-dark-brown">
-            <Sparkles className="w-6 h-6 mr-2 text-purple-600" />
-            Daily Tarot Guidance
+    <div className="flex gap-6">
+      {/* Left Sidebar - Weather & Calendar */}
+      <div className="w-80 flex-shrink-0">
+        <div className="bg-gradient-to-br from-turquoise-700 to-turquoise-900 rounded-lg shadow-lg border-2 border-gold-500 p-6 sticky top-4">
+          <h2 className="text-xl font-serif font-bold mb-4 flex items-center text-white">
+            <Sun className="w-5 h-5 mr-2 text-gold-300" />
+            Today
           </h2>
-          <p className="text-sm text-gray-600 mb-4">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {dailyCards.map((card, index) => (
-              <div key={index} className="bg-white rounded-lg p-4 border-2 border-purple-200 hover:border-purple-400 transition-colors">
-                <div className="text-center mb-3">
-                  {card.image_url ? (
-                    <img
-                      src={card.image_url}
-                      alt={card.name}
-                      className="w-full h-48 object-contain mb-2 rounded"
-                    />
-                  ) : (
-                    <div className="text-5xl mb-2">🎴</div>
-                  )}
-                  <h3 className="font-semibold text-purple-900">{positions[index]}</h3>
-                  <p className="text-sm font-bold text-dark-brown mt-1">{card.name}</p>
-                  {card.suit && <p className="text-xs text-gray-500">{card.suit}</p>}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Overall Interpretation */}
-          <div className="bg-white rounded-lg p-6 border-2 border-purple-300">
-            <h3 className="font-serif font-bold text-lg text-purple-900 mb-3">Today's Celtic Interpretation</h3>
-            <div className="space-y-3 text-gray-700 leading-relaxed">
-              <p>
-                <span className="font-semibold text-purple-800">Your journey through the day:</span> {dailyCards[0]?.celtic_meaning || dailyCards[0]?.meaning} This influence from your past shapes the energy you carry into this moment.
-              </p>
-              <p>
-                <span className="font-semibold text-purple-800">Present moment guidance:</span> {dailyCards[1]?.celtic_meaning || dailyCards[1]?.meaning} As you move forward, {dailyCards[2]?.celtic_meaning || dailyCards[2]?.meaning} Trust in the wisdom of the Celtic seasons and let these energies guide your path today.
-              </p>
-            </div>
-          </div>
-
-          <p className="text-xs text-gray-500 mt-4 text-center">
-            Celtic Seasonal Tarot from Sídhe • Cards refresh daily
-          </p>
-        </div>
-      )}
-
-      {/* Recurring Tasks Widget */}
-      {recurringGoal && (
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-serif font-bold flex items-center">
-              <Repeat className="w-6 h-6 mr-2 text-vintage-orange" />
-              Recurring Tasks
-            </h2>
-            <button
-              onClick={() => onSelectGoal(recurringGoal)}
-              className="text-sm px-3 py-1 bg-vintage-orange text-white rounded-lg hover:bg-opacity-90 transition-colors"
-            >
-              Manage
-            </button>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Daily Tasks */}
-            <div>
-              <h3 className="font-semibold text-lg mb-3 flex items-center">
-                <Sun className="w-5 h-5 mr-2 text-orange-500" />
-                Daily
-              </h3>
-              <div className="space-y-2">
-                {dailyTasks.map((task, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center space-x-3 p-2 bg-white rounded-lg"
-                  >
-                    {task.completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    ) : (
-                      <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                    )}
-                    <span className={task.completed ? 'line-through text-gray-400' : ''}>
-                      {task.text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Weekly Tasks */}
-            <div>
-              <h3 className="font-semibold text-lg mb-3 flex items-center">
-                <CalendarIcon className="w-5 h-5 mr-2 text-blue-500" />
-                Weekly
-              </h3>
-              <div className="space-y-2">
-                {weeklyTasks.map((task, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center space-x-3 p-2 bg-white rounded-lg"
-                  >
-                    {task.completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    ) : (
-                      <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                    )}
-                    <span className={task.completed ? 'line-through text-gray-400' : ''}>
-                      {task.text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <WeatherWidget />
+          <div className="mt-6 pt-6 border-t border-turquoise-600">
+            <CalendarWidget />
           </div>
         </div>
-      )}
-
-      {/* Weekly Digest */}
-      <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-6">
-        <h2 className="text-2xl font-serif font-bold mb-4">
-          {digest.type === 'focus' ? '🎯 Your Focus for the Week' : '⭐ Weekly Review'}
-        </h2>
-        {digest.tasks.length > 0 ? (
-          <ul className="space-y-2">
-            {digest.tasks.map((task, idx) => (
-              <li key={idx} className="flex items-start space-x-2">
-                <span className="text-vintage-orange font-bold">•</span>
-                <button
-                  onClick={() => onSelectGoal(task.goal)}
-                  className="text-left hover:text-vintage-orange transition-colors"
-                >
-                  <span className="font-medium">{task.text}</span>
-                  <span className="text-sm text-gray-600 ml-2">({task.goalTitle})</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-600">
-            {digest.type === 'focus'
-              ? 'No tasks due this week. Time to plan ahead!'
-              : 'No tasks completed this week yet. Keep going!'}
-          </p>
-        )}
       </div>
 
-      {/* Goals Grid */}
-      <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-serif font-bold">Your Goals</h2>
-          <button
-            onClick={onNewGoal}
-            className="flex items-center space-x-2 bg-vintage-orange text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors shadow-md font-medium"
-          >
-            <Plus className="w-5 h-5" />
-            <span>New Goal</span>
-          </button>
-        </div>
-
-        {goals.length === 0 ? (
-          <div className="text-center py-16">
-            <Target className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-serif font-bold mb-2">No goals yet</h3>
-            <p className="text-gray-600 mb-6">
-              Start your journey by creating your first goal with Purpoise
-            </p>
+      {/* Main Content Area */}
+      <div className="flex-1 space-y-6">
+        {/* Goals Section - Front and Center */}
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-serif font-bold text-chocolate-900">Your Goals</h2>
             <button
               onClick={onNewGoal}
-              className="inline-flex items-center space-x-2 bg-vintage-orange text-white px-8 py-4 rounded-lg hover:bg-orange-600 transition-colors shadow-lg font-medium text-lg"
+              className="flex items-center space-x-2 bg-gold-600 text-white px-6 py-3 rounded-lg hover:bg-gold-700 transition-colors shadow-md font-medium"
             >
-              <Plus className="w-6 h-6" />
-              <span>Add Your First Goal</span>
+              <Plus className="w-5 h-5" />
+              <span>New Goal</span>
             </button>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {goals.map(goal => {
-              const progress = calculateProgress(goal);
-              const stats = getTaskStats(goal);
 
-              return (
-                <div
-                  key={goal.id}
-                  onClick={() => onSelectGoal(goal)}
-                  className="bg-white rounded-lg shadow-md border-2 border-gray-200 p-6 cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-serif font-bold flex-1">
-                      {goal.title}
-                    </h3>
-                    <div className={`w-4 h-4 rounded-full ${RAG_COLORS[goal.rag_status || 'green']}`} />
+          {goals.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-lg shadow-md border-2 border-chocolate-200">
+              <Target className="w-16 h-16 text-chocolate-300 mx-auto mb-4" />
+              <h3 className="text-2xl font-serif font-bold mb-2 text-chocolate-900">No goals yet</h3>
+              <p className="text-chocolate-600 mb-6">
+                Start your journey by creating your first goal with Purpoise
+              </p>
+              <button
+                onClick={onNewGoal}
+                className="inline-flex items-center space-x-2 bg-gold-600 text-white px-8 py-4 rounded-lg hover:bg-gold-700 transition-colors shadow-lg font-medium text-lg"
+              >
+                <Plus className="w-6 h-6" />
+                <span>Add Your First Goal</span>
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {goals.map(goal => {
+                const progress = calculateProgress(goal);
+                const stats = getTaskStats(goal);
+
+                return (
+                  <div
+                    key={goal.id}
+                    onClick={() => onSelectGoal(goal)}
+                    className="bg-white rounded-lg shadow-md border-2 border-chocolate-200 p-6 cursor-pointer hover:shadow-xl hover:border-turquoise-500 hover:-translate-y-1 transition-all duration-200"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-xl font-serif font-bold flex-1 text-chocolate-900">
+                        {goal.title}
+                      </h3>
+                      <div className={`w-4 h-4 rounded-full ${RAG_COLORS[goal.rag_status || 'green']}`} />
+                    </div>
+
+                    <p className="text-chocolate-600 text-sm mb-4 line-clamp-2">
+                      {goal.description}
+                    </p>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-chocolate-600">Progress</span>
+                        <span className="font-bold text-turquoise-700">{progress}%</span>
+                      </div>
+                      <div className="w-full bg-chocolate-100 rounded-full h-2">
+                        <div
+                          className="bg-gradient-to-r from-turquoise-500 to-turquoise-600 rounded-full h-2 transition-all duration-300"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      <div className="text-sm text-chocolate-600">
+                        {stats.completed} of {stats.total} tasks completed
+                      </div>
+                    </div>
                   </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {goal.description}
-                  </p>
+        {/* Recurring Tasks Widget */}
+        {goals.find(g => g.title.includes('Recurring Tasks')) && (
+          <RecurringTasksWidget
+            goals={goals}
+            onSelectGoal={onSelectGoal}
+          />
+        )}
 
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Progress</span>
-                      <span className="font-bold text-vintage-orange">{progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-vintage-orange rounded-full h-2 transition-all duration-300"
-                        style={{ width: `${progress}%` }}
+        {/* Weekly Digest */}
+        <WeeklyDigestWidget
+          goals={goals}
+          onSelectGoal={onSelectGoal}
+        />
+      </div>
+
+      {/* Tarot Sidebar */}
+      {!cardsLoading && dailyCards.length > 0 && showTarot && (
+        <div className="w-96 flex-shrink-0">
+          <div className="bg-gradient-to-br from-chocolate-700 to-chocolate-900 rounded-lg shadow-lg border-2 border-gold-500 p-6 sticky top-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-serif font-bold flex items-center text-white">
+                <Sparkles className="w-5 h-5 mr-2 text-gold-300" />
+                Daily Tarot
+              </h2>
+              <button
+                onClick={() => setShowTarot(false)}
+                className="p-1 hover:bg-white/10 rounded transition-colors"
+              >
+                <X className="w-5 h-5 text-gold-300" />
+              </button>
+            </div>
+            <p className="text-xs text-gold-200 mb-4">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+            </p>
+            <div className="space-y-3 mb-4">
+              {dailyCards.map((card, index) => (
+                <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-gold-500/30">
+                  <div className="flex gap-3 mb-2">
+                    {card.image_url ? (
+                      <img
+                        src={card.image_url}
+                        alt={card.name}
+                        className="w-16 h-24 object-contain rounded flex-shrink-0"
                       />
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {stats.completed} of {stats.total} tasks completed
+                    ) : (
+                      <div className="text-3xl">🎴</div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-gold-300 mb-1">{positions[index]}</p>
+                      <p className="text-sm font-bold text-white">{card.name}</p>
+                      {card.suit && <p className="text-xs text-gold-200">{card.suit}</p>}
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {/* Compact Interpretation */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-gold-500/30">
+              <h3 className="font-serif font-semibold text-sm text-gold-300 mb-2">Celtic Interpretation</h3>
+              <p className="text-xs text-white/90 leading-relaxed line-clamp-2">
+                {dailyCards[0]?.celtic_meaning || dailyCards[0]?.meaning}
+              </p>
+              <a
+                href={`https://sidhe.ie/tarot/${dailyCards[0]?.id || ''}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-2 text-xs text-gold-300 hover:text-gold-200 underline"
+              >
+                View Detailed Interpretation →
+              </a>
+            </div>
+
+            <p className="text-xs text-gold-200/70 mt-3 text-center">
+              Celtic Seasonal Tarot from Sídhe
+            </p>
           </div>
-        )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Recurring Tasks Widget Component
+function RecurringTasksWidget({ goals, onSelectGoal }) {
+  const recurringGoal = goals.find(g => g.title.includes('Recurring Tasks'));
+  if (!recurringGoal) return null;
+
+  const dailyTasks = recurringGoal?.stages?.find(s => s.name === 'Daily Tasks')?.tasks || [];
+  const weeklyTasks = recurringGoal?.stages?.find(s => s.name === 'Weekly Tasks')?.tasks || [];
+
+  return (
+    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-serif font-bold flex items-center">
+          <Repeat className="w-6 h-6 mr-2 text-vintage-orange" />
+          Recurring Tasks
+        </h2>
+        <button
+          onClick={() => onSelectGoal(recurringGoal)}
+          className="text-sm px-3 py-1 bg-vintage-orange text-white rounded-lg hover:bg-opacity-90 transition-colors"
+        >
+          Manage
+        </button>
       </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Daily Tasks */}
+        <div>
+          <h3 className="font-semibold text-lg mb-3 flex items-center">
+            <Sun className="w-5 h-5 mr-2 text-orange-500" />
+            Daily
+          </h3>
+          <div className="space-y-2">
+            {dailyTasks.map((task, idx) => (
+              <div
+                key={idx}
+                className="flex items-center space-x-3 p-2 bg-white rounded-lg"
+              >
+                {task.completed ? (
+                  <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                ) : (
+                  <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                )}
+                <span className={task.completed ? 'line-through text-gray-400' : ''}>
+                  {task.text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Weekly Tasks */}
+        <div>
+          <h3 className="font-semibold text-lg mb-3 flex items-center">
+            <CalendarIcon className="w-5 h-5 mr-2 text-blue-500" />
+            Weekly
+          </h3>
+          <div className="space-y-2">
+            {weeklyTasks.map((task, idx) => (
+              <div
+                key={idx}
+                className="flex items-center space-x-3 p-2 bg-white rounded-lg"
+              >
+                {task.completed ? (
+                  <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                ) : (
+                  <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                )}
+                <span className={task.completed ? 'line-through text-gray-400' : ''}>
+                  {task.text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Weekly Digest Widget Component
+function WeeklyDigestWidget({ goals, onSelectGoal }) {
+  const getWeeklyDigest = () => {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const isStartOfWeek = dayOfWeek >= 0 && dayOfWeek <= 2;
+
+    const allTasks = goals.flatMap(g =>
+      g.stages?.flatMap(s => s.tasks.map(t => ({ ...t, goalTitle: g.title, goal: g }))) || []
+    );
+
+    if (isStartOfWeek) {
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - dayOfWeek);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 7);
+
+      const upcomingTasks = allTasks.filter(t => {
+        if (!t.due_date) return false;
+        const dueDate = new Date(t.due_date);
+        return dueDate >= weekStart && dueDate <= weekEnd;
+      });
+
+      return {
+        type: 'focus',
+        tasks: upcomingTasks.slice(0, 5),
+      };
+    } else {
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - dayOfWeek);
+      const weekEnd = new Date(today);
+
+      const completedTasks = allTasks.filter(t => {
+        if (!t.completed || !t.updated_at) return false;
+        const updatedDate = new Date(t.updated_at);
+        return updatedDate >= weekStart && updatedDate <= weekEnd;
+      });
+
+      return {
+        type: 'review',
+        tasks: completedTasks.slice(0, 5),
+      };
+    }
+  };
+
+  const digest = getWeeklyDigest();
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-6">
+      <h2 className="text-2xl font-serif font-bold mb-4">
+        {digest.type === 'focus' ? '🎯 Your Focus for the Week' : '⭐ Weekly Review'}
+      </h2>
+      {digest.tasks.length > 0 ? (
+        <ul className="space-y-2">
+          {digest.tasks.map((task, idx) => (
+            <li key={idx} className="flex items-start space-x-2">
+              <span className="text-vintage-orange font-bold">•</span>
+              <button
+                onClick={() => onSelectGoal(task.goal)}
+                className="text-left hover:text-vintage-orange transition-colors"
+              >
+                <span className="font-medium">{task.text}</span>
+                <span className="text-sm text-gray-600 ml-2">({task.goalTitle})</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-600">
+          {digest.type === 'focus'
+            ? 'No tasks due this week. Time to plan ahead!'
+            : 'No tasks completed this week yet. Keep going!'}
+        </p>
+      )}
     </div>
   );
 }
@@ -1210,6 +1534,7 @@ function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useState(null)[0];
 
   useEffect(() => {
     // Initial greeting
@@ -1224,6 +1549,13 @@ function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
       },
     ]);
   }, [goals]);
+
+  // Auto-scroll to bottom when messages change or loading state changes
+  useEffect(() => {
+    if (messagesEndRef) {
+      messagesEndRef.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, loading]);
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -1431,22 +1763,40 @@ function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
 
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+          {messages.map((msg, idx) => {
+            // Try to parse as JSON for better formatting
+            let isJSON = false;
+            let parsedContent = null;
+            try {
+              parsedContent = JSON.parse(msg.content);
+              isJSON = true;
+            } catch (e) {
+              // Not JSON, display as regular text
+            }
+
+            return (
               <div
-                className={`max-w-[80%] rounded-lg p-4 ${
-                  msg.role === 'user'
-                    ? 'bg-vintage-orange text-white'
-                    : 'bg-gray-100 text-dark-brown'
-                }`}
+                key={idx}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                {msg.content}
+                <div
+                  className={`max-w-[80%] rounded-lg p-4 ${
+                    msg.role === 'user'
+                      ? 'bg-vintage-orange text-white'
+                      : 'bg-gray-100 text-dark-brown'
+                  }`}
+                >
+                  {isJSON ? (
+                    <pre className="whitespace-pre-wrap font-mono text-xs overflow-x-auto">
+                      {JSON.stringify(parsedContent, null, 2)}
+                    </pre>
+                  ) : (
+                    <div className="whitespace-pre-wrap">{msg.content}</div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           {loading && (
             <div className="flex justify-start">
               <div className="bg-gray-100 rounded-lg p-4">
@@ -1454,6 +1804,8 @@ function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
               </div>
             </div>
           )}
+          {/* Scroll anchor */}
+          <div ref={(el) => { if (el) el.scrollIntoView({ behavior: 'smooth' }); }} />
         </div>
 
         {/* Input */}

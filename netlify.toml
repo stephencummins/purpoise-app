@@ -1,7 +1,8 @@
 [build]
-  command = "npm install && cd client && npm install && npm run build"
-  publish = "client/dist"
-  functions = "netlify/functions"
+  command = "npm install && npm run build"
+  publish = "dist"
+  functions = "../netlify/functions"
+  base = "client"
 
 [[redirects]]
   from = "/api/*"
