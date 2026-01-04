@@ -1458,7 +1458,7 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
 
             {/* View Detailed Interpretation Link */}
             <a
-              href="https://sidhe.netlify.app/"
+              href="https://sidhe.netlify.app/daily"
               target="_blank"
               rel="noopener noreferrer"
               className="block mt-4 text-center text-sm text-gold-300 hover:text-gold-200 underline"
