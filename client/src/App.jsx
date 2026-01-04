@@ -899,6 +899,167 @@ function NewsView() {
   );
 }
 
+// Quick Tasks Component
+function QuickTasks() {
+  const [tasks, setTasks] = useState([]);
+  const [newTaskText, setNewTaskText] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchQuickTasks();
+  }, []);
+
+  const fetchQuickTasks = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('quick_tasks')
+        .select('*')
+        .order('order_index', { ascending: true })
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      setTasks(data || []);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching quick tasks:', error);
+      setLoading(false);
+    }
+  };
+
+  const addTask = async (e) => {
+    e.preventDefault();
+    if (!newTaskText.trim()) return;
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('quick_tasks')
+        .insert({
+          user_id: user.id,
+          text: newTaskText.trim(),
+          completed: false,
+          order_index: tasks.length,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      setTasks([...tasks, data]);
+      setNewTaskText('');
+    } catch (error) {
+      console.error('Error adding quick task:', error);
+    }
+  };
+
+  const toggleTask = async (task) => {
+    try {
+      const { error } = await supabase
+        .from('quick_tasks')
+        .update({ completed: !task.completed })
+        .eq('id', task.id);
+
+      if (error) throw error;
+      setTasks(tasks.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t));
+    } catch (error) {
+      console.error('Error toggling quick task:', error);
+    }
+  };
+
+  const deleteTask = async (taskId) => {
+    try {
+      const { error } = await supabase
+        .from('quick_tasks')
+        .delete()
+        .eq('id', taskId);
+
+      if (error) throw error;
+      setTasks(tasks.filter(t => t.id !== taskId));
+    } catch (error) {
+      console.error('Error deleting quick task:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-gradient-to-r from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-5 h-5 animate-spin text-gold-500" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gradient-to-r from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+      <h2 className="text-2xl font-serif font-bold mb-4 flex items-center text-chocolate-900">
+        <CheckCircle2 className="w-6 h-6 mr-2 text-gold-600" />
+        Quick Tasks
+      </h2>
+
+      {/* Add new task form */}
+      <form onSubmit={addTask} className="mb-4">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={newTaskText}
+            onChange={(e) => setNewTaskText(e.target.value)}
+            placeholder="Add a quick task..."
+            className="flex-1 px-4 py-2 border-2 border-gold-300 rounded-lg focus:outline-none focus:border-gold-500 text-chocolate-900"
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-gold-600 text-white rounded-lg hover:bg-gold-700 transition-colors font-medium"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+
+      {/* Task list */}
+      <div className="space-y-2">
+        {tasks.map(task => (
+          <div
+            key={task.id}
+            className="flex items-center gap-3 bg-white rounded-lg p-3 border border-gold-200 hover:border-gold-400 transition-colors group"
+          >
+            <button
+              onClick={() => toggleTask(task)}
+              className="flex-shrink-0"
+            >
+              {task.completed ? (
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+              ) : (
+                <Circle className="w-5 h-5 text-gray-400 hover:text-gold-600 transition-colors" />
+              )}
+            </button>
+            <span
+              className={`flex-1 ${
+                task.completed ? 'line-through text-gray-400' : 'text-chocolate-900'
+              }`}
+            >
+              {task.text}
+            </span>
+            <button
+              onClick={() => deleteTask(task.id)}
+              className="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {tasks.length === 0 && (
+        <p className="text-center text-chocolate-600 py-4">
+          No quick tasks yet. Add one above to get started!
+        </p>
+      )}
+    </div>
+  );
+}
+
 // Dashboard View Component
 function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats }) {
   const [dailyCards, setDailyCards] = useState([]);
@@ -985,6 +1146,9 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
 
       {/* Main Content Area */}
       <div className="flex-1 space-y-6">
+        {/* Quick Tasks - Top of Page */}
+        <QuickTasks />
+
         {/* Goals Section - Front and Center */}
         <div>
           <div className="flex items-center justify-between mb-6">
