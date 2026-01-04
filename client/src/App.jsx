@@ -851,13 +851,20 @@ function NewsView() {
     );
   }
 
-  // Filter articles by source
-  const filteredArticles = selectedSource === 'all'
-    ? articles
-    : articles.filter(a => a.source === selectedSource);
+  // Separate Trump articles from regular news
+  const regularArticles = articles.filter(a => !a.isTrump);
+  const trumpArticles = articles.filter(a => a.isTrump);
 
-  // Get unique sources
-  const sources = ['all', ...new Set(articles.map(a => a.source))];
+  // Filter articles by source (excluding Trump articles)
+  const filteredArticles = selectedSource === 'all'
+    ? regularArticles
+    : regularArticles.filter(a => a.source === selectedSource);
+
+  // Get unique sources (from regular articles only)
+  const sources = ['all', ...new Set(regularArticles.map(a => a.source))];
+
+  // Combine Trump articles from news feeds and trending
+  const allTrumpContent = [...trumpArticles, ...trumpDump];
 
   return (
     <div className="w-full">
@@ -965,7 +972,7 @@ function NewsView() {
         )}
 
         {/* Trump Dump Section */}
-        {trumpDump.length > 0 && (
+        {allTrumpContent.length > 0 && (
           <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
             <div className="mb-6">
               <div className="flex items-center justify-between">
@@ -977,14 +984,14 @@ function NewsView() {
                   onClick={() => setShowTrumpDump(!showTrumpDump)}
                   className="px-4 py-2 bg-chocolate-200 text-chocolate-900 rounded-lg hover:bg-chocolate-300 transition-colors font-medium"
                 >
-                  {showTrumpDump ? 'Hide' : `Show (${trumpDump.length})`}
+                  {showTrumpDump ? 'Hide' : `Show (${allTrumpContent.length})`}
                 </button>
               </div>
             </div>
 
             {showTrumpDump && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-60">
-                {trumpDump.map((item, index) => (
+                {allTrumpContent.map((item, index) => (
                   <a
                     key={index}
                     href={item.link}
@@ -1000,6 +1007,11 @@ function NewsView() {
                     <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">
                       {item.title}
                     </h3>
+                    {item.description && (
+                      <p className="text-xs text-gray-600 mt-2 line-clamp-2">
+                        {item.description}
+                      </p>
+                    )}
                   </a>
                 ))}
               </div>

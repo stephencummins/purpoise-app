@@ -83,6 +83,17 @@ exports.handler = async (event, context) => {
   try {
     const allArticles = [];
 
+    // Check if content is Trump-related
+    const isTrumpRelated = (text) => {
+      if (!text) return false;
+      const lowerText = text.toLowerCase();
+      const trumpKeywords = [
+        'trump', 'donald trump', 'potus', 'president trump',
+        'mar-a-lago', 'maga', 'make america great'
+      ];
+      return trumpKeywords.some(keyword => lowerText.includes(keyword));
+    };
+
     // Fetch all RSS feeds in parallel
     const feedPromises = RSS_FEEDS.map(async (feed) => {
       try {
@@ -95,11 +106,12 @@ exports.handler = async (event, context) => {
 
         const items = parseRSS(response.data);
 
-        // Add source information to each article
+        // Add source information to each article and check for Trump content
         return items.slice(0, 10).map(item => ({
           ...item,
           source: feed.name,
-          category: feed.category
+          category: feed.category,
+          isTrump: isTrumpRelated(item.title) || isTrumpRelated(item.description)
         }));
       } catch (error) {
         console.error(`Error fetching ${feed.name}:`, error.message);
