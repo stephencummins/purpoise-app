@@ -810,21 +810,27 @@ function NewspaperCarousel() {
 function NewsView() {
   const [articles, setArticles] = useState([]);
   const [newspapers, setNewspapers] = useState([]);
+  const [trending, setTrending] = useState([]);
+  const [trumpDump, setTrumpDump] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSource, setSelectedSource] = useState('all');
+  const [showTrumpDump, setShowTrumpDump] = useState(false);
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        // Fetch RSS feeds and newspapers in parallel
-        const [feedsResponse, papersResponse] = await Promise.all([
+        // Fetch RSS feeds, newspapers, and trending in parallel
+        const [feedsResponse, papersResponse, trendingResponse] = await Promise.all([
           axios.get(`${API_URL}/news-feeds`),
-          axios.get(`${API_URL}/newspapers`)
+          axios.get(`${API_URL}/newspapers`),
+          axios.get(`${API_URL}/trending`)
         ]);
 
         setArticles(feedsResponse.data.articles || []);
         const available = (papersResponse.data.newspapers || []).filter(n => n.available && n.pdfLink);
         setNewspapers(available);
+        setTrending(trendingResponse.data.trending || []);
+        setTrumpDump(trendingResponse.data.trumpDump || []);
         setLoading(false);
       } catch (error) {
         console.error('News fetch error:', error);
@@ -916,6 +922,90 @@ function NewsView() {
             </a>
           ))}
         </div>
+
+        {/* What's Trending Section */}
+        {trending.length > 0 && (
+          <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
+            <div className="mb-6">
+              <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">What's Trending</h2>
+              <p className="text-chocolate-600">Popular topics from Google, Reddit & YouTube</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {trending.map((item, index) => (
+                <a
+                  key={index}
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-br from-turquoise-50 to-gold-50 rounded-lg shadow-md border-2 border-turquoise-200 p-4 hover:shadow-xl hover:border-turquoise-500 hover:-translate-y-1 transition-all duration-200"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <span className={`text-xs font-semibold uppercase px-2 py-1 rounded ${
+                      item.source === 'Google Trends' ? 'bg-blue-100 text-blue-700' :
+                      item.source === 'Reddit' ? 'bg-orange-100 text-orange-700' :
+                      'bg-red-100 text-red-700'
+                    }`}>
+                      {item.source}
+                    </span>
+                    {item.traffic && (
+                      <span className="text-xs text-chocolate-400">{item.traffic}</span>
+                    )}
+                  </div>
+                  <h3 className="text-sm font-semibold text-chocolate-900 line-clamp-2">
+                    {item.title}
+                  </h3>
+                  {item.subreddit && (
+                    <p className="text-xs text-chocolate-600 mt-1">r/{item.subreddit}</p>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Trump Dump Section */}
+        {trumpDump.length > 0 && (
+          <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
+            <div className="mb-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">The Trump Dump</h2>
+                  <p className="text-chocolate-600">Trump-related content quarantined for your sanity</p>
+                </div>
+                <button
+                  onClick={() => setShowTrumpDump(!showTrumpDump)}
+                  className="px-4 py-2 bg-chocolate-200 text-chocolate-900 rounded-lg hover:bg-chocolate-300 transition-colors font-medium"
+                >
+                  {showTrumpDump ? 'Hide' : `Show (${trumpDump.length})`}
+                </button>
+              </div>
+            </div>
+
+            {showTrumpDump && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-60">
+                {trumpDump.map((item, index) => (
+                  <a
+                    key={index}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-100 rounded-lg shadow-md border-2 border-gray-300 p-4 hover:shadow-xl hover:border-gray-400 transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="text-xs font-semibold bg-gray-200 text-gray-700 uppercase px-2 py-1 rounded">
+                        {item.source}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">
+                      {item.title}
+                    </h3>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Today's Papers Section */}
         {newspapers.length > 0 && (
