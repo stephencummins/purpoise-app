@@ -808,28 +808,36 @@ function NewspaperCarousel() {
 
 // News View Component
 function NewsView() {
+  const [articles, setArticles] = useState([]);
   const [newspapers, setNewspapers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSource, setSelectedSource] = useState('all');
 
   useEffect(() => {
-    const fetchNewspapers = async () => {
+    const fetchNews = async () => {
       try {
-        const response = await axios.get(`${API_URL}/newspapers`);
-        const available = (response.data.newspapers || []).filter(n => n.available && n.pdfLink);
+        // Fetch RSS feeds and newspapers in parallel
+        const [feedsResponse, papersResponse] = await Promise.all([
+          axios.get(`${API_URL}/news-feeds`),
+          axios.get(`${API_URL}/newspapers`)
+        ]);
+
+        setArticles(feedsResponse.data.articles || []);
+        const available = (papersResponse.data.newspapers || []).filter(n => n.available && n.pdfLink);
         setNewspapers(available);
         setLoading(false);
       } catch (error) {
-        console.error('Newspaper fetch error:', error);
+        console.error('News fetch error:', error);
         setLoading(false);
       }
     };
 
-    fetchNewspapers();
+    fetchNews();
   }, []);
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-center h-64">
           <Loader2 className="w-8 h-8 animate-spin text-gold-500" />
         </div>
@@ -837,63 +845,135 @@ function NewsView() {
     );
   }
 
+  // Filter articles by source
+  const filteredArticles = selectedSource === 'all'
+    ? articles
+    : articles.filter(a => a.source === selectedSource);
+
+  // Get unique sources
+  const sources = ['all', ...new Set(articles.map(a => a.source))];
+
   return (
     <div className="w-full">
-      <div className="max-w-7xl mx-auto px-6 mb-8">
-        <h1 className="text-4xl font-serif font-bold text-chocolate-900 mb-2">Today's News</h1>
-        <p className="text-chocolate-600">Click on any cover to read the full edition • Scroll to browse →</p>
-      </div>
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-serif font-bold text-chocolate-900 mb-2">Latest News</h1>
+          <p className="text-chocolate-600">Real-time headlines from trusted sources</p>
+        </div>
 
-      {/* Horizontal Scrolling Carousel */}
-      <div className="w-full overflow-x-auto scrollbar-hide">
-        <div className="flex gap-8 px-6 pb-8 min-w-max">
-          {newspapers.map((paper, index) => (
-            <div
-              key={index}
-              className="flex-shrink-0 w-[600px]"
+        {/* Source Filter */}
+        <div className="mb-6 flex gap-2 flex-wrap">
+          {sources.map(source => (
+            <button
+              key={source}
+              onClick={() => setSelectedSource(source)}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedSource === source
+                  ? 'bg-gold-600 text-white'
+                  : 'bg-white text-chocolate-900 border-2 border-chocolate-200 hover:border-gold-400'
+              }`}
             >
-              {/* Clickable Cover Image - Large */}
-              <a
-                href={paper.pdfLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-gradient-to-br from-chocolate-800 to-chocolate-900 rounded-lg shadow-2xl border-2 border-gold-500 overflow-hidden cursor-pointer hover:shadow-3xl hover:border-gold-400 transition-all"
-              >
-                <div className="relative bg-chocolate-700 h-[800px] flex items-center justify-center p-6">
-                  {paper.coverImage ? (
-                    <img
-                      src={paper.coverImage}
-                      alt={`${paper.name} cover`}
-                      className="w-full h-full object-contain hover:scale-[1.02] transition-transform"
-                    />
-                  ) : (
-                    <Newspaper className="w-32 h-32 text-gold-300/30" />
-                  )}
-                </div>
-
-                {/* Info Bar */}
-                <div className="p-6 bg-gradient-to-r from-chocolate-900 to-chocolate-800">
-                  <h3 className="text-2xl font-serif font-bold text-white mb-2">
-                    {paper.name}
-                  </h3>
-                  <p className="text-gold-200 flex items-center gap-2">
-                    <CalendarIcon className="w-4 h-4" />
-                    {paper.date}
-                  </p>
-                </div>
-              </a>
-            </div>
+              {source === 'all' ? 'All Sources' : source}
+            </button>
           ))}
         </div>
-      </div>
 
-      {/* Scroll Indicator */}
-      <div className="max-w-7xl mx-auto px-6 mt-4">
-        <p className="text-sm text-chocolate-400 text-center flex items-center justify-center gap-2">
-          <ChevronLeft className="w-4 h-4" />
-          Scroll horizontally to browse all newspapers
-          <ChevronRight className="w-4 h-4" />
-        </p>
+        {/* News Headlines Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {filteredArticles.map((article, index) => (
+            <a
+              key={index}
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white rounded-lg shadow-md border-2 border-chocolate-200 p-6 hover:shadow-xl hover:border-turquoise-500 hover:-translate-y-1 transition-all duration-200"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <span className="text-xs font-semibold text-gold-600 uppercase">
+                  {article.source}
+                </span>
+                <span className="text-xs text-chocolate-400">
+                  {new Date(article.pubDate).toLocaleDateString('en-GB', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </span>
+              </div>
+              <h3 className="text-lg font-serif font-bold text-chocolate-900 mb-2 line-clamp-3">
+                {article.title}
+              </h3>
+              {article.description && (
+                <p className="text-sm text-chocolate-600 line-clamp-2">
+                  {article.description}
+                </p>
+              )}
+              <div className="mt-3 flex items-center text-turquoise-600 text-sm font-medium">
+                Read more →
+              </div>
+            </a>
+          ))}
+        </div>
+
+        {/* Today's Papers Section */}
+        {newspapers.length > 0 && (
+          <>
+            <div className="mb-6 pt-8 border-t-2 border-chocolate-200">
+              <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">Today's Papers</h2>
+              <p className="text-chocolate-600">Front page editions • Click to read full PDF</p>
+            </div>
+
+            {/* Newspaper Carousel */}
+            <div className="w-full overflow-x-auto scrollbar-hide mb-8">
+              <div className="flex gap-8 pb-8 min-w-max">
+                {newspapers.map((paper, index) => (
+                  <div
+                    key={index}
+                    className="flex-shrink-0 w-[600px]"
+                  >
+                    <a
+                      href={paper.pdfLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block bg-gradient-to-br from-chocolate-800 to-chocolate-900 rounded-lg shadow-2xl border-2 border-gold-500 overflow-hidden cursor-pointer hover:shadow-3xl hover:border-gold-400 transition-all"
+                    >
+                      <div className="relative bg-chocolate-700 h-[800px] flex items-center justify-center p-6">
+                        {paper.coverImage ? (
+                          <img
+                            src={paper.coverImage}
+                            alt={`${paper.name} cover`}
+                            className="w-full h-full object-contain hover:scale-[1.02] transition-transform"
+                          />
+                        ) : (
+                          <Newspaper className="w-32 h-32 text-gold-300/30" />
+                        )}
+                      </div>
+                      <div className="p-6 bg-gradient-to-r from-chocolate-900 to-chocolate-800">
+                        <h3 className="text-2xl font-serif font-bold text-white mb-2">
+                          {paper.name}
+                        </h3>
+                        <p className="text-gold-200 flex items-center gap-2">
+                          <CalendarIcon className="w-4 h-4" />
+                          {paper.date}
+                        </p>
+                      </div>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <p className="text-sm text-chocolate-400 text-center flex items-center justify-center gap-2">
+                <ChevronLeft className="w-4 h-4" />
+                Scroll horizontally to browse newspaper editions
+                <ChevronRight className="w-4 h-4" />
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
