@@ -809,7 +809,6 @@ function NewspaperCarousel() {
 // News View Component
 function NewsView() {
   const [articles, setArticles] = useState([]);
-  const [newspapers, setNewspapers] = useState([]);
   const [trending, setTrending] = useState([]);
   const [trumpDump, setTrumpDump] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -819,16 +818,13 @@ function NewsView() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        // Fetch RSS feeds, newspapers, and trending in parallel
-        const [feedsResponse, papersResponse, trendingResponse] = await Promise.all([
+        // Fetch RSS feeds and trending in parallel
+        const [feedsResponse, trendingResponse] = await Promise.all([
           axios.get(`${API_URL}/news-feeds`),
-          axios.get(`${API_URL}/newspapers`),
           axios.get(`${API_URL}/trending`)
         ]);
 
         setArticles(feedsResponse.data.articles || []);
-        const available = (papersResponse.data.newspapers || []).filter(n => n.available && n.pdfLink);
-        setNewspapers(available);
         setTrending(trendingResponse.data.trending || []);
         setTrumpDump(trendingResponse.data.trumpDump || []);
         setLoading(false);
@@ -1020,69 +1016,41 @@ function NewsView() {
         )}
 
         {/* Today's Papers Section */}
-        {newspapers.length > 0 && (
-          <>
-            <div className="mb-6 pt-8 border-t-2 border-chocolate-200">
-              <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">Today's Papers</h2>
-              <p className="text-chocolate-600">Front page editions • Click to read full PDF</p>
-            </div>
+        <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
+          <div className="mb-6">
+            <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">Today's Papers</h2>
+            <p className="text-chocolate-600">Browse latest newspaper editions</p>
+          </div>
 
-            {/* Newspaper Carousel */}
-            <div className="w-full overflow-x-auto scrollbar-hide mb-8">
-              <div className="flex gap-8 pb-8 min-w-max">
-                {newspapers.map((paper, index) => (
-                  <div
-                    key={index}
-                    className="flex-shrink-0 w-[600px]"
-                  >
-                    <a
-                      href={paper.pdfLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block bg-gradient-to-br from-chocolate-800 to-chocolate-900 rounded-lg shadow-2xl border-2 border-gold-500 overflow-hidden cursor-pointer hover:shadow-3xl hover:border-gold-400 transition-all"
-                    >
-                      <div className="relative bg-chocolate-700 h-[800px] flex items-center justify-center p-6">
-                        {paper.coverImage ? (
-                          <img
-                            src={paper.coverImage}
-                            alt={`${paper.name} cover`}
-                            className="w-full h-full object-contain hover:scale-[1.02] transition-transform"
-                          />
-                        ) : (
-                          <Newspaper className="w-32 h-32 text-gold-300/30" />
-                        )}
-                      </div>
-                      <div className="p-6 bg-gradient-to-r from-chocolate-900 to-chocolate-800">
-                        <h3 className="text-2xl font-serif font-bold text-white mb-2">
-                          {paper.name}
-                        </h3>
-                        <p className="text-gold-200 flex items-center gap-2">
-                          <CalendarIcon className="w-4 h-4" />
-                          {paper.date}
-                        </p>
-                      </div>
-                    </a>
-                  </div>
-                ))}
+          <a
+            href="https://oceanofpdf.com/magazines-newspapers/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-gradient-to-br from-chocolate-700 to-chocolate-900 rounded-lg shadow-xl border-2 border-gold-500 p-8 hover:shadow-2xl hover:border-gold-400 hover:-translate-y-1 transition-all duration-200"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Newspaper className="w-16 h-16 text-gold-300" />
+                <div>
+                  <h3 className="text-2xl font-serif font-bold text-white mb-2">
+                    View All Newspaper Editions
+                  </h3>
+                  <p className="text-gold-200">
+                    Guardian, NY Times, Washington Post, New Yorker & more
+                  </p>
+                </div>
               </div>
+              <ExternalLink className="w-8 h-8 text-gold-300" />
             </div>
-
-            <div className="mb-8">
-              <p className="text-sm text-chocolate-400 text-center flex items-center justify-center gap-2">
-                <ChevronLeft className="w-4 h-4" />
-                Scroll horizontally to browse newspaper editions
-                <ChevronRight className="w-4 h-4" />
-              </p>
-            </div>
-          </>
-        )}
+          </a>
+        </div>
       </div>
     </div>
   );
 }
 
-// Quick Tasks Component
-function QuickTasks() {
+// Quick Tasks Inner Component (used inside Focus section)
+function QuickTasksInner() {
   const [tasks, setTasks] = useState([]);
   const [newTaskText, setNewTaskText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -1165,21 +1133,14 @@ function QuickTasks() {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-r from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
-        <div className="flex items-center justify-center">
-          <Loader2 className="w-5 h-5 animate-spin text-gold-500" />
-        </div>
+      <div className="flex items-center justify-center py-4">
+        <Loader2 className="w-5 h-5 animate-spin text-gold-500" />
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-r from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
-      <h2 className="text-2xl font-serif font-bold mb-4 flex items-center text-chocolate-900">
-        <CheckCircle2 className="w-6 h-6 mr-2 text-gold-600" />
-        Quick Tasks
-      </h2>
-
+    <>
       {/* Add new task form */}
       <form onSubmit={addTask} className="mb-4">
         <div className="flex gap-2">
@@ -1238,7 +1199,7 @@ function QuickTasks() {
           No quick tasks yet. Add one above to get started!
         </p>
       )}
-    </div>
+    </>
   );
 }
 
@@ -1328,8 +1289,56 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
 
       {/* Main Content Area */}
       <div className="flex-1 space-y-6">
-        {/* Quick Tasks - Top of Page */}
-        <QuickTasks />
+        {/* Focus for the Week - Top of Page */}
+        <div className="bg-gradient-to-r from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+          <h2 className="text-2xl font-serif font-bold mb-6 flex items-center text-chocolate-900">
+            {digest.type === 'focus' ? '🎯 Your Focus for the Week' : '⭐ Weekly Review'}
+          </h2>
+
+          {/* Weekly Tasks */}
+          {digest.tasks.length > 0 ? (
+            <div className="mb-6">
+              <ul className="space-y-2">
+                {digest.tasks.map((task, idx) => (
+                  <li key={idx} className="flex items-start space-x-2">
+                    <span className="text-gold-600 font-bold">•</span>
+                    <button
+                      onClick={() => onSelectGoal(task.goal)}
+                      className="text-left hover:text-turquoise-600 transition-colors"
+                    >
+                      <span className="font-medium text-chocolate-900">{task.text}</span>
+                      <span className="text-sm text-chocolate-600 ml-2">({task.goalTitle})</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p className="text-chocolate-600 mb-6">
+              {digest.type === 'focus'
+                ? 'No tasks due this week. Time to plan ahead!'
+                : 'No tasks completed this week yet. Keep going!'}
+            </p>
+          )}
+
+          {/* Quick Tasks Section */}
+          <div className="pt-6 border-t-2 border-gold-300">
+            <h3 className="text-xl font-serif font-bold mb-4 flex items-center text-chocolate-900">
+              <CheckCircle2 className="w-5 h-5 mr-2 text-gold-600" />
+              Quick Tasks
+            </h3>
+
+            <QuickTasksInner />
+          </div>
+        </div>
+
+        {/* Recurring Tasks Widget */}
+        {goals.find(g => g.title.includes('Recurring Tasks')) && (
+          <RecurringTasksWidget
+            goals={goals}
+            onSelectGoal={onSelectGoal}
+          />
+        )}
 
         {/* Goals Section - Front and Center */}
         <div>
@@ -1403,20 +1412,6 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
             </div>
           )}
         </div>
-
-        {/* Recurring Tasks Widget */}
-        {goals.find(g => g.title.includes('Recurring Tasks')) && (
-          <RecurringTasksWidget
-            goals={goals}
-            onSelectGoal={onSelectGoal}
-          />
-        )}
-
-        {/* Weekly Digest */}
-        <WeeklyDigestWidget
-          goals={goals}
-          onSelectGoal={onSelectGoal}
-        />
       </div>
 
       {/* Tarot Sidebar */}
@@ -1555,84 +1550,6 @@ function RecurringTasksWidget({ goals, onSelectGoal }) {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-// Weekly Digest Widget Component
-function WeeklyDigestWidget({ goals, onSelectGoal }) {
-  const getWeeklyDigest = () => {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    const isStartOfWeek = dayOfWeek >= 0 && dayOfWeek <= 2;
-
-    const allTasks = goals.flatMap(g =>
-      g.stages?.flatMap(s => s.tasks.map(t => ({ ...t, goalTitle: g.title, goal: g }))) || []
-    );
-
-    if (isStartOfWeek) {
-      const weekStart = new Date(today);
-      weekStart.setDate(today.getDate() - dayOfWeek);
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 7);
-
-      const upcomingTasks = allTasks.filter(t => {
-        if (!t.due_date) return false;
-        const dueDate = new Date(t.due_date);
-        return dueDate >= weekStart && dueDate <= weekEnd;
-      });
-
-      return {
-        type: 'focus',
-        tasks: upcomingTasks.slice(0, 5),
-      };
-    } else {
-      const weekStart = new Date(today);
-      weekStart.setDate(today.getDate() - dayOfWeek);
-      const weekEnd = new Date(today);
-
-      const completedTasks = allTasks.filter(t => {
-        if (!t.completed || !t.updated_at) return false;
-        const updatedDate = new Date(t.updated_at);
-        return updatedDate >= weekStart && updatedDate <= weekEnd;
-      });
-
-      return {
-        type: 'review',
-        tasks: completedTasks.slice(0, 5),
-      };
-    }
-  };
-
-  const digest = getWeeklyDigest();
-
-  return (
-    <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-6">
-      <h2 className="text-2xl font-serif font-bold mb-4">
-        {digest.type === 'focus' ? '🎯 Your Focus for the Week' : '⭐ Weekly Review'}
-      </h2>
-      {digest.tasks.length > 0 ? (
-        <ul className="space-y-2">
-          {digest.tasks.map((task, idx) => (
-            <li key={idx} className="flex items-start space-x-2">
-              <span className="text-vintage-orange font-bold">•</span>
-              <button
-                onClick={() => onSelectGoal(task.goal)}
-                className="text-left hover:text-vintage-orange transition-colors"
-              >
-                <span className="font-medium">{task.text}</span>
-                <span className="text-sm text-gray-600 ml-2">({task.goalTitle})</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-gray-600">
-          {digest.type === 'focus'
-            ? 'No tasks due this week. Time to plan ahead!'
-            : 'No tasks completed this week yet. Keep going!'}
-        </p>
-      )}
     </div>
   );
 }
