@@ -1116,21 +1116,15 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
               ))}
             </div>
 
-            {/* Compact Interpretation */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-gold-500/30">
-              <h3 className="font-serif font-semibold text-sm text-gold-300 mb-2">Celtic Interpretation</h3>
-              <p className="text-xs text-white/90 leading-relaxed line-clamp-2">
-                {dailyCards[0]?.celtic_meaning || dailyCards[0]?.meaning}
-              </p>
-              <a
-                href={`https://sidhe.ie/tarot/${dailyCards[0]?.id || ''}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-2 text-xs text-gold-300 hover:text-gold-200 underline"
-              >
-                View Detailed Interpretation →
-              </a>
-            </div>
+            {/* View Detailed Interpretation Link */}
+            <a
+              href="https://sidhe.ie/tarot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-4 text-center text-sm text-gold-300 hover:text-gold-200 underline"
+            >
+              View Detailed Interpretations →
+            </a>
 
             <p className="text-xs text-gold-200/70 mt-3 text-center">
               Celtic Seasonal Tarot from Sídhe
