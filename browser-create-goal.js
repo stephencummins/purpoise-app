@@ -5,15 +5,30 @@
   try {
     console.log('Creating Leigh Council Election Campaign goals...\n');
 
-    // Get the Supabase client from the app
-    const { createClient } = supabaseJs;
-    const supabase = createClient(
+    // Load Supabase from CDN if not already loaded
+    if (typeof supabase === 'undefined') {
+      console.log('Loading Supabase library...');
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+      document.head.appendChild(script);
+
+      await new Promise((resolve, reject) => {
+        script.onload = resolve;
+        script.onerror = reject;
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 500)); // Wait for module to initialize
+    }
+
+    // Get the Supabase client
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
       'https://qpmewfobfnbprlnfgayh.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwbWV3Zm9iZm5icHJsbmZnYXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NzMxNDIsImV4cCI6MjA3ODQ0OTE0Mn0.ynHs4CmCwf9s-vkPHzn4khddshQU530Pz6MJI-iIxIU'
     );
 
     // Get current user
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session?.user) {
       console.error('❌ You must be signed in to create goals');
       return;
@@ -24,7 +39,7 @@
 
     // ===== CREATE LEIGH GOAL =====
     console.log('\n📋 Creating Leigh Council Election Campaign...');
-    const { data: leighGoal, error: leighGoalError } = await supabase
+    const { data: leighGoal, error: leighGoalError } = await supabaseClient
       .from('goals')
       .insert({
         user_id: userId,
@@ -39,7 +54,7 @@
     console.log('✓ Goal created:', leighGoal.title);
 
     // Create Leigh stage
-    const { data: leighStage, error: leighStageError } = await supabase
+    const { data: leighStage, error: leighStageError } = await supabaseClient
       .from('stages')
       .insert({
         goal_id: leighGoal.id,
@@ -61,7 +76,7 @@
       { text: 'Distribute Leigh leaflet', category: 'action', due_date: '2026-01-30', order_index: 4 },
     ].map(t => ({ ...t, stage_id: leighStage.id, completed: false, streak: 0 }));
 
-    const { error: leighTasksError } = await supabase
+    const { error: leighTasksError } = await supabaseClient
       .from('tasks')
       .insert(leighTasks);
 
@@ -70,7 +85,7 @@
 
     // ===== CREATE WEST LEIGH GOAL =====
     console.log('\n📋 Creating West Leigh Council Election Campaign...');
-    const { data: westLeighGoal, error: westLeighGoalError } = await supabase
+    const { data: westLeighGoal, error: westLeighGoalError } = await supabaseClient
       .from('goals')
       .insert({
         user_id: userId,
@@ -85,7 +100,7 @@
     console.log('✓ Goal created:', westLeighGoal.title);
 
     // Create West Leigh stage
-    const { data: westLeighStage, error: westLeighStageError } = await supabase
+    const { data: westLeighStage, error: westLeighStageError } = await supabaseClient
       .from('stages')
       .insert({
         goal_id: westLeighGoal.id,
@@ -107,7 +122,7 @@
       { text: 'Distribute West Leigh leaflet', category: 'action', due_date: '2026-01-30', order_index: 4 },
     ].map(t => ({ ...t, stage_id: westLeighStage.id, completed: false, streak: 0 }));
 
-    const { error: westLeighTasksError } = await supabase
+    const { error: westLeighTasksError } = await supabaseClient
       .from('tasks')
       .insert(westLeighTasks);
 
