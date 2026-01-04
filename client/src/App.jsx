@@ -598,12 +598,10 @@ function CalendarWidget() {
       // Get the current session to retrieve the provider token
       const { data: { session } } = await supabase.auth.getSession();
 
-      console.log('Session provider_token:', session?.provider_token ? 'exists' : 'missing');
-      console.log('Session provider_refresh_token:', session?.provider_refresh_token ? 'exists' : 'missing');
-
       if (!session?.provider_token) {
-        console.log('No Google provider token found - please sign out and sign in again');
+        // No token available - silently fail (user may not have calendar connected)
         setLoading(false);
+        setError('No calendar access');
         return;
       }
 
@@ -632,8 +630,9 @@ function CalendarWidget() {
       setEvents(response.data.items || []);
       setLoading(false);
     } catch (error) {
-      console.error('Calendar fetch error:', error);
-      setError(error.message);
+      // Calendar access failed - silently hide the widget
+      // This is expected if OAuth tokens have expired or calendar scope wasn't granted
+      setError('Calendar unavailable');
       setLoading(false);
     }
   };
