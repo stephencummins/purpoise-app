@@ -847,11 +847,12 @@ function NewsView() {
     );
   }
 
-  // Separate Trump articles from regular news
-  const regularArticles = articles.filter(a => !a.isTrump);
+  // Separate Trump and sports articles from regular news
+  const regularArticles = articles.filter(a => !a.isTrump && !a.isSports);
   const trumpArticles = articles.filter(a => a.isTrump);
+  const sportsArticles = articles.filter(a => a.isSports && !a.isTrump);
 
-  // Filter articles by source (excluding Trump articles)
+  // Filter articles by source (excluding Trump and sports articles)
   const filteredArticles = selectedSource === 'all'
     ? regularArticles
     : regularArticles.filter(a => a.source === selectedSource);
@@ -927,7 +928,7 @@ function NewsView() {
         </div>
 
         {/* What's Trending Section */}
-        {trending.length > 0 && (
+        {trending.filter(item => !item.isSports && !item.isTrump).length > 0 && (
           <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
             <div className="mb-6">
               <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">What's Trending</h2>
@@ -935,7 +936,7 @@ function NewsView() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {trending.map((item, index) => (
+              {trending.filter(item => !item.isSports && !item.isTrump).map((item, index) => (
                 <a
                   key={index}
                   href={item.link}

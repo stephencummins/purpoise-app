@@ -11,6 +11,20 @@ function isTrumpRelated(text) {
   return trumpKeywords.some(keyword => lowerText.includes(keyword));
 }
 
+// Check if content is sports-related
+function isSportsRelated(text) {
+  if (!text) return false;
+  const lowerText = text.toLowerCase();
+  const sportsKeywords = [
+    'football', 'soccer', 'cricket', 'rugby', 'tennis', 'basketball',
+    'baseball', 'golf', 'boxing', 'formula 1', 'f1', 'nfl', 'nba',
+    'premier league', 'champions league', 'world cup', 'olympics',
+    'match', 'tournament', 'championship', 'league', 'goal', 'score',
+    'player', 'team', 'coach', 'stadium', 'fixture', 'playoff'
+  ];
+  return sportsKeywords.some(keyword => lowerText.includes(keyword));
+}
+
 // Fetch Google Trends (using trending searches RSS)
 async function getGoogleTrends() {
   try {
@@ -35,7 +49,8 @@ async function getGoogleTrends() {
             link: linkMatch ? linkMatch[1] : `https://trends.google.com/trends/trendingsearches/daily`,
             source: 'Google Trends',
             traffic: trafficMatch ? trafficMatch[1] : '',
-            isTrump: isTrumpRelated(title)
+            isTrump: isTrumpRelated(title),
+            isSports: isSportsRelated(title)
           });
         }
       });
@@ -62,7 +77,8 @@ async function getRedditHot() {
       source: 'Reddit',
       subreddit: post.data.subreddit,
       score: post.data.score,
-      isTrump: isTrumpRelated(post.data.title)
+      isTrump: isTrumpRelated(post.data.title),
+      isSports: isSportsRelated(post.data.title)
     }));
 
     return items;
@@ -104,7 +120,8 @@ async function getYouTubeTrending() {
                   title,
                   link: `https://www.youtube.com/watch?v=${videoId}`,
                   source: 'YouTube',
-                  isTrump: isTrumpRelated(title)
+                  isTrump: isTrumpRelated(title),
+                  isSports: isSportsRelated(title)
                 });
               }
             }

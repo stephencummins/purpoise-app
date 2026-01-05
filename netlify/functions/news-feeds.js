@@ -94,6 +94,20 @@ exports.handler = async (event, context) => {
       return trumpKeywords.some(keyword => lowerText.includes(keyword));
     };
 
+    // Check if content is sports-related
+    const isSportsRelated = (text) => {
+      if (!text) return false;
+      const lowerText = text.toLowerCase();
+      const sportsKeywords = [
+        'football', 'soccer', 'cricket', 'rugby', 'tennis', 'basketball',
+        'baseball', 'golf', 'boxing', 'formula 1', 'f1', 'nfl', 'nba',
+        'premier league', 'champions league', 'world cup', 'olympics',
+        'match', 'tournament', 'championship', 'league', 'goal', 'score',
+        'player', 'team', 'coach', 'stadium', 'fixture', 'playoff'
+      ];
+      return sportsKeywords.some(keyword => lowerText.includes(keyword));
+    };
+
     // Fetch all RSS feeds in parallel
     const feedPromises = RSS_FEEDS.map(async (feed) => {
       try {
@@ -106,12 +120,13 @@ exports.handler = async (event, context) => {
 
         const items = parseRSS(response.data);
 
-        // Add source information to each article and check for Trump content
+        // Add source information to each article and check for Trump/sports content
         return items.slice(0, 10).map(item => ({
           ...item,
           source: feed.name,
           category: feed.category,
-          isTrump: isTrumpRelated(item.title) || isTrumpRelated(item.description)
+          isTrump: isTrumpRelated(item.title) || isTrumpRelated(item.description),
+          isSports: isSportsRelated(item.title) || isSportsRelated(item.description)
         }));
       } catch (error) {
         console.error(`Error fetching ${feed.name}:`, error.message);
