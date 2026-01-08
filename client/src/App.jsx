@@ -411,6 +411,7 @@ function App() {
             onNewGoal={() => setShowNewGoalModal(true)}
             calculateProgress={calculateProgress}
             getTaskStats={getTaskStats}
+            toggleTask={toggleTask}
           />
         )}
 
@@ -1335,7 +1336,7 @@ function QuickTasksInner() {
 }
 
 // Dashboard View Component
-function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats }) {
+function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats, toggleTask }) {
   const [dailyCards, setDailyCards] = useState([]);
   const [cardsLoading, setCardsLoading] = useState(true);
   const [weatherExpanded, setWeatherExpanded] = useState(false);
