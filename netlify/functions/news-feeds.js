@@ -46,6 +46,24 @@ function parseRSS(xml) {
     const descMatch = item.match(/<description>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/description>/);
     let description = descMatch ? descMatch[1].trim() : '';
 
+    // Extract image before cleaning HTML
+    let image = null;
+    // Try multiple image sources (media:content, enclosure, img tags in description)
+    const mediaContentMatch = item.match(/<media:content[^>]*url=["']([^"']*)["']/i);
+    const mediaThumbnailMatch = item.match(/<media:thumbnail[^>]*url=["']([^"']*)["']/i);
+    const enclosureMatch = item.match(/<enclosure[^>]*url=["']([^"']*)["'][^>]*type=["']image/i);
+    const imgMatch = description.match(/<img[^>]*src=["']([^"']*)["']/i);
+
+    if (mediaContentMatch) {
+      image = mediaContentMatch[1];
+    } else if (mediaThumbnailMatch) {
+      image = mediaThumbnailMatch[1];
+    } else if (enclosureMatch) {
+      image = enclosureMatch[1];
+    } else if (imgMatch) {
+      image = imgMatch[1];
+    }
+
     // Clean HTML tags from description
     description = description.replace(/<[^>]*>/g, '').substring(0, 200);
 
@@ -58,6 +76,7 @@ function parseRSS(xml) {
         title,
         link,
         description,
+        image,
         pubDate: pubDate.toISOString(),
         timestamp: pubDate.getTime()
       });

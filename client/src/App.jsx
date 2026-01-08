@@ -1120,31 +1120,45 @@ function NewsView() {
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white rounded-lg shadow-md border-2 border-chocolate-200 p-6 hover:shadow-xl hover:border-turquoise-500 hover:-translate-y-1 transition-all duration-200"
+              className="bg-white rounded-lg shadow-md border-2 border-chocolate-200 overflow-hidden hover:shadow-xl hover:border-turquoise-500 hover:-translate-y-1 transition-all duration-200 flex flex-col"
             >
-              <div className="flex items-start justify-between mb-2">
-                <span className="text-xs font-semibold text-gold-600 uppercase">
-                  {article.source}
-                </span>
-                <span className="text-xs text-chocolate-400">
-                  {new Date(article.pubDate).toLocaleDateString('en-GB', {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </span>
-              </div>
-              <h3 className="text-lg font-serif font-bold text-chocolate-900 mb-2 line-clamp-3">
-                {article.title}
-              </h3>
-              {article.description && (
-                <p className="text-sm text-chocolate-600 line-clamp-2">
-                  {article.description}
-                </p>
+              {/* Article Image */}
+              {article.image && (
+                <div className="w-full h-48 overflow-hidden bg-gray-100">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                </div>
               )}
-              <div className="mt-3 flex items-center text-turquoise-600 text-sm font-medium">
-                Read more →
+
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-2">
+                  <span className="text-xs font-semibold text-gold-600 uppercase">
+                    {article.source}
+                  </span>
+                  <span className="text-xs text-chocolate-400">
+                    {new Date(article.pubDate).toLocaleDateString('en-GB', {
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </span>
+                </div>
+                <h3 className="text-lg font-serif font-bold text-chocolate-900 mb-2 line-clamp-3">
+                  {article.title}
+                </h3>
+                {article.description && (
+                  <p className="text-sm text-chocolate-600 line-clamp-2 mb-3">
+                    {article.description}
+                  </p>
+                )}
+                <div className="mt-auto flex items-center text-turquoise-600 text-sm font-medium">
+                  Read more →
+                </div>
               </div>
             </a>
           ))}
