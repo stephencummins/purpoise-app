@@ -45,12 +45,32 @@ function parseWikipediaMainPage(html) {
     const newsMatch = html.match(/<div[^>]*id="mp-itn"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i);
     if (newsMatch) {
       const newsContent = newsMatch[1];
+
+      // Try to extract the featured news image
+      let newsImage = null;
+      const imageMatch = newsContent.match(/<img[^>]*src="([^"]*)"[^>]*>/i);
+      if (imageMatch) {
+        let imgSrc = imageMatch[1];
+        // Make image URL absolute if it's relative
+        if (imgSrc.startsWith('//')) {
+          imgSrc = 'https:' + imgSrc;
+        } else if (imgSrc.startsWith('/')) {
+          imgSrc = 'https://en.wikipedia.org' + imgSrc;
+        }
+        newsImage = imgSrc;
+      }
+
       const listMatch = newsContent.match(/<ul[^>]*>([\s\S]*?)<\/ul>/);
       if (listMatch) {
         const items = listMatch[1].match(/<li[^>]*>([\s\S]*?)<\/li>/g);
         if (items) {
           result.inTheNews = items.slice(0, 5).map(item => cleanHTML(item.replace(/<li[^>]*>|<\/li>/g, '')));
         }
+      }
+
+      // Add image if found
+      if (newsImage) {
+        result.newsImage = newsImage;
       }
     }
 

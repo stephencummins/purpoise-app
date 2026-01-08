@@ -927,17 +927,30 @@ function WikipediaView() {
                 <Newspaper className="w-6 h-6 mr-2 text-vintage-orange" />
                 In the News
               </h2>
-              <ul className="space-y-3">
-                {content.inTheNews.map((item, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-turquoise-600 font-bold mr-3 mt-1">•</span>
-                    <div
-                      className="flex-1 text-chocolate-700"
-                      dangerouslySetInnerHTML={{ __html: item }}
+              <div className={content.newsImage ? "grid md:grid-cols-[300px_1fr] gap-6" : ""}>
+                {/* Featured News Image */}
+                {content.newsImage && (
+                  <div className="flex-shrink-0">
+                    <img
+                      src={content.newsImage}
+                      alt="In the news"
+                      className="w-full h-auto rounded-lg shadow-md border-2 border-chocolate-200"
                     />
-                  </li>
-                ))}
-              </ul>
+                  </div>
+                )}
+                {/* News Items */}
+                <ul className="space-y-3">
+                  {content.inTheNews.map((item, index) => (
+                    <li key={index} className="flex items-start">
+                      <span className="text-turquoise-600 font-bold mr-3 mt-1">•</span>
+                      <div
+                        className="flex-1 text-chocolate-700"
+                        dangerouslySetInnerHTML={{ __html: item }}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         )}
