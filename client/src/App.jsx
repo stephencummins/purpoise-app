@@ -307,7 +307,10 @@ function App() {
       <header className="bg-white border-b-4 border-vintage-orange shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setView('dashboard')}
+              className="flex items-center space-x-4 hover:opacity-80 transition-opacity"
+            >
               <img
                 src="/porpoise-logo.jpg"
                 alt="Purpoise"
@@ -316,7 +319,7 @@ function App() {
               <h1 className="text-3xl font-serif font-bold text-dark-brown">
                 Purpoise
               </h1>
-            </div>
+            </button>
             <div className="flex items-center space-x-4">
               <nav className="flex space-x-4">
                 <button
