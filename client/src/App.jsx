@@ -22,6 +22,7 @@ import {
   Sparkles,
   Newspaper,
   ExternalLink,
+  BookOpen,
 } from 'lucide-react';
 import { getDailyCards } from './tarotData';
 
@@ -350,6 +351,17 @@ function App() {
                   <Newspaper className="w-5 h-5 inline-block mr-1" />
                   News
                 </button>
+                <button
+                  onClick={() => setView('wikipedia')}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    view === 'wikipedia'
+                      ? 'bg-vintage-orange text-white'
+                      : 'text-dark-brown hover:bg-gray-100'
+                  }`}
+                >
+                  <BookOpen className="w-5 h-5 inline-block mr-1" />
+                  Wikipedia
+                </button>
               </nav>
 
               {user ? (
@@ -433,6 +445,8 @@ function App() {
         )}
 
         {view === 'news' && <NewsView />}
+
+        {view === 'wikipedia' && <WikipediaView />}
       </main>
 
       {/* New Goal Modal */}
@@ -801,6 +815,202 @@ function NewspaperCarousel() {
             ))}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// Wikipedia View Component
+function WikipediaView() {
+  const [content, setContent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchWikipedia = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/wikipedia`);
+        setContent(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Wikipedia fetch error:', error);
+        setError('Failed to load Wikipedia content');
+        setLoading(false);
+      }
+    };
+
+    fetchWikipedia();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin text-gold-500" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="bg-white rounded-lg shadow-md border-2 border-chocolate-200 p-8 text-center">
+          <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4">Unable to Load Wikipedia</h2>
+          <p className="text-chocolate-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-serif font-bold text-chocolate-900 mb-2 flex items-center">
+                <BookOpen className="w-10 h-10 mr-3 text-turquoise-600" />
+                Wikipedia Main Page
+              </h1>
+              <p className="text-chocolate-600">The free encyclopedia that anyone can edit</p>
+            </div>
+            <a
+              href="https://en.wikipedia.org/wiki/Main_Page"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 bg-turquoise-600 text-white rounded-lg hover:bg-turquoise-700 transition-colors font-medium"
+            >
+              <ExternalLink className="w-4 h-4" />
+              View on Wikipedia
+            </a>
+          </div>
+        </div>
+
+        {/* Featured Article */}
+        {content?.featuredArticle && (
+          <div className="mb-8">
+            <div className="bg-gradient-to-br from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+              <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4 flex items-center">
+                <Sparkles className="w-6 h-6 mr-2 text-gold-600" />
+                Featured Article
+              </h2>
+              <div className="prose prose-lg max-w-none">
+                <h3 className="text-xl font-bold text-chocolate-900 mb-3">
+                  {content.featuredArticle.title}
+                </h3>
+                <div
+                  className="text-chocolate-700 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: content.featuredArticle.content }}
+                />
+                {content.featuredArticle.link && (
+                  <a
+                    href={content.featuredArticle.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 mt-4 text-turquoise-600 hover:text-turquoise-700 font-medium"
+                  >
+                    Read more →
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* In the News */}
+        {content?.inTheNews && content.inTheNews.length > 0 && (
+          <div className="mb-8">
+            <div className="bg-white rounded-lg shadow-lg border-2 border-chocolate-200 p-6">
+              <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4 flex items-center">
+                <Newspaper className="w-6 h-6 mr-2 text-vintage-orange" />
+                In the News
+              </h2>
+              <ul className="space-y-3">
+                {content.inTheNews.map((item, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-turquoise-600 font-bold mr-3 mt-1">•</span>
+                    <div
+                      className="flex-1 text-chocolate-700"
+                      dangerouslySetInnerHTML={{ __html: item }}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Did You Know */}
+        {content?.didYouKnow && content.didYouKnow.length > 0 && (
+          <div className="mb-8">
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
+              <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4">
+                Did You Know...
+              </h2>
+              <ul className="space-y-3">
+                {content.didYouKnow.map((item, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-vintage-orange font-bold mr-3 mt-1">?</span>
+                    <div
+                      className="flex-1 text-chocolate-700"
+                      dangerouslySetInnerHTML={{ __html: item }}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* On This Day */}
+        {content?.onThisDay && content.onThisDay.length > 0 && (
+          <div className="mb-8">
+            <div className="bg-white rounded-lg shadow-lg border-2 border-chocolate-200 p-6">
+              <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4 flex items-center">
+                <CalendarIcon className="w-6 h-6 mr-2 text-turquoise-600" />
+                On This Day
+              </h2>
+              <ul className="space-y-3">
+                {content.onThisDay.map((item, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-turquoise-600 font-bold mr-3 mt-1">•</span>
+                    <div
+                      className="flex-1 text-chocolate-700"
+                      dangerouslySetInnerHTML={{ __html: item }}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Full Page Link */}
+        <div className="mb-8">
+          <a
+            href="https://en.wikipedia.org/wiki/Main_Page"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-gradient-to-br from-turquoise-700 to-turquoise-900 rounded-lg shadow-xl border-2 border-gold-500 p-8 hover:shadow-2xl hover:border-gold-400 hover:-translate-y-1 transition-all duration-200"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <BookOpen className="w-16 h-16 text-gold-300" />
+                <div>
+                  <h3 className="text-2xl font-serif font-bold text-white mb-2">
+                    Explore More on Wikipedia
+                  </h3>
+                  <p className="text-gold-200">
+                    Visit the full Wikipedia Main Page for more featured content
+                  </p>
+                </div>
+              </div>
+              <ExternalLink className="w-8 h-8 text-gold-300" />
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   );
