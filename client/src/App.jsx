@@ -597,105 +597,6 @@ function WeatherWidget() {
   );
 }
 
-// Calendar Widget Component
-function CalendarWidget() {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchCalendarEvents();
-  }, []);
-
-  const fetchCalendarEvents = async () => {
-    try {
-      // Get the current session to retrieve the provider token
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (!session?.provider_token) {
-        // No token available - silently fail (user may not have calendar connected)
-        setLoading(false);
-        setError('No calendar access');
-        return;
-      }
-
-      // Get today's date range
-      const now = new Date();
-      const todayStart = new Date(now.setHours(0, 0, 0, 0)).toISOString();
-      const todayEnd = new Date(now.setHours(23, 59, 59, 999)).toISOString();
-
-      // Fetch calendar events from Google Calendar API
-      const response = await axios.get(
-        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-        {
-          headers: {
-            Authorization: `Bearer ${session.provider_token}`
-          },
-          params: {
-            timeMin: todayStart,
-            timeMax: todayEnd,
-            singleEvents: true,
-            orderBy: 'startTime',
-            maxResults: 10
-          }
-        }
-      );
-
-      setEvents(response.data.items || []);
-      setLoading(false);
-    } catch (error) {
-      // Calendar access failed - silently hide the widget
-      // This is expected if OAuth tokens have expired or calendar scope wasn't granted
-      setError('Calendar unavailable');
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
-        <div className="flex items-center justify-center">
-          <Loader2 className="w-5 h-5 animate-spin text-vintage-orange" />
-        </div>
-      </div>
-    );
-  }
-
-  if (error || events.length === 0) return null;
-
-  const formatTime = (dateTime) => {
-    if (!dateTime) return 'All day';
-    const date = new Date(dateTime);
-    return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  };
-
-  return (
-    <div>
-      <h3 className="text-sm font-semibold text-white mb-3 flex items-center">
-        <CalendarIcon className="w-4 h-4 mr-2 text-gold-300" />
-        Events
-      </h3>
-      <div className="space-y-2">
-        {events.map((event, index) => (
-          <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border-l-2 border-gold-500">
-            <div className="flex justify-between items-start">
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-white text-sm truncate">{event.summary}</h4>
-                {event.location && (
-                  <p className="text-xs text-gold-200 mt-1 truncate">{event.location}</p>
-                )}
-              </div>
-              <div className="text-xs text-gold-200 ml-2 whitespace-nowrap">
-                {formatTime(event.start?.dateTime || event.start?.date)}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // Newspaper Carousel Component
 function NewspaperCarousel() {
   const [newspapers, setNewspapers] = useState([]);
@@ -1519,9 +1420,6 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
             Today
           </h2>
           <WeatherWidget />
-          <div className="mt-6 pt-6 border-t border-turquoise-600">
-            <CalendarWidget />
-          </div>
         </div>
       </div>
 
