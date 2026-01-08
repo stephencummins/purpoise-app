@@ -23,26 +23,43 @@ function parseWikipediaMainPage(html) {
 
   try {
     // Extract Featured Article (From today's featured article)
-    const featuredMatch = html.match(/<div[^>]*id="mp-tfa"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i);
+    const featuredMatch = html.match(/<div[^>]*id="mp-tfa"[^>]*class="[^"]*">([\s\S]*?)<div class="tfa-recent"/i);
     if (featuredMatch) {
-      const featuredContent = featuredMatch[1];
-      const titleMatch = featuredContent.match(/<b><a[^>]*title="([^"]*)"[^>]*>([^<]*)<\/a><\/b>/);
-      const title = titleMatch ? titleMatch[2] : 'Featured Article';
-      const link = titleMatch ? `https://en.wikipedia.org/wiki/${titleMatch[1].replace(/\s/g, '_')}` : null;
+      let featuredContent = featuredMatch[1];
 
-      // Extract first paragraph
-      const paragraphMatch = featuredContent.match(/<p[^>]*>([\s\S]*?)<\/p>/);
-      const content = paragraphMatch ? cleanHTML(paragraphMatch[1]) : cleanHTML(featuredContent.substring(0, 500));
+      // Extract title from first bold link
+      let titleMatch = featuredContent.match(/<b><a[^>]*title="([^"]*)"[^>]*>(.*?)<\/a><\/b>/);
+      let title = 'Featured Article';
+      let titleForLink = null;
+
+      if (titleMatch) {
+        titleForLink = titleMatch[1];
+        // Remove HTML tags from title (like <i> tags)
+        title = titleMatch[2].replace(/<[^>]*>/g, '').trim();
+      }
+
+      const link = titleForLink ? `https://en.wikipedia.org/wiki/${encodeURIComponent(titleForLink)}` : null;
+
+      // Extract the main paragraph (after removing image div)
+      let textContent = featuredContent.replace(/<div[^>]*id="mp-tfa-img"[^>]*>[\s\S]*?<\/div>\s*<\/div>/g, '');
+      const paragraphMatch = textContent.match(/<p>([\s\S]*?)<\/p>/);
+
+      let content = '';
+      if (paragraphMatch) {
+        content = cleanHTML(paragraphMatch[1]);
+        // Remove the "This article is part of..." footer
+        content = content.replace(/\s*\([^)]*This\s+article[^)]*\)\s*$/i, '').trim();
+      }
 
       result.featuredArticle = {
         title,
-        content,
+        content: content.length > 1000 ? content.substring(0, 1000).trim() + '...' : content,
         link
       };
     }
 
     // Extract In the News
-    const newsMatch = html.match(/<div[^>]*id="mp-itn"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i);
+    const newsMatch = html.match(/<div[^>]*id="mp-itn"[^>]*>([\s\S]*?)(?=<div[^>]*id="|$)/i);
     if (newsMatch) {
       const newsContent = newsMatch[1];
 
@@ -60,12 +77,13 @@ function parseWikipediaMainPage(html) {
         newsImage = imgSrc;
       }
 
-      const listMatch = newsContent.match(/<ul[^>]*>([\s\S]*?)<\/ul>/);
-      if (listMatch) {
-        const items = listMatch[1].match(/<li[^>]*>([\s\S]*?)<\/li>/g);
-        if (items) {
-          result.inTheNews = items.slice(0, 5).map(item => cleanHTML(item.replace(/<li[^>]*>|<\/li>/g, '')));
-        }
+      // Extract all list items more robustly
+      const listMatches = newsContent.match(/<li[^>]*>([\s\S]*?)<\/li>/g);
+      if (listMatches) {
+        result.inTheNews = listMatches.slice(0, 6).map(item => {
+          const cleaned = item.replace(/<li[^>]*>|<\/li>/g, '').trim();
+          return cleanHTML(cleaned);
+        }).filter(item => item.length > 10); // Filter out empty or very short items
       }
 
       // Add image if found
@@ -75,27 +93,31 @@ function parseWikipediaMainPage(html) {
     }
 
     // Extract Did You Know
-    const dykMatch = html.match(/<div[^>]*id="mp-dyk"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i);
+    const dykMatch = html.match(/<div[^>]*id="mp-dyk"[^>]*>([\s\S]*?)(?=<div[^>]*id="|$)/i);
     if (dykMatch) {
       const dykContent = dykMatch[1];
-      const listMatch = dykContent.match(/<ul[^>]*>([\s\S]*?)<\/ul>/);
-      if (listMatch) {
-        const items = listMatch[1].match(/<li[^>]*>([\s\S]*?)<\/li>/g);
-        if (items) {
-          result.didYouKnow = items.slice(0, 5).map(item => cleanHTML(item.replace(/<li[^>]*>|<\/li>/g, '')));
-        }
+      const listMatches = dykContent.match(/<li[^>]*>([\s\S]*?)<\/li>/g);
+      if (listMatches) {
+        result.didYouKnow = listMatches.slice(0, 6).map(item => {
+          const cleaned = item.replace(/<li[^>]*>|<\/li>/g, '').trim();
+          return cleanHTML(cleaned);
+        }).filter(item => item.length > 10);
       }
     }
 
     // Extract On This Day
-    const otdMatch = html.match(/<div[^>]*id="mp-otd"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i);
+    const otdMatch = html.match(/<div[^>]*id="mp-otd"[^>]*class="[^"]*">([\s\S]*?)<div class="hlist otd-footer"/i);
     if (otdMatch) {
       const otdContent = otdMatch[1];
-      const listMatch = otdContent.match(/<ul[^>]*>([\s\S]*?)<\/ul>/);
-      if (listMatch) {
-        const items = listMatch[1].match(/<li[^>]*>([\s\S]*?)<\/li>/g);
-        if (items) {
-          result.onThisDay = items.slice(0, 5).map(item => cleanHTML(item.replace(/<li[^>]*>|<\/li>/g, '')));
+      // Find all list items within <ul> tags
+      const ulMatch = otdContent.match(/<ul>([\s\S]*?)<\/ul>/);
+      if (ulMatch) {
+        const listMatches = ulMatch[1].match(/<li>([\s\S]*?)<\/li>/g);
+        if (listMatches) {
+          result.onThisDay = listMatches.slice(0, 5).map(item => {
+            const cleaned = item.replace(/<li>|<\/li>/g, '').trim();
+            return cleanHTML(cleaned);
+          }).filter(item => item.length > 30); // Filter very short items
         }
       }
     }
