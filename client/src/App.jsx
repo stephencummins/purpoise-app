@@ -330,17 +330,6 @@ function App() {
                   Dashboard
                 </button>
                 <button
-                  onClick={() => setView('calendar')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    view === 'calendar'
-                      ? 'bg-vintage-orange text-white'
-                      : 'text-dark-brown hover:bg-gray-100'
-                  }`}
-                >
-                  <CalendarIcon className="w-5 h-5 inline-block mr-1" />
-                  Calendar
-                </button>
-                <button
                   onClick={() => setView('news')}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     view === 'news'
