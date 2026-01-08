@@ -1465,6 +1465,7 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
           <RecurringTasksWidget
             goals={goals}
             onSelectGoal={onSelectGoal}
+            toggleTask={toggleTask}
           />
         )}
 
@@ -1605,12 +1606,14 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
 }
 
 // Recurring Tasks Widget Component
-function RecurringTasksWidget({ goals, onSelectGoal }) {
+function RecurringTasksWidget({ goals, onSelectGoal, toggleTask }) {
   const recurringGoal = goals.find(g => g.title.includes('Recurring Tasks'));
   if (!recurringGoal) return null;
 
-  const dailyTasks = recurringGoal?.stages?.find(s => s.name === 'Daily Tasks')?.tasks || [];
-  const weeklyTasks = recurringGoal?.stages?.find(s => s.name === 'Weekly Tasks')?.tasks || [];
+  const dailyStage = recurringGoal?.stages?.find(s => s.name === 'Daily Tasks');
+  const weeklyStage = recurringGoal?.stages?.find(s => s.name === 'Weekly Tasks');
+  const dailyTasks = dailyStage?.tasks || [];
+  const weeklyTasks = weeklyStage?.tasks || [];
 
   return (
     <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
@@ -1636,19 +1639,20 @@ function RecurringTasksWidget({ goals, onSelectGoal }) {
           </h3>
           <div className="space-y-2">
             {dailyTasks.map((task, idx) => (
-              <div
+              <button
                 key={idx}
-                className="flex items-center space-x-3 p-2 bg-white rounded-lg"
+                onClick={() => toggleTask(task, dailyStage.id)}
+                className="w-full flex items-center space-x-3 p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors text-left"
               >
                 {task.completed ? (
                   <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
                 ) : (
-                  <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                  <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange flex-shrink-0" />
                 )}
                 <span className={task.completed ? 'line-through text-gray-400' : ''}>
                   {task.text}
                 </span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -1661,19 +1665,20 @@ function RecurringTasksWidget({ goals, onSelectGoal }) {
           </h3>
           <div className="space-y-2">
             {weeklyTasks.map((task, idx) => (
-              <div
+              <button
                 key={idx}
-                className="flex items-center space-x-3 p-2 bg-white rounded-lg"
+                onClick={() => toggleTask(task, weeklyStage.id)}
+                className="w-full flex items-center space-x-3 p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors text-left"
               >
                 {task.completed ? (
                   <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
                 ) : (
-                  <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                  <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange flex-shrink-0" />
                 )}
                 <span className={task.completed ? 'line-through text-gray-400' : ''}>
                   {task.text}
                 </span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
