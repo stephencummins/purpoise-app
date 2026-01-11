@@ -23,6 +23,7 @@ import {
   Newspaper,
   ExternalLink,
   BookOpen,
+  Edit,
 } from 'lucide-react';
 import { getDailyCards } from './tarotData';
 
@@ -60,6 +61,7 @@ function App() {
   const [showNewGoalModal, setShowNewGoalModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [animatingTasks, setAnimatingTasks] = useState(new Set());
 
   // Initialize auth
   useEffect(() => {
@@ -227,6 +229,9 @@ function App() {
 
   const toggleTask = async (task, stageId) => {
     try {
+      // Add task to animating set
+      setAnimatingTasks(prev => new Set(prev).add(task.id));
+
       const newCompleted = !task.completed;
       let updates = { completed: newCompleted, updated_at: new Date().toISOString() };
 
@@ -250,15 +255,55 @@ function App() {
         updates.streak = Math.max(0, (task.streak || 0) - 1);
       }
 
+      // Optimistically update the UI immediately
+      setGoals(prevGoals => prevGoals.map(goal => ({
+        ...goal,
+        stages: goal.stages?.map(stage => ({
+          ...stage,
+          tasks: stage.tasks.map(t =>
+            t.id === task.id ? { ...t, ...updates } : t
+          )
+        }))
+      })));
+
+      // Update selected goal if it's the current one
+      if (selectedGoal) {
+        setSelectedGoal(prevGoal => ({
+          ...prevGoal,
+          stages: prevGoal.stages?.map(stage => ({
+            ...stage,
+            tasks: stage.tasks.map(t =>
+              t.id === task.id ? { ...t, ...updates } : t
+            )
+          }))
+        }));
+      }
+
       const { error } = await supabase
         .from('tasks')
         .update(updates)
         .eq('id', task.id);
 
       if (error) throw error;
-      await loadGoals();
+
+      // Remove task from animating set after animation completes
+      setTimeout(() => {
+        setAnimatingTasks(prev => {
+          const next = new Set(prev);
+          next.delete(task.id);
+          return next;
+        });
+      }, 600);
     } catch (error) {
       console.error('Error toggling task:', error);
+      // Revert the optimistic update and reload from database
+      await loadGoals();
+      // Remove from animating set on error
+      setAnimatingTasks(prev => {
+        const next = new Set(prev);
+        next.delete(task.id);
+        return next;
+      });
     }
   };
 
@@ -412,6 +457,7 @@ function App() {
             calculateProgress={calculateProgress}
             getTaskStats={getTaskStats}
             toggleTask={toggleTask}
+            animatingTasks={animatingTasks}
           />
         )}
 
@@ -426,6 +472,9 @@ function App() {
             onUpdateRAG={updateRAGStatus}
             toggleTask={toggleTask}
             calculateProgress={calculateProgress}
+            animatingTasks={animatingTasks}
+            loadGoals={loadGoals}
+            setSelectedGoal={setSelectedGoal}
           />
         )}
 
@@ -964,10 +1013,11 @@ function NewsView() {
     );
   }
 
-  // Separate Trump and sports articles from regular news
-  const regularArticles = articles.filter(a => !a.isTrump && !a.isSports);
+  // Separate Trump, sports, and AI articles from regular news
+  const regularArticles = articles.filter(a => !a.isTrump && !a.isSports && !a.isAI);
   const trumpArticles = articles.filter(a => a.isTrump);
   const sportsArticles = articles.filter(a => a.isSports && !a.isTrump);
+  const aiArticles = articles.filter(a => a.isAI && !a.isTrump && !a.isSports);
 
   // Filter articles by source (excluding Trump and sports articles)
   const filteredArticles = selectedSource === 'all'
@@ -1093,6 +1143,70 @@ function NewsView() {
                   {item.subreddit && (
                     <p className="text-xs text-chocolate-600 mt-1">r/{item.subreddit}</p>
                   )}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* AI News Section */}
+        {aiArticles.length > 0 && (
+          <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
+            <div className="mb-6">
+              <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2 flex items-center">
+                <Sparkles className="w-8 h-8 mr-3 text-purple-600" />
+                AI News
+              </h2>
+              <p className="text-chocolate-600">Latest developments in artificial intelligence and machine learning</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {aiArticles.map((article, index) => (
+                <a
+                  key={index}
+                  href={article.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg shadow-md border-2 border-purple-200 overflow-hidden hover:shadow-xl hover:border-purple-500 hover:-translate-y-1 transition-all duration-200 flex flex-col"
+                >
+                  {/* Article Image */}
+                  {article.image && (
+                    <div className="w-full h-48 overflow-hidden bg-gray-100">
+                      <img
+                        src={article.image}
+                        alt={article.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
+                  )}
+
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="text-xs font-semibold text-purple-600 uppercase bg-purple-100 px-2 py-1 rounded">
+                        {article.source}
+                      </span>
+                      <span className="text-xs text-chocolate-400">
+                        {new Date(article.pubDate).toLocaleDateString('en-GB', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-serif font-bold text-chocolate-900 mb-2 line-clamp-3">
+                      {article.title}
+                    </h3>
+                    {article.description && (
+                      <p className="text-sm text-chocolate-600 line-clamp-2 mb-3">
+                        {article.description}
+                      </p>
+                    )}
+                    <div className="mt-auto flex items-center text-purple-600 text-sm font-medium">
+                      Read more →
+                    </div>
+                  </div>
                 </a>
               ))}
             </div>
@@ -1336,7 +1450,7 @@ function QuickTasksInner() {
 }
 
 // Dashboard View Component
-function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats, toggleTask }) {
+function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getTaskStats, toggleTask, animatingTasks }) {
   const [dailyCards, setDailyCards] = useState([]);
   const [cardsLoading, setCardsLoading] = useState(true);
   const [weatherExpanded, setWeatherExpanded] = useState(false);
@@ -1405,71 +1519,22 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
 
   return (
     <div className="flex gap-6">
-      {/* Left Sidebar - Weather & Calendar */}
+      {/* Left Sidebar - Weather & News */}
       <div className="w-80 flex-shrink-0">
-        <div className="bg-gradient-to-br from-turquoise-700 to-turquoise-900 rounded-lg shadow-lg border-2 border-gold-500 p-6 sticky top-4">
-          <h2 className="text-xl font-serif font-bold mb-4 flex items-center text-white">
-            <Sun className="w-5 h-5 mr-2 text-gold-300" />
-            Today
-          </h2>
-          <WeatherWidget />
+        <div className="sticky top-4 space-y-6">
+          <div className="bg-gradient-to-br from-turquoise-700 to-turquoise-900 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+            <h2 className="text-xl font-serif font-bold mb-4 flex items-center text-white">
+              <Sun className="w-5 h-5 mr-2 text-gold-300" />
+              Today
+            </h2>
+            <WeatherWidget />
+          </div>
+          <NewsDigestWidget />
         </div>
       </div>
 
       {/* Main Content Area */}
       <div className="flex-1 space-y-6">
-        {/* Focus for the Week - Top of Page */}
-        <div className="bg-gradient-to-r from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
-          <h2 className="text-2xl font-serif font-bold mb-6 flex items-center text-chocolate-900">
-            {digest.type === 'focus' ? '🎯 Your Focus for the Week' : '⭐ Weekly Review'}
-          </h2>
-
-          {/* Weekly Tasks */}
-          {digest.tasks.length > 0 ? (
-            <div className="mb-6">
-              <ul className="space-y-2">
-                {digest.tasks.map((task, idx) => (
-                  <li key={idx} className="flex items-start space-x-2">
-                    <span className="text-gold-600 font-bold">•</span>
-                    <button
-                      onClick={() => onSelectGoal(task.goal)}
-                      className="text-left hover:text-turquoise-600 transition-colors"
-                    >
-                      <span className="font-medium text-chocolate-900">{task.text}</span>
-                      <span className="text-sm text-chocolate-600 ml-2">({task.goalTitle})</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <p className="text-chocolate-600 mb-6">
-              {digest.type === 'focus'
-                ? 'No tasks due this week. Time to plan ahead!'
-                : 'No tasks completed this week yet. Keep going!'}
-            </p>
-          )}
-
-          {/* Quick Tasks Section */}
-          <div className="pt-6 border-t-2 border-gold-300">
-            <h3 className="text-xl font-serif font-bold mb-4 flex items-center text-chocolate-900">
-              <CheckCircle2 className="w-5 h-5 mr-2 text-gold-600" />
-              Quick Tasks
-            </h3>
-
-            <QuickTasksInner />
-          </div>
-        </div>
-
-        {/* Recurring Tasks Widget */}
-        {goals.find(g => g.title.includes('Recurring Tasks')) && (
-          <RecurringTasksWidget
-            goals={goals}
-            onSelectGoal={onSelectGoal}
-            toggleTask={toggleTask}
-          />
-        )}
-
         {/* Goals Section - Front and Center */}
         <div>
           <div className="flex items-center justify-between mb-6">
@@ -1542,6 +1607,59 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
             </div>
           )}
         </div>
+
+        {/* Recurring Tasks Widget */}
+        {goals.find(g => g.title.includes('Recurring Tasks')) && (
+          <RecurringTasksWidget
+            goals={goals}
+            onSelectGoal={onSelectGoal}
+            toggleTask={toggleTask}
+            animatingTasks={animatingTasks}
+          />
+        )}
+
+        {/* Focus for the Week - Compact Version */}
+        <div className="bg-gradient-to-r from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+          <h2 className="text-2xl font-serif font-bold mb-4 flex items-center text-chocolate-900">
+            {digest.type === 'focus' ? '🎯 Your Focus for the Week' : '⭐ Weekly Review'}
+          </h2>
+
+          {/* Weekly Tasks */}
+          {digest.tasks.length > 0 ? (
+            <div className="mb-4">
+              <ul className="space-y-2">
+                {digest.tasks.map((task, idx) => (
+                  <li key={idx} className="flex items-start space-x-2">
+                    <span className="text-gold-600 font-bold">•</span>
+                    <button
+                      onClick={() => onSelectGoal(task.goal)}
+                      className="text-left hover:text-turquoise-600 transition-colors"
+                    >
+                      <span className="font-medium text-chocolate-900">{task.text}</span>
+                      <span className="text-sm text-chocolate-600 ml-2">({task.goalTitle})</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p className="text-chocolate-600 mb-4">
+              {digest.type === 'focus'
+                ? 'No tasks due this week. Time to plan ahead!'
+                : 'No tasks completed this week yet. Keep going!'}
+            </p>
+          )}
+
+          {/* Quick Tasks Section */}
+          <div className="pt-4 border-t-2 border-gold-300">
+            <h3 className="text-xl font-serif font-bold mb-4 flex items-center text-chocolate-900">
+              <CheckCircle2 className="w-5 h-5 mr-2 text-gold-600" />
+              Quick Tasks
+            </h3>
+
+            <QuickTasksInner />
+          </div>
+        </div>
       </div>
 
       {/* Tarot Sidebar */}
@@ -1606,8 +1724,83 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
   );
 }
 
+// News Digest Widget Component
+function NewsDigestWidget() {
+  const [headlines, setHeadlines] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchHeadlines = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/news-feeds?source=bbc`);
+        // The API returns 'articles' not 'items'
+        if (response.data && response.data.articles && Array.isArray(response.data.articles)) {
+          setHeadlines(response.data.articles.slice(0, 5));
+        } else if (response.data && response.data.items && Array.isArray(response.data.items)) {
+          // Fallback to 'items' for backward compatibility
+          setHeadlines(response.data.items.slice(0, 5));
+        } else {
+          console.error('Unexpected response structure:', response.data);
+          setError(true);
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHeadlines();
+  }, []);
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-4 mt-6">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-lg font-serif font-bold flex items-center">
+          <Newspaper className="w-5 h-5 mr-2 text-vintage-orange" />
+          News Digest
+        </h3>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="w-5 h-5 animate-spin text-vintage-orange" />
+        </div>
+      ) : error ? (
+        <div className="text-center py-4 text-sm text-gray-500">
+          Unable to load news
+        </div>
+      ) : headlines.length === 0 ? (
+        <div className="text-center py-4 text-sm text-gray-500">
+          No headlines available
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {headlines.map((item, idx) => (
+            <a
+              key={idx}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block p-2 hover:bg-gray-50 rounded-lg transition-colors group"
+            >
+              <div className="flex items-start space-x-2">
+                <div className="w-1 h-1 rounded-full bg-vintage-orange mt-2 flex-shrink-0" />
+                <p className="text-sm text-gray-700 group-hover:text-vintage-orange transition-colors line-clamp-2">
+                  {item.title}
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Recurring Tasks Widget Component
-function RecurringTasksWidget({ goals, onSelectGoal, toggleTask }) {
+function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks }) {
   const recurringGoal = goals.find(g => g.title.includes('Recurring Tasks'));
   if (!recurringGoal) return null;
 
@@ -1639,22 +1832,32 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask }) {
             Daily
           </h3>
           <div className="space-y-2">
-            {dailyTasks.map((task, idx) => (
-              <button
-                key={idx}
-                onClick={() => toggleTask(task, dailyStage.id)}
-                className="w-full flex items-center space-x-3 p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors text-left"
-              >
-                {task.completed ? (
-                  <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-                ) : (
-                  <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange flex-shrink-0" />
-                )}
-                <span className={task.completed ? 'line-through text-gray-400' : ''}>
-                  {task.text}
-                </span>
-              </button>
-            ))}
+            {dailyTasks.map((task, idx) => {
+              const isAnimating = animatingTasks.has(task.id);
+              return (
+                <button
+                  key={idx}
+                  onClick={() => toggleTask(task, dailyStage.id)}
+                  className={`w-full flex items-center space-x-3 p-2 bg-white rounded-lg hover:bg-gray-50 transition-all text-left ${
+                    isAnimating ? 'scale-105 ring-2 ring-vintage-orange ring-opacity-50' : ''
+                  }`}
+                  style={{
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                  }}
+                >
+                  <div className={isAnimating ? 'animate-bounce' : ''}>
+                    {task.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    ) : (
+                      <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange flex-shrink-0" />
+                    )}
+                  </div>
+                  <span className={task.completed ? 'line-through text-gray-400' : ''}>
+                    {task.text}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -1665,22 +1868,32 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask }) {
             Weekly
           </h3>
           <div className="space-y-2">
-            {weeklyTasks.map((task, idx) => (
-              <button
-                key={idx}
-                onClick={() => toggleTask(task, weeklyStage.id)}
-                className="w-full flex items-center space-x-3 p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors text-left"
-              >
-                {task.completed ? (
-                  <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-                ) : (
-                  <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange flex-shrink-0" />
-                )}
-                <span className={task.completed ? 'line-through text-gray-400' : ''}>
-                  {task.text}
-                </span>
-              </button>
-            ))}
+            {weeklyTasks.map((task, idx) => {
+              const isAnimating = animatingTasks.has(task.id);
+              return (
+                <button
+                  key={idx}
+                  onClick={() => toggleTask(task, weeklyStage.id)}
+                  className={`w-full flex items-center space-x-3 p-2 bg-white rounded-lg hover:bg-gray-50 transition-all text-left ${
+                    isAnimating ? 'scale-105 ring-2 ring-vintage-orange ring-opacity-50' : ''
+                  }`}
+                  style={{
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                  }}
+                >
+                  <div className={isAnimating ? 'animate-bounce' : ''}>
+                    {task.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    ) : (
+                      <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange flex-shrink-0" />
+                    )}
+                  </div>
+                  <span className={task.completed ? 'line-through text-gray-400' : ''}>
+                    {task.text}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -1689,8 +1902,50 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask }) {
 }
 
 // Goal Detail View Component
-function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calculateProgress }) {
+function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calculateProgress, animatingTasks, loadGoals, setSelectedGoal }) {
   const progress = calculateProgress(goal);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(goal.title);
+  const [editDescription, setEditDescription] = useState(goal.description);
+  const [saving, setSaving] = useState(false);
+
+  const handleSaveEdit = async () => {
+    try {
+      setSaving(true);
+      const { error } = await supabase
+        .from('goals')
+        .update({
+          title: editTitle,
+          description: editDescription,
+        })
+        .eq('id', goal.id);
+
+      if (error) throw error;
+
+      // Reload goals to get the updated data
+      await loadGoals();
+
+      // Update the selected goal with new values
+      setSelectedGoal(prev => ({
+        ...prev,
+        title: editTitle,
+        description: editDescription,
+      }));
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating goal:', error);
+      alert('Failed to update goal. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditTitle(goal.title);
+    setEditDescription(goal.description);
+    setIsEditing(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -1702,12 +1957,58 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="text-4xl font-serif font-bold flex-1">{goal.title}</h1>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            className="flex-1 text-4xl font-serif font-bold border-2 border-vintage-orange rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-vintage-orange"
+          />
+        ) : (
+          <h1 className="text-4xl font-serif font-bold flex-1">{goal.title}</h1>
+        )}
+        {!isEditing && (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            title="Edit goal"
+          >
+            <Edit className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Goal Info Card */}
       <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-6">
-        <p className="text-gray-700 mb-6">{goal.description}</p>
+        {isEditing ? (
+          <textarea
+            value={editDescription}
+            onChange={(e) => setEditDescription(e.target.value)}
+            rows={3}
+            className="w-full text-gray-700 mb-6 border-2 border-vintage-orange rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-vintage-orange"
+          />
+        ) : (
+          <p className="text-gray-700 mb-6">{goal.description}</p>
+        )}
+
+        {isEditing && (
+          <div className="flex space-x-3 mb-6">
+            <button
+              onClick={handleSaveEdit}
+              disabled={saving}
+              className="px-4 py-2 bg-vintage-orange text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              disabled={saving}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -1760,43 +2061,49 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
               Stage {stageIdx + 1}: {stage.name}
             </h2>
             <div className="space-y-3">
-              {stage.tasks?.map(task => (
-                <div
-                  key={task.id}
-                  className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                >
+              {stage.tasks?.map(task => {
+                const isAnimating = animatingTasks.has(task.id);
+                return (
                   <button
+                    key={task.id}
                     onClick={() => toggleTask(task, stage.id)}
-                    className="mt-1 flex-shrink-0"
+                    className={`w-full flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-all text-left ${
+                      isAnimating ? 'scale-105 ring-2 ring-vintage-orange ring-opacity-50' : ''
+                    }`}
+                    style={{
+                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                    }}
                   >
-                    {task.completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
-                    ) : (
-                      <Circle className="w-5 h-5 text-gray-400" />
-                    )}
-                  </button>
-                  <div className="flex-1">
-                    <p className={`${task.completed ? 'line-through text-gray-400' : ''}`}>
-                      {task.text}
-                    </p>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <span className={`text-xs px-2 py-1 rounded border ${CATEGORY_COLORS[task.category]}`}>
-                        {task.category}
-                      </span>
-                      {task.due_date && (
-                        <span className="text-xs text-gray-500">
-                          Due: {new Date(task.due_date).toLocaleDateString('en-GB')}
-                        </span>
-                      )}
-                      {task.category === 'habit' && task.streak > 0 && (
-                        <span className="text-xs font-bold text-vintage-orange">
-                          🔥 {task.streak} day streak
-                        </span>
+                    <div className={`mt-1 flex-shrink-0 ${isAnimating ? 'animate-bounce' : ''}`}>
+                      {task.completed ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      ) : (
+                        <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange" />
                       )}
                     </div>
-                  </div>
-                </div>
-              ))}
+                    <div className="flex-1">
+                      <p className={`${task.completed ? 'line-through text-gray-400' : ''}`}>
+                        {task.text}
+                      </p>
+                      <div className="flex items-center space-x-2 mt-2">
+                        <span className={`text-xs px-2 py-1 rounded border ${CATEGORY_COLORS[task.category]}`}>
+                          {task.category}
+                        </span>
+                        {task.due_date && (
+                          <span className="text-xs text-gray-500">
+                            Due: {new Date(task.due_date).toLocaleDateString('en-GB')}
+                          </span>
+                        )}
+                        {task.category === 'habit' && task.streak > 0 && (
+                          <span className="text-xs font-bold text-vintage-orange">
+                            🔥 {task.streak} day streak
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         ))}

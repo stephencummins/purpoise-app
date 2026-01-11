@@ -21,6 +21,11 @@ const RSS_FEEDS = [
     name: 'The New York Times',
     url: 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
     category: 'US News'
+  },
+  {
+    name: 'Paddo.dev',
+    url: 'https://paddo.dev/rss.xml',
+    category: 'AI & Tech'
   }
 ];
 
@@ -127,6 +132,23 @@ exports.handler = async (event, context) => {
       return sportsKeywords.some(keyword => lowerText.includes(keyword));
     };
 
+    // Check if content is AI-related
+    const isAIRelated = (text, source) => {
+      // All Paddo.dev articles are AI-related
+      if (source === 'Paddo.dev') return true;
+
+      if (!text) return false;
+      const lowerText = text.toLowerCase();
+      const aiKeywords = [
+        'ai', 'artificial intelligence', 'machine learning', 'ml', 'deep learning',
+        'neural network', 'gpt', 'chatgpt', 'claude', 'gemini', 'llm', 'large language model',
+        'openai', 'anthropic', 'google ai', 'microsoft ai', 'meta ai',
+        'generative ai', 'gen ai', 'diffusion', 'transformer', 'nlp',
+        'computer vision', 'robotics', 'automation', 'algorithm'
+      ];
+      return aiKeywords.some(keyword => lowerText.includes(keyword));
+    };
+
     // Fetch all RSS feeds in parallel
     const feedPromises = RSS_FEEDS.map(async (feed) => {
       try {
@@ -139,13 +161,14 @@ exports.handler = async (event, context) => {
 
         const items = parseRSS(response.data);
 
-        // Add source information to each article and check for Trump/sports content
+        // Add source information to each article and check for Trump/sports/AI content
         return items.slice(0, 10).map(item => ({
           ...item,
           source: feed.name,
           category: feed.category,
           isTrump: isTrumpRelated(item.title) || isTrumpRelated(item.description),
-          isSports: isSportsRelated(item.title) || isSportsRelated(item.description)
+          isSports: isSportsRelated(item.title) || isSportsRelated(item.description),
+          isAI: isAIRelated(item.title + ' ' + item.description, feed.name)
         }));
       } catch (error) {
         console.error(`Error fetching ${feed.name}:`, error.message);
