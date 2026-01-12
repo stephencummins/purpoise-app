@@ -1149,67 +1149,170 @@ function NewsView() {
           </div>
         )}
 
-        {/* AI News Section */}
+        {/* AI News Section - Futuristic Retro Aesthetic */}
         {aiArticles.length > 0 && (
-          <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
-            <div className="mb-6">
-              <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2 flex items-center">
-                <Sparkles className="w-8 h-8 mr-3 text-purple-600" />
-                AI News
-              </h2>
-              <p className="text-chocolate-600">Latest developments in artificial intelligence and machine learning</p>
+          <div className="mb-12 pt-12 border-t-4 border-double border-cyan-600 relative overflow-hidden">
+            {/* Animated background grid */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+              <div className="absolute inset-0" style={{
+                backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent)',
+                backgroundSize: '50px 50px'
+              }} />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Section Header */}
+            <div className="mb-10 relative">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="relative">
+                  <Sparkles className="w-12 h-12 text-cyan-600 animate-pulse" />
+                  <div className="absolute inset-0 blur-xl bg-cyan-400 opacity-30 animate-pulse" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-5xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 via-blue-600 to-cyan-700 mb-1 tracking-tight" style={{
+                    textShadow: '0 0 30px rgba(6, 182, 212, 0.3)'
+                  }}>
+                    NEURAL FEED
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <div className="h-px flex-1 bg-gradient-to-r from-cyan-600 to-transparent" />
+                    <p className="text-xs font-mono uppercase tracking-widest text-cyan-700 font-bold">
+                      Artificial Intelligence Transmissions
+                    </p>
+                    <div className="h-px flex-1 bg-gradient-to-l from-cyan-600 to-transparent" />
+                  </div>
+                </div>
+                {/* Pulse indicator */}
+                <div className="flex items-center gap-2 px-4 py-2 bg-cyan-50 border-2 border-cyan-600 rounded-full">
+                  <div className="w-2 h-2 rounded-full bg-cyan-600 animate-pulse" />
+                  <span className="text-xs font-mono font-bold text-cyan-900">{aiArticles.length} ACTIVE</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Articles Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
               {aiArticles.map((article, index) => (
                 <a
                   key={index}
                   href={article.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg shadow-md border-2 border-purple-200 overflow-hidden hover:shadow-xl hover:border-purple-500 hover:-translate-y-1 transition-all duration-200 flex flex-col"
+                  className="group relative bg-gradient-to-br from-slate-900 to-cyan-950 rounded-none border-4 border-cyan-600 overflow-hidden hover:border-gold-400 transition-all duration-300 flex flex-col shadow-2xl hover:shadow-cyan-600/50"
+                  style={{
+                    boxShadow: '0 0 20px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                    animation: `slideInUp 0.6s ease-out ${index * 0.1}s backwards`
+                  }}
                 >
-                  {/* Article Image */}
+                  {/* Corner accents */}
+                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-gold-400" />
+                  <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-gold-400" />
+                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-gold-400" />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-gold-400" />
+
+                  {/* Scan line effect */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400 to-transparent h-full animate-scan" />
+                  </div>
+
+                  {/* Article Image with overlay */}
                   {article.image && (
-                    <div className="w-full h-48 overflow-hidden bg-gray-100">
+                    <div className="relative w-full h-48 overflow-hidden bg-slate-950">
                       <img
                         src={article.image}
                         alt={article.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+                      {/* Data stream overlay */}
+                      <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity" style={{
+                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6, 182, 212, 0.5) 2px, rgba(6, 182, 212, 0.5) 4px)'
+                      }} />
                     </div>
                   )}
 
-                  <div className="p-6 flex-1 flex flex-col">
-                    <div className="flex items-start justify-between mb-2">
-                      <span className="text-xs font-semibold text-purple-600 uppercase bg-purple-100 px-2 py-1 rounded">
+                  <div className="p-6 flex-1 flex flex-col bg-gradient-to-br from-slate-900/50 to-cyan-950/50 backdrop-blur-sm relative">
+                    {/* Source badge with circuit pattern */}
+                    <div className="flex items-start justify-between mb-4">
+                      <span className="relative text-xs font-mono font-black uppercase tracking-wider text-cyan-300 bg-cyan-950/80 px-3 py-1.5 border-2 border-cyan-600 backdrop-blur-sm"
+                        style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)' }}>
                         {article.source}
+                        <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-shimmer" />
                       </span>
-                      <span className="text-xs text-chocolate-400">
+                      <span className="text-xs font-mono text-cyan-400 bg-slate-900/60 px-2 py-1 border border-cyan-700">
                         {new Date(article.pubDate).toLocaleDateString('en-GB', {
-                          month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: '2-digit'
                         })}
                       </span>
                     </div>
-                    <h3 className="text-lg font-serif font-bold text-chocolate-900 mb-2 line-clamp-3">
+
+                    {/* Title with glitch effect on hover */}
+                    <h3 className="text-xl font-serif font-bold text-cyan-50 mb-3 line-clamp-3 group-hover:text-gold-300 transition-colors duration-300 leading-tight">
                       {article.title}
                     </h3>
+
+                    {/* Description */}
                     {article.description && (
-                      <p className="text-sm text-chocolate-600 line-clamp-2 mb-3">
+                      <p className="text-sm text-cyan-200/80 line-clamp-2 mb-4 leading-relaxed">
                         {article.description}
                       </p>
                     )}
-                    <div className="mt-auto flex items-center text-purple-600 text-sm font-medium">
-                      Read more →
+
+                    {/* Read more with arrow */}
+                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-cyan-800">
+                      <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider group-hover:text-gold-400 transition-colors">
+                        Access Data
+                      </span>
+                      <div className="w-8 h-8 flex items-center justify-center border-2 border-cyan-600 group-hover:border-gold-400 group-hover:bg-gold-400/20 transition-all">
+                        <span className="text-cyan-400 group-hover:text-gold-400 text-lg font-bold group-hover:translate-x-1 transition-transform inline-block">→</span>
+                      </div>
                     </div>
                   </div>
                 </a>
               ))}
             </div>
+
+            {/* Add keyframes for animations */}
+            <style>{`
+              @keyframes slideInUp {
+                from {
+                  opacity: 0;
+                  transform: translateY(30px);
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+              }
+
+              @keyframes scan {
+                0% {
+                  transform: translateY(-100%);
+                }
+                100% {
+                  transform: translateY(200%);
+                }
+              }
+
+              @keyframes shimmer {
+                0% {
+                  transform: translateX(-100%);
+                }
+                100% {
+                  transform: translateX(100%);
+                }
+              }
+
+              .animate-scan {
+                animation: scan 2s linear infinite;
+              }
+
+              .animate-shimmer {
+                animation: shimmer 3s linear infinite;
+              }
+            `}</style>
           </div>
         )}
 
