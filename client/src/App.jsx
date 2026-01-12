@@ -1031,118 +1031,235 @@ function NewsView() {
   const allTrumpContent = [...trumpArticles, ...trumpDump];
 
   return (
-    <div className="w-full">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-serif font-bold text-chocolate-900 mb-2">Latest News</h1>
-          <p className="text-chocolate-600">Real-time headlines from trusted sources</p>
+    <div className="w-full bg-slate-950 min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Header - Terminal Style */}
+        <div className="mb-12 relative">
+          {/* Scanline background */}
+          <div className="absolute inset-0 opacity-5 pointer-events-none">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6, 182, 212, 0.3) 2px, rgba(6, 182, 212, 0.3) 4px)'
+            }} />
+          </div>
+
+          <div className="relative border-4 border-cyan-600 p-8 bg-gradient-to-br from-slate-900 to-cyan-950" style={{
+            boxShadow: '0 0 30px rgba(6, 182, 212, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.1)'
+          }}>
+            {/* Corner decorations */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-gold-400" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-gold-400" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-gold-400" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-gold-400" />
+
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h1 className="text-6xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 mb-2 tracking-tight" style={{
+                  textShadow: '0 0 40px rgba(6, 182, 212, 0.5)'
+                }}>
+                  NEWS TERMINAL
+                </h1>
+                <div className="flex items-center gap-3">
+                  <div className="h-px flex-1 bg-gradient-to-r from-cyan-600 to-transparent" />
+                  <p className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
+                    Real-time Global Intelligence Feed
+                  </p>
+                  <div className="h-px flex-1 bg-gradient-to-l from-cyan-600 to-transparent" />
+                </div>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-2 bg-cyan-950/50 border-2 border-cyan-600">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs font-mono font-bold text-cyan-300">LIVE</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Source Filter */}
-        <div className="mb-6 flex gap-2 flex-wrap">
-          {sources.map(source => (
+        {/* Source Filter - Terminal Buttons */}
+        <div className="mb-8 flex gap-3 flex-wrap">
+          {sources.map((source, idx) => (
             <button
               key={source}
               onClick={() => setSelectedSource(source)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`relative px-5 py-2.5 font-mono font-bold uppercase tracking-wider text-sm transition-all duration-300 border-2 ${
                 selectedSource === source
-                  ? 'bg-gold-600 text-white'
-                  : 'bg-white text-chocolate-900 border-2 border-chocolate-200 hover:border-gold-400'
+                  ? 'bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-600/50'
+                  : 'bg-slate-900 text-cyan-400 border-cyan-700 hover:border-gold-400 hover:text-gold-400 hover:shadow-lg hover:shadow-gold-600/30'
               }`}
+              style={{
+                clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)',
+                animation: `fadeIn 0.3s ease-out ${idx * 0.05}s backwards`
+              }}
             >
-              {source === 'all' ? 'All Sources' : source}
+              {source === 'all' ? 'ALL FEEDS' : source.toUpperCase()}
+              {selectedSource === source && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              )}
             </button>
           ))}
         </div>
 
-        {/* News Headlines Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {/* News Headlines Grid - Terminal Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {filteredArticles.map((article, index) => (
             <a
               key={index}
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white rounded-lg shadow-md border-2 border-chocolate-200 overflow-hidden hover:shadow-xl hover:border-turquoise-500 hover:-translate-y-1 transition-all duration-200 flex flex-col"
+              className="group relative bg-gradient-to-br from-slate-900 to-cyan-950 border-4 border-cyan-600 overflow-hidden hover:border-gold-400 transition-all duration-300 flex flex-col shadow-2xl hover:shadow-cyan-600/50"
+              style={{
+                boxShadow: '0 0 20px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                animation: `slideInUp 0.6s ease-out ${index * 0.08}s backwards`
+              }}
             >
-              {/* Article Image */}
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-gold-400" />
+              <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-gold-400" />
+              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-gold-400" />
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-gold-400" />
+
+              {/* Scan line effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400 to-transparent h-full animate-scan" />
+              </div>
+
+              {/* Article Image with overlay */}
               {article.image && (
-                <div className="w-full h-48 overflow-hidden bg-gray-100">
+                <div className="relative w-full h-48 overflow-hidden bg-slate-950">
                   <img
                     src={article.image}
                     alt={article.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                     onError={(e) => { e.target.style.display = 'none'; }}
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+                  {/* Data stream overlay */}
+                  <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity" style={{
+                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6, 182, 212, 0.5) 2px, rgba(6, 182, 212, 0.5) 4px)'
+                  }} />
                 </div>
               )}
 
-              <div className="p-6 flex-1 flex flex-col">
-                <div className="flex items-start justify-between mb-2">
-                  <span className="text-xs font-semibold text-gold-600 uppercase">
+              <div className="p-6 flex-1 flex flex-col bg-gradient-to-br from-slate-900/50 to-cyan-950/50 backdrop-blur-sm relative">
+                {/* Source badge */}
+                <div className="flex items-start justify-between mb-4">
+                  <span className="relative text-xs font-mono font-black uppercase tracking-wider text-cyan-300 bg-cyan-950/80 px-3 py-1.5 border-2 border-cyan-600 backdrop-blur-sm"
+                    style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)' }}>
                     {article.source}
+                    <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-shimmer" />
                   </span>
-                  <span className="text-xs text-chocolate-400">
+                  <span className="text-xs font-mono text-cyan-400 bg-slate-900/60 px-2 py-1 border border-cyan-700">
                     {new Date(article.pubDate).toLocaleDateString('en-GB', {
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: '2-digit'
                     })}
                   </span>
                 </div>
-                <h3 className="text-lg font-serif font-bold text-chocolate-900 mb-2 line-clamp-3">
+
+                {/* Title */}
+                <h3 className="text-xl font-serif font-bold text-cyan-50 mb-3 line-clamp-3 group-hover:text-gold-300 transition-colors duration-300 leading-tight">
                   {article.title}
                 </h3>
+
+                {/* Description */}
                 {article.description && (
-                  <p className="text-sm text-chocolate-600 line-clamp-2 mb-3">
+                  <p className="text-sm text-cyan-200/80 line-clamp-2 mb-4 leading-relaxed">
                     {article.description}
                   </p>
                 )}
-                <div className="mt-auto flex items-center text-turquoise-600 text-sm font-medium">
-                  Read more →
+
+                {/* Read more with arrow */}
+                <div className="mt-auto flex items-center justify-between pt-4 border-t border-cyan-800">
+                  <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider group-hover:text-gold-400 transition-colors">
+                    Read Article
+                  </span>
+                  <div className="w-8 h-8 flex items-center justify-center border-2 border-cyan-600 group-hover:border-gold-400 group-hover:bg-gold-400/20 transition-all">
+                    <span className="text-cyan-400 group-hover:text-gold-400 text-lg font-bold group-hover:translate-x-1 transition-transform inline-block">→</span>
+                  </div>
                 </div>
               </div>
             </a>
           ))}
         </div>
 
-        {/* What's Trending Section */}
+        {/* What's Trending Section - Pulse Monitor */}
         {trending.filter(item => !item.isSports && !item.isTrump).length > 0 && (
-          <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
-            <div className="mb-6">
-              <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">What's Trending</h2>
-              <p className="text-chocolate-600">Popular topics from Google, Reddit & YouTube</p>
+          <div className="mb-16 pt-12 border-t-4 border-double border-cyan-600 relative">
+            {/* Animated grid background */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+              <div className="absolute inset-0" style={{
+                backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent)',
+                backgroundSize: '50px 50px'
+              }} />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="mb-10 relative">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="relative">
+                  <div className="w-12 h-12 border-4 border-cyan-600 flex items-center justify-center bg-slate-900">
+                    <div className="w-4 h-4 bg-gold-400 animate-pulse" style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }} />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-5xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400 mb-1 tracking-tight" style={{
+                    textShadow: '0 0 30px rgba(251, 191, 36, 0.3)'
+                  }}>
+                    PULSE MONITOR
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <div className="h-px flex-1 bg-gradient-to-r from-gold-600 to-transparent" />
+                    <p className="text-xs font-mono uppercase tracking-widest text-gold-400 font-bold">
+                      Global Conversation Tracker
+                    </p>
+                    <div className="h-px flex-1 bg-gradient-to-l from-gold-600 to-transparent" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative">
               {trending.filter(item => !item.isSports && !item.isTrump).map((item, index) => (
                 <a
                   key={index}
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-gradient-to-br from-turquoise-50 to-gold-50 rounded-lg shadow-md border-2 border-turquoise-200 p-4 hover:shadow-xl hover:border-turquoise-500 hover:-translate-y-1 transition-all duration-200"
+                  className="group relative bg-gradient-to-br from-slate-900 to-slate-950 border-2 border-gold-600 p-5 hover:border-cyan-400 hover:shadow-lg hover:shadow-gold-600/30 transition-all duration-300"
+                  style={{
+                    boxShadow: '0 0 15px rgba(251, 191, 36, 0.15)',
+                    animation: `fadeIn 0.5s ease-out ${index * 0.08}s backwards`
+                  }}
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <span className={`text-xs font-semibold uppercase px-2 py-1 rounded ${
-                      item.source === 'Google Trends' ? 'bg-blue-100 text-blue-700' :
-                      item.source === 'Reddit' ? 'bg-orange-100 text-orange-700' :
-                      'bg-red-100 text-red-700'
+                  {/* Corner indicators */}
+                  <div className="absolute top-0 left-0 w-2 h-2 bg-gold-400" />
+                  <div className="absolute top-0 right-0 w-2 h-2 bg-gold-400" />
+                  <div className="absolute bottom-0 left-0 w-2 h-2 bg-gold-400" />
+                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-gold-400" />
+
+                  <div className="flex items-start justify-between mb-3">
+                    <span className={`text-xs font-mono font-bold uppercase px-2 py-1 border ${
+                      item.source === 'Google Trends' ? 'border-blue-400 text-blue-300 bg-blue-950/50' :
+                      item.source === 'Reddit' ? 'border-orange-400 text-orange-300 bg-orange-950/50' :
+                      'border-red-400 text-red-300 bg-red-950/50'
                     }`}>
                       {item.source}
                     </span>
                     {item.traffic && (
-                      <span className="text-xs text-chocolate-400">{item.traffic}</span>
+                      <span className="text-xs font-mono text-gold-400 bg-slate-900/80 px-2 py-1 border border-gold-600">{item.traffic}</span>
                     )}
                   </div>
-                  <h3 className="text-sm font-semibold text-chocolate-900 line-clamp-2">
+                  <h3 className="text-sm font-serif font-bold text-cyan-50 line-clamp-2 mb-2 group-hover:text-gold-300 transition-colors">
                     {item.title}
                   </h3>
                   {item.subreddit && (
-                    <p className="text-xs text-chocolate-600 mt-1">r/{item.subreddit}</p>
+                    <p className="text-xs font-mono text-gold-400 mt-2 border-t border-gold-900 pt-2">r/{item.subreddit}</p>
                   )}
+
+                  {/* Hover scan line */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold-400 to-transparent h-full animate-scan" />
+                  </div>
                 </a>
               ))}
             </div>
@@ -1316,44 +1433,78 @@ function NewsView() {
           </div>
         )}
 
-        {/* Trump Dump Section */}
+        {/* Trump Dump Section - Quarantine Zone */}
         {allTrumpContent.length > 0 && (
-          <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
-            <div className="mb-6">
+          <div className="mb-16 pt-12 border-t-4 border-double border-red-900 relative bg-gradient-to-br from-red-950/20 to-slate-950">
+            {/* Warning stripes */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+              <div className="absolute inset-0" style={{
+                backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(239, 68, 68, 0.3) 10px, rgba(239, 68, 68, 0.3) 20px)'
+              }} />
+            </div>
+
+            <div className="mb-8 relative">
               <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">The Trump Dump</h2>
-                  <p className="text-chocolate-600">Trump-related content quarantined for your sanity</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 border-4 border-red-600 bg-slate-900 flex items-center justify-center">
+                    <X className="w-8 h-8 text-red-500" />
+                  </div>
+                  <div>
+                    <h2 className="text-4xl font-serif font-black text-red-500 mb-1 tracking-tight" style={{
+                      textShadow: '0 0 20px rgba(239, 68, 68, 0.3)'
+                    }}>
+                      QUARANTINE ZONE
+                    </h2>
+                    <div className="flex items-center gap-3">
+                      <div className="h-px w-24 bg-gradient-to-r from-red-600 to-transparent" />
+                      <p className="text-xs font-mono uppercase tracking-widest text-red-400 font-bold">
+                        Filtered Content Container
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 <button
                   onClick={() => setShowTrumpDump(!showTrumpDump)}
-                  className="px-4 py-2 bg-chocolate-200 text-chocolate-900 rounded-lg hover:bg-chocolate-300 transition-colors font-medium"
+                  className="relative px-6 py-3 bg-slate-900 text-red-400 border-2 border-red-600 font-mono font-bold uppercase tracking-wider hover:bg-red-950 hover:text-red-300 transition-all"
+                  style={{
+                    clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)'
+                  }}
                 >
-                  {showTrumpDump ? 'Hide' : `Show (${allTrumpContent.length})`}
+                  {showTrumpDump ? 'SEAL CONTAINER' : `UNSEAL (${allTrumpContent.length})`}
                 </button>
               </div>
             </div>
 
             {showTrumpDump && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-60">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-70">
                 {allTrumpContent.map((item, index) => (
                   <a
                     key={index}
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-gray-100 rounded-lg shadow-md border-2 border-gray-300 p-4 hover:shadow-xl hover:border-gray-400 transition-all"
+                    className="group relative bg-gradient-to-br from-slate-900 to-red-950/30 border-2 border-red-900 p-5 hover:border-red-700 transition-all duration-300"
+                    style={{
+                      boxShadow: '0 0 10px rgba(127, 29, 29, 0.2)',
+                      animation: `fadeIn 0.4s ease-out ${index * 0.05}s backwards`
+                    }}
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <span className="text-xs font-semibold bg-gray-200 text-gray-700 uppercase px-2 py-1 rounded">
+                    {/* Warning corners */}
+                    <div className="absolute top-0 left-0 w-2 h-2 bg-red-600" />
+                    <div className="absolute top-0 right-0 w-2 h-2 bg-red-600" />
+                    <div className="absolute bottom-0 left-0 w-2 h-2 bg-red-600" />
+                    <div className="absolute bottom-0 right-0 w-2 h-2 bg-red-600" />
+
+                    <div className="flex items-start justify-between mb-3">
+                      <span className="text-xs font-mono font-bold bg-red-950/80 text-red-300 uppercase px-2 py-1 border border-red-800">
                         {item.source}
                       </span>
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">
+                    <h3 className="text-sm font-serif font-bold text-gray-400 line-clamp-2 group-hover:text-red-300 transition-colors">
                       {item.title}
                     </h3>
                     {item.description && (
-                      <p className="text-xs text-gray-600 mt-2 line-clamp-2">
+                      <p className="text-xs text-gray-500 mt-2 line-clamp-2">
                         {item.description}
                       </p>
                     )}
@@ -1364,35 +1515,98 @@ function NewsView() {
           </div>
         )}
 
-        {/* Today's Papers Section */}
-        <div className="mb-12 pt-8 border-t-2 border-chocolate-200">
-          <div className="mb-6">
-            <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-2">Today's Papers</h2>
-            <p className="text-chocolate-600">Browse latest newspaper editions</p>
+        {/* Today's Papers Section - Archive Terminal */}
+        <div className="mb-16 pt-12 border-t-4 border-double border-cyan-600 relative">
+          {/* Grid background */}
+          <div className="absolute inset-0 opacity-5 pointer-events-none">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent)',
+              backgroundSize: '50px 50px'
+            }} />
+          </div>
+
+          <div className="mb-10 relative">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="relative">
+                <Newspaper className="w-12 h-12 text-cyan-500" />
+                <div className="absolute inset-0 blur-xl bg-cyan-400 opacity-30 animate-pulse" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-5xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 mb-1 tracking-tight" style={{
+                  textShadow: '0 0 30px rgba(6, 182, 212, 0.3)'
+                }}>
+                  PRINT ARCHIVE
+                </h2>
+                <div className="flex items-center gap-3">
+                  <div className="h-px flex-1 bg-gradient-to-r from-cyan-600 to-transparent" />
+                  <p className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
+                    Digital Newspaper Repository
+                  </p>
+                  <div className="h-px flex-1 bg-gradient-to-l from-cyan-600 to-transparent" />
+                </div>
+              </div>
+            </div>
           </div>
 
           <a
             href="https://oceanofpdf.com/magazines-newspapers/"
             target="_blank"
             rel="noopener noreferrer"
-            className="block bg-gradient-to-br from-chocolate-700 to-chocolate-900 rounded-lg shadow-xl border-2 border-gold-500 p-8 hover:shadow-2xl hover:border-gold-400 hover:-translate-y-1 transition-all duration-200"
+            className="group relative block bg-gradient-to-br from-slate-900 to-cyan-950 border-4 border-cyan-600 p-10 hover:border-gold-400 hover:shadow-2xl hover:shadow-cyan-600/50 transition-all duration-300"
+            style={{
+              boxShadow: '0 0 30px rgba(6, 182, 212, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.1)'
+            }}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Newspaper className="w-16 h-16 text-gold-300" />
+            {/* Corner accents */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-gold-400" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-gold-400" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-gold-400" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-gold-400" />
+
+            {/* Scan line effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400 to-transparent h-full animate-scan" />
+            </div>
+
+            <div className="flex items-center justify-between relative">
+              <div className="flex items-center gap-6">
+                <div className="w-20 h-20 border-4 border-cyan-600 bg-slate-950 flex items-center justify-center group-hover:border-gold-400 transition-colors">
+                  <Newspaper className="w-12 h-12 text-cyan-400 group-hover:text-gold-400 transition-colors" />
+                </div>
                 <div>
-                  <h3 className="text-2xl font-serif font-bold text-white mb-2">
-                    View All Newspaper Editions
+                  <h3 className="text-3xl font-serif font-black text-cyan-50 mb-2 group-hover:text-gold-300 transition-colors">
+                    ACCESS NEWSPAPER DATABASE
                   </h3>
-                  <p className="text-gold-200">
-                    Guardian, NY Times, Washington Post, New Yorker & more
+                  <p className="text-cyan-300 font-mono text-sm tracking-wide">
+                    Guardian • NY Times • Washington Post • New Yorker • Financial Times • Telegraph
                   </p>
                 </div>
               </div>
-              <ExternalLink className="w-8 h-8 text-gold-300" />
+              <div className="flex items-center gap-4">
+                <div className="px-4 py-2 bg-cyan-950/80 border-2 border-cyan-600 group-hover:border-gold-400 transition-colors">
+                  <span className="text-xs font-mono font-bold text-cyan-300 uppercase">External Link</span>
+                </div>
+                <div className="w-12 h-12 border-2 border-cyan-600 group-hover:border-gold-400 flex items-center justify-center bg-slate-950 group-hover:bg-gold-400/20 transition-all">
+                  <ExternalLink className="w-6 h-6 text-cyan-400 group-hover:text-gold-400 transition-colors" />
+                </div>
+              </div>
             </div>
           </a>
         </div>
+
+        {/* Add global fadeIn keyframe */}
+        <style>{`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}</style>
       </div>
     </div>
   );
