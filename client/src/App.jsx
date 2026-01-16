@@ -1018,7 +1018,14 @@ function NewsView() {
   const regularArticles = articles.filter(a => !a.isTrump && !a.isSports && !a.isAI);
   const trumpArticles = articles.filter(a => a.isTrump);
   const sportsArticles = articles.filter(a => a.isSports && !a.isTrump);
-  const aiArticles = articles.filter(a => a.isAI && !a.isTrump && !a.isSports);
+  const aiArticles = articles
+    .filter(a => a.isAI && !a.isTrump && !a.isSports)
+    .sort((a, b) => {
+      // Prioritize Anthropic/Claude articles at the top
+      if (a.isAnthropic && !b.isAnthropic) return -1;
+      if (!a.isAnthropic && b.isAnthropic) return 1;
+      return 0; // Keep original order (by date) for same priority
+    });
 
   // Filter articles by source (excluding Trump and sports articles)
   const filteredArticles = selectedSource === 'all'
@@ -1233,13 +1240,26 @@ function NewsView() {
                   )}
 
                   <div className="p-6 flex-1 flex flex-col bg-gradient-to-br from-gray-900/50 to-gray-800/50 backdrop-blur-sm relative">
+                    {/* Anthropic Priority Badge */}
+                    {article.isAnthropic && (
+                      <div className="absolute -top-1 -right-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg shadow-lg z-10">
+                        ★ PRIORITY
+                      </div>
+                    )}
                     {/* Source badge with circuit pattern */}
                     <div className="flex items-start justify-between mb-4">
-                      <span className="relative text-xs font-mono font-black uppercase tracking-wider text-brand-orange bg-brand-orange-dark/80 px-3 py-1.5 border-2 border-brand-orange backdrop-blur-sm"
-                        style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)' }}>
-                        {article.source}
-                        <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-shimmer" />
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="relative text-xs font-mono font-black uppercase tracking-wider text-brand-orange bg-brand-orange-dark/80 px-3 py-1.5 border-2 border-brand-orange backdrop-blur-sm"
+                          style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)' }}>
+                          {article.source}
+                          <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-shimmer" />
+                        </span>
+                        {article.isAnthropic && (
+                          <span className="text-xs font-mono font-bold text-amber-400 bg-amber-900/50 px-2 py-1 border border-amber-500 rounded">
+                            CLAUDE
+                          </span>
+                        )}
+                      </div>
                       <span className="text-xs font-mono text-brand-orange bg-gray-800/60 px-2 py-1 border border-brand-orange">
                         {new Date(article.pubDate).toLocaleDateString('en-GB', {
                           day: '2-digit',

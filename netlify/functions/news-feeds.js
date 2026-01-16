@@ -174,6 +174,22 @@ exports.handler = async (event, context) => {
       return aiPatterns.some(pattern => pattern.test(lowerText));
     };
 
+    // Check if content is Anthropic/Claude-related (for prioritization)
+    const isAnthropicRelated = (text) => {
+      if (!text) return false;
+      const lowerText = text.toLowerCase();
+      const anthropicPatterns = [
+        /anthropic/,
+        /\bclaude\b/,
+        /claude\s*\d/,           // Claude 3, Claude 4, etc.
+        /claude\s*(opus|sonnet|haiku)/i,
+        /artifacts/,             // Claude's Artifacts feature
+        /dario\s*amodei/,        // CEO
+        /daniela\s*amodei/       // President
+      ];
+      return anthropicPatterns.some(pattern => pattern.test(lowerText));
+    };
+
     // Fetch all RSS feeds in parallel
     const feedPromises = RSS_FEEDS.map(async (feed) => {
       try {
@@ -186,15 +202,19 @@ exports.handler = async (event, context) => {
 
         const items = parseRSS(response.data);
 
-        // Add source information to each article and check for Trump/sports/AI content
-        return items.slice(0, 10).map(item => ({
-          ...item,
-          source: feed.name,
-          category: feed.category,
-          isTrump: isTrumpRelated(item.title) || isTrumpRelated(item.description),
-          isSports: isSportsRelated(item.title) || isSportsRelated(item.description),
-          isAI: isAIRelated(item.title + ' ' + item.description, feed.name)
-        }));
+        // Add source information to each article and check for Trump/sports/AI/Anthropic content
+        return items.slice(0, 10).map(item => {
+          const combinedText = item.title + ' ' + item.description;
+          return {
+            ...item,
+            source: feed.name,
+            category: feed.category,
+            isTrump: isTrumpRelated(item.title) || isTrumpRelated(item.description),
+            isSports: isSportsRelated(item.title) || isSportsRelated(item.description),
+            isAI: isAIRelated(combinedText, feed.name),
+            isAnthropic: isAnthropicRelated(combinedText)
+          };
+        });
       } catch (error) {
         console.error(`Error fetching ${feed.name}:`, error.message);
         return [];
