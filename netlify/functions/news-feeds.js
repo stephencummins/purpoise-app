@@ -190,6 +190,25 @@ exports.handler = async (event, context) => {
       return anthropicPatterns.some(pattern => pattern.test(lowerText));
     };
 
+    // Check if content is Liberal Democrats-related (for prioritization)
+    const isLibDemRelated = (text) => {
+      if (!text) return false;
+      const lowerText = text.toLowerCase();
+      const libDemPatterns = [
+        /liberal democrat/,
+        /lib\s*dem/,
+        /\bld\b/,                // LD as abbreviation (whole word)
+        /ed\s*davey/,            // Leader
+        /daisy\s*cooper/,        // Deputy Leader
+        /layla\s*moran/,
+        /munira\s*wilson/,
+        /wera\s*hobhouse/,
+        /tim\s*farron/,
+        /alistair\s*carmichael/
+      ];
+      return libDemPatterns.some(pattern => pattern.test(lowerText));
+    };
+
     // Fetch all RSS feeds in parallel
     const feedPromises = RSS_FEEDS.map(async (feed) => {
       try {
@@ -212,7 +231,8 @@ exports.handler = async (event, context) => {
             isTrump: isTrumpRelated(item.title) || isTrumpRelated(item.description),
             isSports: isSportsRelated(item.title) || isSportsRelated(item.description),
             isAI: isAIRelated(combinedText, feed.name),
-            isAnthropic: isAnthropicRelated(combinedText)
+            isAnthropic: isAnthropicRelated(combinedText),
+            isLibDem: isLibDemRelated(combinedText)
           };
         });
       } catch (error) {

@@ -1015,7 +1015,14 @@ function NewsView() {
   }
 
   // Separate Trump, sports, and AI articles from regular news
-  const regularArticles = articles.filter(a => !a.isTrump && !a.isSports && !a.isAI);
+  const regularArticles = articles
+    .filter(a => !a.isTrump && !a.isSports && !a.isAI)
+    .sort((a, b) => {
+      // Prioritize Lib Dem articles at the top
+      if (a.isLibDem && !b.isLibDem) return -1;
+      if (!a.isLibDem && b.isLibDem) return 1;
+      return 0; // Keep original order (by date) for same priority
+    });
   const trumpArticles = articles.filter(a => a.isTrump);
   const sportsArticles = articles.filter(a => a.isSports && !a.isTrump);
   const aiArticles = articles
@@ -1086,11 +1093,24 @@ function NewsView() {
                 </div>
               )}
 
-              <div className="p-6 flex-1 flex flex-col">
+              <div className="p-6 flex-1 flex flex-col relative">
+                {/* Lib Dem Priority Badge */}
+                {article.isLibDem && (
+                  <div className="absolute -top-1 -right-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg shadow-lg z-10">
+                    🔶 LIB DEM
+                  </div>
+                )}
                 <div className="flex items-start justify-between mb-2">
-                  <span className="text-xs font-semibold text-brand-orange-dark uppercase">
-                    {article.source}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-brand-orange-dark uppercase">
+                      {article.source}
+                    </span>
+                    {article.isLibDem && (
+                      <span className="text-xs font-bold text-amber-400 bg-amber-900/50 px-2 py-0.5 border border-amber-500 rounded">
+                        LD
+                      </span>
+                    )}
+                  </div>
                   <span className="text-xs text-gray-400">
                     {new Date(article.pubDate).toLocaleDateString('en-GB', {
                       month: 'short',
