@@ -844,7 +844,7 @@ function WikipediaView() {
                   {content.featuredArticle.title}
                 </h3>
                 <div
-                  className="text-chocolate-700 leading-relaxed"
+                  className="text-gray-300 leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: content.featuredArticle.content }}
                 />
                 {content.featuredArticle.link && (
@@ -887,7 +887,7 @@ function WikipediaView() {
                     <li key={index} className="flex items-start">
                       <span className="text-brand-orange-dark font-bold mr-3 mt-1">•</span>
                       <div
-                        className="flex-1 text-chocolate-700"
+                        className="flex-1 text-gray-300"
                         dangerouslySetInnerHTML={{ __html: item }}
                       />
                     </li>
@@ -901,8 +901,9 @@ function WikipediaView() {
         {/* Did You Know */}
         {content?.didYouKnow && content.didYouKnow.length > 0 && (
           <div className="mb-8">
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
-              <h2 className="text-2xl font-serif font-bold text-white mb-4">
+            <div className="bg-gray-900 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
+              <h2 className="text-2xl font-serif font-bold text-white mb-4 flex items-center">
+                <span className="text-brand-orange-dark mr-2">?</span>
                 Did You Know...
               </h2>
               <ul className="space-y-3">
@@ -910,7 +911,7 @@ function WikipediaView() {
                   <li key={index} className="flex items-start">
                     <span className="text-brand-orange-dark font-bold mr-3 mt-1">?</span>
                     <div
-                      className="flex-1 text-chocolate-700"
+                      className="flex-1 text-gray-300"
                       dangerouslySetInnerHTML={{ __html: item }}
                     />
                   </li>
@@ -933,7 +934,7 @@ function WikipediaView() {
                   <li key={index} className="flex items-start">
                     <span className="text-brand-orange-dark font-bold mr-3 mt-1">•</span>
                     <div
-                      className="flex-1 text-chocolate-700"
+                      className="flex-1 text-gray-300"
                       dangerouslySetInnerHTML={{ __html: item }}
                     />
                   </li>
@@ -1083,7 +1084,7 @@ function NewsView() {
                   <span className="text-xs font-semibold text-brand-orange-dark uppercase">
                     {article.source}
                   </span>
-                  <span className="text-xs text-chocolate-400">
+                  <span className="text-xs text-gray-400">
                     {new Date(article.pubDate).toLocaleDateString('en-GB', {
                       month: 'short',
                       day: 'numeric',
@@ -1134,7 +1135,7 @@ function NewsView() {
                       {item.source}
                     </span>
                     {item.traffic && (
-                      <span className="text-xs text-chocolate-400">{item.traffic}</span>
+                      <span className="text-xs text-gray-400">{item.traffic}</span>
                     )}
                   </div>
                   <h3 className="text-sm font-semibold text-white line-clamp-2">
@@ -1342,10 +1343,10 @@ function NewsView() {
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-gray-100 rounded-lg shadow-md border-2 border-gray-300 p-4 hover:shadow-xl hover:border-gray-400 transition-all"
+                    className="bg-gray-800 rounded-lg shadow-md border-2 border-gray-600 p-4 hover:shadow-xl hover:border-gray-500 transition-all"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <span className="text-xs font-semibold bg-gray-200 text-gray-700 uppercase px-2 py-1 rounded">
+                      <span className="text-xs font-semibold bg-gray-700 text-gray-300 uppercase px-2 py-1 rounded">
                         {item.source}
                       </span>
                     </div>
@@ -1353,7 +1354,7 @@ function NewsView() {
                       {item.title}
                     </h3>
                     {item.description && (
-                      <p className="text-xs text-gray-600 mt-2 line-clamp-2">
+                      <p className="text-xs text-gray-400 mt-2 line-clamp-2">
                         {item.description}
                       </p>
                     )}
@@ -2127,7 +2128,7 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
             className="w-full text-gray-700 mb-6 border-2 border-brand-orange-dark rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-vintage-orange"
           />
         ) : (
-          <p className="text-gray-700 mb-6">{goal.description}</p>
+          <p className="text-gray-300 mb-6">{goal.description}</p>
         )}
 
         {isEditing && (
