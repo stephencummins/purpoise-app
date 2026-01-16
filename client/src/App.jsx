@@ -1875,7 +1875,7 @@ function NewsDigestWidget() {
   return (
     <div className="bg-gray-900 rounded-lg shadow-lg border-2 border-brand-orange-dark p-4 mt-6">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-serif font-bold flex items-center">
+        <h3 className="text-lg font-serif font-bold flex items-center text-white">
           <Newspaper className="w-5 h-5 mr-2 text-brand-orange-dark" />
           News Digest
         </h3>
@@ -1905,7 +1905,7 @@ function NewsDigestWidget() {
             >
               <div className="flex items-start space-x-2">
                 <div className="w-1 h-1 rounded-full bg-brand-orange-dark mt-2 flex-shrink-0" />
-                <p className="text-sm text-gray-700 group-hover:text-brand-orange-dark transition-colors line-clamp-2">
+                <p className="text-sm text-gray-300 group-hover:text-brand-orange-dark transition-colors line-clamp-2">
                   {item.title}
                 </p>
               </div>
@@ -1949,11 +1949,11 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
         {/* Daily Tasks */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-xl flex items-center text-chocolate-900">
+            <h3 className="font-bold text-xl flex items-center text-white">
               <Sun className="w-5 h-5 mr-2 text-orange-500" />
               Daily Tasks
             </h3>
-            <span className="text-sm font-semibold text-chocolate-600">
+            <span className="text-sm font-semibold text-gray-300">
               {completedDaily}/{dailyTasks.length}
             </span>
           </div>
@@ -1994,11 +1994,11 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
         {/* Weekly Tasks */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-xl flex items-center text-chocolate-900">
+            <h3 className="font-bold text-xl flex items-center text-white">
               <CalendarIcon className="w-5 h-5 mr-2 text-blue-500" />
               Weekly Tasks
             </h3>
-            <span className="text-sm font-semibold text-chocolate-600">
+            <span className="text-sm font-semibold text-gray-300">
               {completedWeekly}/{weeklyTasks.length}
             </span>
           </div>
