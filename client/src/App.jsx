@@ -2108,21 +2108,18 @@ function NewsDigestWidget() {
           No headlines available
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-1">
           {headlines.map((item, idx) => (
             <a
               key={idx}
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-2 hover:bg-gray-50 rounded-lg transition-colors group"
+              className="block px-3 py-2.5 hover:bg-orange-50 rounded-lg transition-colors group border-l-2 border-transparent hover:border-vintage-orange"
             >
-              <div className="flex items-start space-x-2">
-                <div className="w-1 h-1 rounded-full bg-vintage-orange mt-2 flex-shrink-0" />
-                <p className="text-sm text-gray-700 group-hover:text-vintage-orange transition-colors line-clamp-2">
-                  {item.title}
-                </p>
-              </div>
+              <p className="text-base leading-snug text-gray-800 group-hover:text-vintage-orange transition-colors font-medium">
+                {item.title}
+              </p>
             </a>
           ))}
         </div>
