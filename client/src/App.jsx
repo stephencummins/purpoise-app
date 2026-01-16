@@ -1558,6 +1558,7 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
   const [cardsLoading, setCardsLoading] = useState(true);
   const [weatherExpanded, setWeatherExpanded] = useState(false);
   const [showTarot, setShowTarot] = useState(true);
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
 
   useEffect(() => {
     const loadCards = async () => {
@@ -1566,6 +1567,13 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
       setCardsLoading(false);
     };
     loadCards();
+
+    // Update current hour every minute to handle time-based repositioning
+    const interval = setInterval(() => {
+      setCurrentHour(new Date().getHours());
+    }, 60000); // Check every minute
+
+    return () => clearInterval(interval);
   }, []);
 
   const getWeeklyDigest = () => {
@@ -1620,6 +1628,9 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
 
   const positions = ['Past', 'Present', 'Future'];
 
+  // Determine News Digest position based on time (before or after 11am)
+  const isAfter11am = currentHour >= 11;
+
   return (
     <div className="flex gap-6">
       {/* Left Sidebar - Weather & News */}
@@ -1632,12 +1643,16 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
             </h2>
             <WeatherWidget />
           </div>
-          <NewsDigestWidget />
+          {/* News Digest - Left sidebar after 11am */}
+          {isAfter11am && <NewsDigestWidget />}
         </div>
       </div>
 
       {/* Main Content Area */}
       <div className="flex-1 space-y-6">
+        {/* News Digest - Top of main content before 11am */}
+        {!isAfter11am && <NewsDigestWidget />}
+
         {/* Goals Section - Front and Center */}
         <div>
           <div className="flex items-center justify-between mb-6">
@@ -1912,16 +1927,19 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
   const dailyTasks = dailyStage?.tasks || [];
   const weeklyTasks = weeklyStage?.tasks || [];
 
+  const completedDaily = dailyTasks.filter(t => t.completed).length;
+  const completedWeekly = weeklyTasks.filter(t => t.completed).length;
+
   return (
-    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-serif font-bold flex items-center">
+    <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-serif font-bold flex items-center text-white">
           <Repeat className="w-6 h-6 mr-2 text-brand-orange-dark" />
           Recurring Tasks
         </h2>
         <button
           onClick={() => onSelectGoal(recurringGoal)}
-          className="text-sm px-3 py-1 bg-brand-orange-dark text-white rounded-lg hover:bg-opacity-90 transition-colors"
+          className="text-sm px-4 py-2 bg-brand-orange-dark text-white rounded-lg hover:bg-opacity-90 transition-colors font-medium"
         >
           Manage
         </button>
@@ -1930,73 +1948,91 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Daily Tasks */}
         <div>
-          <h3 className="font-semibold text-lg mb-3 flex items-center">
-            <Sun className="w-5 h-5 mr-2 text-orange-500" />
-            Daily
-          </h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-xl flex items-center text-chocolate-900">
+              <Sun className="w-5 h-5 mr-2 text-orange-500" />
+              Daily Tasks
+            </h3>
+            <span className="text-sm font-semibold text-chocolate-600">
+              {completedDaily}/{dailyTasks.length}
+            </span>
+          </div>
           <div className="space-y-2">
-            {dailyTasks.map((task, idx) => {
-              const isAnimating = animatingTasks.has(task.id);
-              return (
-                <button
-                  key={idx}
-                  onClick={() => toggleTask(task, dailyStage.id)}
-                  className={`w-full flex items-center space-x-3 p-2 bg-gray-900 rounded-lg hover:bg-gray-800 transition-all text-left ${
-                    isAnimating ? 'scale-105 ring-2 ring-vintage-orange ring-opacity-50' : ''
-                  }`}
-                  style={{
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-                  }}
-                >
-                  <div className={isAnimating ? 'animate-bounce' : ''}>
-                    {task.completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    ) : (
-                      <Circle className="w-5 h-5 text-gray-400 hover:text-brand-orange-dark flex-shrink-0" />
-                    )}
-                  </div>
-                  <span className={task.completed ? 'line-through text-gray-400' : ''}>
-                    {task.text}
-                  </span>
-                </button>
-              );
-            })}
+            {dailyTasks.length === 0 ? (
+              <p className="text-sm text-gray-400 italic py-2">No daily tasks yet</p>
+            ) : (
+              dailyTasks.map((task, idx) => {
+                const isAnimating = animatingTasks.has(task.id);
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => toggleTask(task, dailyStage.id)}
+                    className={`w-full flex items-center space-x-3 p-2 bg-gray-900 rounded-lg hover:bg-gray-800 transition-all text-left ${
+                      isAnimating ? 'scale-105 ring-2 ring-brand-orange-dark ring-opacity-50' : ''
+                    }`}
+                    style={{
+                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                    }}
+                  >
+                    <div className={isAnimating ? 'animate-bounce' : ''}>
+                      {task.completed ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      ) : (
+                        <Circle className="w-5 h-5 text-gray-400 hover:text-brand-orange-dark flex-shrink-0" />
+                      )}
+                    </div>
+                    <span className={task.completed ? 'line-through text-gray-400' : 'text-white'}>
+                      {task.text}
+                    </span>
+                  </button>
+                );
+              })
+            )}
           </div>
         </div>
 
         {/* Weekly Tasks */}
         <div>
-          <h3 className="font-semibold text-lg mb-3 flex items-center">
-            <CalendarIcon className="w-5 h-5 mr-2 text-blue-500" />
-            Weekly
-          </h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-xl flex items-center text-chocolate-900">
+              <CalendarIcon className="w-5 h-5 mr-2 text-blue-500" />
+              Weekly Tasks
+            </h3>
+            <span className="text-sm font-semibold text-chocolate-600">
+              {completedWeekly}/{weeklyTasks.length}
+            </span>
+          </div>
           <div className="space-y-2">
-            {weeklyTasks.map((task, idx) => {
-              const isAnimating = animatingTasks.has(task.id);
-              return (
-                <button
-                  key={idx}
-                  onClick={() => toggleTask(task, weeklyStage.id)}
-                  className={`w-full flex items-center space-x-3 p-2 bg-gray-900 rounded-lg hover:bg-gray-800 transition-all text-left ${
-                    isAnimating ? 'scale-105 ring-2 ring-vintage-orange ring-opacity-50' : ''
-                  }`}
-                  style={{
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-                  }}
-                >
-                  <div className={isAnimating ? 'animate-bounce' : ''}>
-                    {task.completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    ) : (
-                      <Circle className="w-5 h-5 text-gray-400 hover:text-brand-orange-dark flex-shrink-0" />
-                    )}
-                  </div>
-                  <span className={task.completed ? 'line-through text-gray-400' : ''}>
-                    {task.text}
-                  </span>
-                </button>
-              );
-            })}
+            {weeklyTasks.length === 0 ? (
+              <p className="text-sm text-gray-400 italic py-2">No weekly tasks yet</p>
+            ) : (
+              weeklyTasks.map((task, idx) => {
+                const isAnimating = animatingTasks.has(task.id);
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => toggleTask(task, weeklyStage.id)}
+                    className={`w-full flex items-center space-x-3 p-2 bg-gray-900 rounded-lg hover:bg-gray-800 transition-all text-left ${
+                      isAnimating ? 'scale-105 ring-2 ring-brand-orange-dark ring-opacity-50' : ''
+                    }`}
+                    style={{
+                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                    }}
+                  >
+                    <div className={isAnimating ? 'animate-bounce' : ''}>
+                      {task.completed ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      ) : (
+                        <Circle className="w-5 h-5 text-gray-400 hover:text-brand-orange-dark flex-shrink-0" />
+                      )}
+                    </div>
+                    <span className={task.completed ? 'line-through text-gray-400' : 'text-white'}>
+                      {task.text}
+                    </span>
+                  </button>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
