@@ -139,14 +139,39 @@ exports.handler = async (event, context) => {
 
       if (!text) return false;
       const lowerText = text.toLowerCase();
-      const aiKeywords = [
-        'ai', 'artificial intelligence', 'machine learning', 'ml', 'deep learning',
-        'neural network', 'gpt', 'chatgpt', 'claude', 'gemini', 'llm', 'large language model',
-        'openai', 'anthropic', 'google ai', 'microsoft ai', 'meta ai',
-        'generative ai', 'gen ai', 'diffusion', 'transformer', 'nlp',
-        'computer vision', 'robotics', 'automation', 'algorithm'
+
+      // Use word boundary regex for short keywords to avoid false positives
+      // e.g., 'ai' shouldn't match 'said', 'rain', 'britain'
+      const aiPatterns = [
+        /\bai\b/,                    // "AI" as whole word only
+        /\bml\b/,                    // "ML" as whole word only
+        /\bllm\b/,                   // "LLM" as whole word only
+        /\bnlp\b/,                   // "NLP" as whole word only
+        /\bgpt[-\s]?\d*/,            // GPT, GPT-4, GPT 4, etc.
+        /artificial intelligence/,
+        /machine learning/,
+        /deep learning/,
+        /neural network/,
+        /chatgpt/,
+        /\bclaude\b/,               // Claude AI (whole word)
+        /\bgemini\b/,               // Gemini AI (whole word)
+        /large language model/,
+        /openai/,
+        /anthropic/,
+        /generative ai/,
+        /gen[\s-]?ai/,
+        /diffusion model/,
+        /transformer model/,
+        /computer vision/,
+        /copilot/,
+        /midjourney/,
+        /stable diffusion/,
+        /dall-?e/,
+        /\bsora\b/,
+        /hugging\s?face/
       ];
-      return aiKeywords.some(keyword => lowerText.includes(keyword));
+
+      return aiPatterns.some(pattern => pattern.test(lowerText));
     };
 
     // Fetch all RSS feeds in parallel
