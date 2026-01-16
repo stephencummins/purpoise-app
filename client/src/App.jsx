@@ -340,16 +340,16 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-vintage-orange animate-spin" />
+      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-brand-orange-dark animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-cream text-dark-brown">
+    <div className="min-h-screen bg-gray-800 text-white">
       {/* Header */}
-      <header className="bg-white border-b-4 border-vintage-orange shadow-md">
+      <header className="bg-gray-900 border-b-4 border-brand-orange-dark shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <button
@@ -361,7 +361,7 @@ function App() {
                 alt="Purpoise"
                 className="h-12 w-12 object-cover rounded-lg"
               />
-              <h1 className="text-3xl font-serif font-bold text-dark-brown">
+              <h1 className="text-3xl font-serif font-bold text-white">
                 Purpoise
               </h1>
             </button>
@@ -371,8 +371,8 @@ function App() {
                   onClick={() => setView('dashboard')}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     view === 'dashboard'
-                      ? 'bg-vintage-orange text-white'
-                      : 'text-dark-brown hover:bg-gray-100'
+                      ? 'bg-brand-orange-dark text-white'
+                      : 'text-white hover:bg-gray-100'
                   }`}
                 >
                   Dashboard
@@ -381,8 +381,8 @@ function App() {
                   onClick={() => setView('news')}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     view === 'news'
-                      ? 'bg-vintage-orange text-white'
-                      : 'text-dark-brown hover:bg-gray-100'
+                      ? 'bg-brand-orange-dark text-white'
+                      : 'text-white hover:bg-gray-100'
                   }`}
                 >
                   <Newspaper className="w-5 h-5 inline-block mr-1" />
@@ -392,8 +392,8 @@ function App() {
                   onClick={() => setView('wikipedia')}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     view === 'wikipedia'
-                      ? 'bg-vintage-orange text-white'
-                      : 'text-dark-brown hover:bg-gray-100'
+                      ? 'bg-brand-orange-dark text-white'
+                      : 'text-white hover:bg-gray-100'
                   }`}
                 >
                   <BookOpen className="w-5 h-5 inline-block mr-1" />
@@ -403,12 +403,12 @@ function App() {
 
               {user ? (
                 <div className="flex items-center space-x-3">
-                  <span className="text-sm text-dark-brown">
+                  <span className="text-sm text-white">
                     {user.email || 'Signed in'}
                   </span>
                   <button
                     onClick={signOut}
-                    className="px-4 py-2 rounded-lg font-medium bg-gray-200 text-dark-brown hover:bg-gray-300 transition-colors"
+                    className="px-4 py-2 rounded-lg font-medium bg-gray-200 text-white hover:bg-gray-300 transition-colors"
                   >
                     Sign Out
                   </button>
@@ -416,7 +416,7 @@ function App() {
               ) : (
                 <button
                   onClick={signInWithGoogle}
-                  className="px-4 py-2 rounded-lg font-medium bg-vintage-orange text-white hover:bg-opacity-90 transition-colors flex items-center space-x-2"
+                  className="px-4 py-2 rounded-lg font-medium bg-brand-orange-dark text-white hover:bg-opacity-90 transition-colors flex items-center space-x-2"
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path
@@ -537,9 +537,9 @@ function WeatherWidget() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-4 mb-6">
+      <div className="bg-gray-900 rounded-lg shadow-lg border-2 border-brand-orange-dark p-4 mb-6">
         <div className="flex items-center justify-center">
-          <Loader2 className="w-5 h-5 animate-spin text-vintage-orange" />
+          <Loader2 className="w-5 h-5 animate-spin text-brand-orange-dark" />
         </div>
       </div>
     );
@@ -578,7 +578,7 @@ function WeatherWidget() {
         const dayName = getDayName(daily.time[dayIndex], dayIndex);
 
         return (
-          <div key={dayIndex} className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-gold-500/30">
+          <div key={dayIndex} className="bg-gray-900/10 backdrop-blur-sm rounded-lg p-3 border border-brand-orange-dark/30">
             {daysToShow.length > 1 && (
               <h3 className="text-sm font-semibold text-white mb-2">{dayName}</h3>
             )}
@@ -586,12 +586,12 @@ function WeatherWidget() {
               {/* Temperature */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Sun className="w-4 h-4 text-gold-300" />
-                  <span className="text-xs text-gold-200">Temp</span>
+                  <Sun className="w-4 h-4 text-brand-orange-dark" />
+                  <span className="text-xs text-brand-orange-dark">Temp</span>
                 </div>
                 <div className="text-right">
                   <div className="text-lg font-bold text-white">{tempMax}°C</div>
-                  <div className="text-xs text-gold-200">Low {tempMin}°C</div>
+                  <div className="text-xs text-brand-orange-dark">Low {tempMin}°C</div>
                 </div>
               </div>
 
@@ -599,11 +599,11 @@ function WeatherWidget() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   {sunshine > 50 ? (
-                    <Sun className="w-4 h-4 text-gold-300" />
+                    <Sun className="w-4 h-4 text-brand-orange-dark" />
                   ) : (
-                    <Cloud className="w-4 h-4 text-gold-300" />
+                    <Cloud className="w-4 h-4 text-brand-orange-dark" />
                   )}
-                  <span className="text-xs text-gold-200">Sun</span>
+                  <span className="text-xs text-brand-orange-dark">Sun</span>
                 </div>
                 <div className="text-lg font-bold text-white">{sunshine}%</div>
               </div>
@@ -611,18 +611,18 @@ function WeatherWidget() {
               {/* Rain */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <CloudRain className="w-4 h-4 text-gold-300" />
-                  <span className="text-xs text-gold-200">Rain</span>
+                  <CloudRain className="w-4 h-4 text-brand-orange-dark" />
+                  <span className="text-xs text-brand-orange-dark">Rain</span>
                 </div>
                 <div className="text-lg font-bold text-white">{rain.toFixed(1)}mm</div>
               </div>
 
               {/* Time (only for today) */}
               {dayIndex === 0 && (
-                <div className="flex items-center justify-between pt-2 border-t border-turquoise-600">
+                <div className="flex items-center justify-between pt-2 border-t border-brand-orange-dark">
                   <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-gold-300" />
-                    <span className="text-xs text-gold-200">
+                    <Clock className="w-4 h-4 text-brand-orange-dark" />
+                    <span className="text-xs text-brand-orange-dark">
                       {today.getHours() < 12 ? 'Morning' : today.getHours() < 18 ? 'Afternoon' : 'Evening'}
                     </span>
                   </div>
@@ -672,9 +672,9 @@ function NewspaperCarousel() {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-chocolate-800 to-chocolate-900 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 animate-spin text-gold-500" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-orange-dark" />
         </div>
       </div>
     );
@@ -685,9 +685,9 @@ function NewspaperCarousel() {
   const current = newspapers[currentIndex];
 
   return (
-    <div className="bg-gradient-to-br from-chocolate-800 to-chocolate-900 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+    <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
       <h2 className="text-xl font-serif font-bold mb-4 flex items-center text-white">
-        <Newspaper className="w-5 h-5 mr-2 text-gold-300" />
+        <Newspaper className="w-5 h-5 mr-2 text-brand-orange-dark" />
         Today's Papers
       </h2>
 
@@ -696,7 +696,7 @@ function NewspaperCarousel() {
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={prevNewspaper}
-            className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-gold-300 transition-colors"
+            className="p-2 rounded-full bg-gray-900/10 hover:bg-gray-900/20 text-brand-orange-dark transition-colors"
             disabled={newspapers.length <= 1}
           >
             <ChevronLeft className="w-5 h-5" />
@@ -704,12 +704,12 @@ function NewspaperCarousel() {
 
           <div className="text-center">
             <h3 className="text-lg font-semibold text-white">{current.name}</h3>
-            <p className="text-sm text-gold-200">{current.date}</p>
+            <p className="text-sm text-brand-orange-dark">{current.date}</p>
           </div>
 
           <button
             onClick={nextNewspaper}
-            className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-gold-300 transition-colors"
+            className="p-2 rounded-full bg-gray-900/10 hover:bg-gray-900/20 text-brand-orange-dark transition-colors"
             disabled={newspapers.length <= 1}
           >
             <ChevronRight className="w-5 h-5" />
@@ -717,7 +717,7 @@ function NewspaperCarousel() {
         </div>
 
         {/* Newspaper cover */}
-        <div className="bg-white/5 rounded-lg p-4 mb-4">
+        <div className="bg-gray-900/5 rounded-lg p-4 mb-4">
           {current.coverImage ? (
             <img
               src={current.coverImage}
@@ -725,8 +725,8 @@ function NewspaperCarousel() {
               className="w-full h-auto rounded shadow-lg"
             />
           ) : (
-            <div className="flex items-center justify-center h-64 bg-white/10 rounded">
-              <Newspaper className="w-16 h-16 text-gold-300/50" />
+            <div className="flex items-center justify-center h-64 bg-gray-900/10 rounded">
+              <Newspaper className="w-16 h-16 text-brand-orange-dark/50" />
             </div>
           )}
         </div>
@@ -737,7 +737,7 @@ function NewspaperCarousel() {
             href={current.pdfLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-gold-600 hover:bg-gold-700 text-white font-semibold rounded-lg transition-colors"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-brand-orange-dark hover:bg-brand-orange-dark text-white font-semibold rounded-lg transition-colors"
           >
             <ExternalLink className="w-4 h-4" />
             View Latest Issue
@@ -752,7 +752,7 @@ function NewspaperCarousel() {
                 key={index}
                 onClick={() => setCurrentIndex(index)}
                 className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex ? 'bg-gold-500' : 'bg-white/30'
+                  index === currentIndex ? 'bg-brand-orange-dark' : 'bg-gray-900/30'
                 }`}
               />
             ))}
@@ -789,7 +789,7 @@ function WikipediaView() {
     return (
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 animate-spin text-gold-500" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-orange-dark" />
         </div>
       </div>
     );
@@ -798,9 +798,9 @@ function WikipediaView() {
   if (error) {
     return (
       <div className="max-w-7xl mx-auto px-6">
-        <div className="bg-white rounded-lg shadow-md border-2 border-chocolate-200 p-8 text-center">
-          <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4">Unable to Load Wikipedia</h2>
-          <p className="text-chocolate-600">{error}</p>
+        <div className="bg-gray-900 rounded-lg shadow-md border-2 border-gray-700 p-8 text-center">
+          <h2 className="text-2xl font-serif font-bold text-white mb-4">Unable to Load Wikipedia</h2>
+          <p className="text-gray-300">{error}</p>
         </div>
       </div>
     );
@@ -813,17 +813,17 @@ function WikipediaView() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-serif font-bold text-chocolate-900 mb-2 flex items-center">
-                <BookOpen className="w-10 h-10 mr-3 text-turquoise-600" />
+              <h1 className="text-4xl font-serif font-bold text-white mb-2 flex items-center">
+                <BookOpen className="w-10 h-10 mr-3 text-brand-orange-dark" />
                 Wikipedia Main Page
               </h1>
-              <p className="text-chocolate-600">The free encyclopedia that anyone can edit</p>
+              <p className="text-gray-300">The free encyclopedia that anyone can edit</p>
             </div>
             <a
               href="https://en.wikipedia.org/wiki/Main_Page"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 bg-turquoise-600 text-white rounded-lg hover:bg-turquoise-700 transition-colors font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-brand-orange-dark text-white rounded-lg hover:bg-brand-orange-dark transition-colors font-medium"
             >
               <ExternalLink className="w-4 h-4" />
               View on Wikipedia
@@ -834,13 +834,13 @@ function WikipediaView() {
         {/* Featured Article */}
         {content?.featuredArticle && (
           <div className="mb-8">
-            <div className="bg-gradient-to-br from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
-              <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4 flex items-center">
-                <Sparkles className="w-6 h-6 mr-2 text-gold-600" />
+            <div className="bg-gradient-to-br from-gold-50 to-gray-700 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
+              <h2 className="text-2xl font-serif font-bold text-white mb-4 flex items-center">
+                <Sparkles className="w-6 h-6 mr-2 text-brand-orange-dark" />
                 Featured Article
               </h2>
               <div className="prose prose-lg max-w-none">
-                <h3 className="text-xl font-bold text-chocolate-900 mb-3">
+                <h3 className="text-xl font-bold text-white mb-3">
                   {content.featuredArticle.title}
                 </h3>
                 <div
@@ -852,7 +852,7 @@ function WikipediaView() {
                     href={content.featuredArticle.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 mt-4 text-turquoise-600 hover:text-turquoise-700 font-medium"
+                    className="inline-flex items-center gap-2 mt-4 text-brand-orange-dark hover:text-brand-orange-dark font-medium"
                   >
                     Read more →
                   </a>
@@ -865,9 +865,9 @@ function WikipediaView() {
         {/* In the News */}
         {content?.inTheNews && content.inTheNews.length > 0 && (
           <div className="mb-8">
-            <div className="bg-white rounded-lg shadow-lg border-2 border-chocolate-200 p-6">
-              <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4 flex items-center">
-                <Newspaper className="w-6 h-6 mr-2 text-vintage-orange" />
+            <div className="bg-gray-900 rounded-lg shadow-lg border-2 border-gray-700 p-6">
+              <h2 className="text-2xl font-serif font-bold text-white mb-4 flex items-center">
+                <Newspaper className="w-6 h-6 mr-2 text-brand-orange-dark" />
                 In the News
               </h2>
               <div className={content.newsImage ? "grid md:grid-cols-[300px_1fr] gap-6" : ""}>
@@ -877,7 +877,7 @@ function WikipediaView() {
                     <img
                       src={content.newsImage}
                       alt="In the news"
-                      className="w-full h-auto rounded-lg shadow-md border-2 border-chocolate-200"
+                      className="w-full h-auto rounded-lg shadow-md border-2 border-gray-700"
                     />
                   </div>
                 )}
@@ -885,7 +885,7 @@ function WikipediaView() {
                 <ul className="space-y-3">
                   {content.inTheNews.map((item, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="text-turquoise-600 font-bold mr-3 mt-1">•</span>
+                      <span className="text-brand-orange-dark font-bold mr-3 mt-1">•</span>
                       <div
                         className="flex-1 text-chocolate-700"
                         dangerouslySetInnerHTML={{ __html: item }}
@@ -901,14 +901,14 @@ function WikipediaView() {
         {/* Did You Know */}
         {content?.didYouKnow && content.didYouKnow.length > 0 && (
           <div className="mb-8">
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
-              <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4">
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
+              <h2 className="text-2xl font-serif font-bold text-white mb-4">
                 Did You Know...
               </h2>
               <ul className="space-y-3">
                 {content.didYouKnow.map((item, index) => (
                   <li key={index} className="flex items-start">
-                    <span className="text-vintage-orange font-bold mr-3 mt-1">?</span>
+                    <span className="text-brand-orange-dark font-bold mr-3 mt-1">?</span>
                     <div
                       className="flex-1 text-chocolate-700"
                       dangerouslySetInnerHTML={{ __html: item }}
@@ -923,15 +923,15 @@ function WikipediaView() {
         {/* On This Day */}
         {content?.onThisDay && content.onThisDay.length > 0 && (
           <div className="mb-8">
-            <div className="bg-white rounded-lg shadow-lg border-2 border-chocolate-200 p-6">
-              <h2 className="text-2xl font-serif font-bold text-chocolate-900 mb-4 flex items-center">
-                <CalendarIcon className="w-6 h-6 mr-2 text-turquoise-600" />
+            <div className="bg-gray-900 rounded-lg shadow-lg border-2 border-gray-700 p-6">
+              <h2 className="text-2xl font-serif font-bold text-white mb-4 flex items-center">
+                <CalendarIcon className="w-6 h-6 mr-2 text-brand-orange-dark" />
                 On This Day
               </h2>
               <ul className="space-y-3">
                 {content.onThisDay.map((item, index) => (
                   <li key={index} className="flex items-start">
-                    <span className="text-turquoise-600 font-bold mr-3 mt-1">•</span>
+                    <span className="text-brand-orange-dark font-bold mr-3 mt-1">•</span>
                     <div
                       className="flex-1 text-chocolate-700"
                       dangerouslySetInnerHTML={{ __html: item }}
@@ -949,21 +949,21 @@ function WikipediaView() {
             href="https://en.wikipedia.org/wiki/Main_Page"
             target="_blank"
             rel="noopener noreferrer"
-            className="block bg-gradient-to-br from-turquoise-700 to-turquoise-900 rounded-lg shadow-xl border-2 border-gold-500 p-8 hover:shadow-2xl hover:border-gold-400 hover:-translate-y-1 transition-all duration-200"
+            className="block bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg shadow-xl border-2 border-brand-orange-dark p-8 hover:shadow-2xl hover:border-brand-orange-dark hover:-translate-y-1 transition-all duration-200"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <BookOpen className="w-16 h-16 text-gold-300" />
+                <BookOpen className="w-16 h-16 text-brand-orange-dark" />
                 <div>
                   <h3 className="text-2xl font-serif font-bold text-white mb-2">
                     Explore More on Wikipedia
                   </h3>
-                  <p className="text-gold-200">
+                  <p className="text-brand-orange-dark">
                     Visit the full Wikipedia Main Page for more featured content
                   </p>
                 </div>
               </div>
-              <ExternalLink className="w-8 h-8 text-gold-300" />
+              <ExternalLink className="w-8 h-8 text-brand-orange-dark" />
             </div>
           </a>
         </div>
@@ -1007,7 +1007,7 @@ function NewsView() {
     return (
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 animate-spin text-gold-500" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-orange-dark" />
         </div>
       </div>
     );
@@ -1031,235 +1031,118 @@ function NewsView() {
   const allTrumpContent = [...trumpArticles, ...trumpDump];
 
   return (
-    <div className="w-full bg-slate-950 min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Header - Terminal Style */}
-        <div className="mb-12 relative">
-          {/* Scanline background */}
-          <div className="absolute inset-0 opacity-5 pointer-events-none">
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6, 182, 212, 0.3) 2px, rgba(6, 182, 212, 0.3) 4px)'
-            }} />
-          </div>
-
-          <div className="relative border-4 border-cyan-600 p-8 bg-gradient-to-br from-slate-900 to-cyan-950" style={{
-            boxShadow: '0 0 30px rgba(6, 182, 212, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.1)'
-          }}>
-            {/* Corner decorations */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-gold-400" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-gold-400" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-gold-400" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-gold-400" />
-
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <h1 className="text-6xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 mb-2 tracking-tight" style={{
-                  textShadow: '0 0 40px rgba(6, 182, 212, 0.5)'
-                }}>
-                  NEWS TERMINAL
-                </h1>
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-gradient-to-r from-cyan-600 to-transparent" />
-                  <p className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
-                    Real-time Global Intelligence Feed
-                  </p>
-                  <div className="h-px flex-1 bg-gradient-to-l from-cyan-600 to-transparent" />
-                </div>
-              </div>
-              <div className="flex items-center gap-3 px-4 py-2 bg-cyan-950/50 border-2 border-cyan-600">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs font-mono font-bold text-cyan-300">LIVE</span>
-              </div>
-            </div>
-          </div>
+    <div className="w-full">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-serif font-bold text-white mb-2">Latest News</h1>
+          <p className="text-gray-300">Real-time headlines from trusted sources</p>
         </div>
 
-        {/* Source Filter - Terminal Buttons */}
-        <div className="mb-8 flex gap-3 flex-wrap">
-          {sources.map((source, idx) => (
+        {/* Source Filter */}
+        <div className="mb-6 flex gap-2 flex-wrap">
+          {sources.map(source => (
             <button
               key={source}
               onClick={() => setSelectedSource(source)}
-              className={`relative px-5 py-2.5 font-mono font-bold uppercase tracking-wider text-sm transition-all duration-300 border-2 ${
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 selectedSource === source
-                  ? 'bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-600/50'
-                  : 'bg-slate-900 text-cyan-400 border-cyan-700 hover:border-gold-400 hover:text-gold-400 hover:shadow-lg hover:shadow-gold-600/30'
+                  ? 'bg-brand-orange-dark text-white'
+                  : 'bg-gray-900 text-white border-2 border-gray-700 hover:border-brand-orange-dark'
               }`}
-              style={{
-                clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)',
-                animation: `fadeIn 0.3s ease-out ${idx * 0.05}s backwards`
-              }}
             >
-              {source === 'all' ? 'ALL FEEDS' : source.toUpperCase()}
-              {selectedSource === source && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
-              )}
+              {source === 'all' ? 'All Sources' : source}
             </button>
           ))}
         </div>
 
-        {/* News Headlines Grid - Terminal Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        {/* News Headlines Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {filteredArticles.map((article, index) => (
             <a
               key={index}
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative bg-gradient-to-br from-slate-900 to-cyan-950 border-4 border-cyan-600 overflow-hidden hover:border-gold-400 transition-all duration-300 flex flex-col shadow-2xl hover:shadow-cyan-600/50"
-              style={{
-                boxShadow: '0 0 20px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                animation: `slideInUp 0.6s ease-out ${index * 0.08}s backwards`
-              }}
+              className="bg-gray-900 rounded-lg shadow-md border-2 border-gray-700 overflow-hidden hover:shadow-xl hover:border-brand-orange-dark hover:-translate-y-1 transition-all duration-200 flex flex-col"
             >
-              {/* Corner accents */}
-              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-gold-400" />
-              <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-gold-400" />
-              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-gold-400" />
-              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-gold-400" />
-
-              {/* Scan line effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity pointer-events-none">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400 to-transparent h-full animate-scan" />
-              </div>
-
-              {/* Article Image with overlay */}
+              {/* Article Image */}
               {article.image && (
-                <div className="relative w-full h-48 overflow-hidden bg-slate-950">
+                <div className="w-full h-48 overflow-hidden bg-gray-100">
                   <img
                     src={article.image}
                     alt={article.title}
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
+                    className="w-full h-full object-cover"
                     onError={(e) => { e.target.style.display = 'none'; }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-                  {/* Data stream overlay */}
-                  <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity" style={{
-                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6, 182, 212, 0.5) 2px, rgba(6, 182, 212, 0.5) 4px)'
-                  }} />
                 </div>
               )}
 
-              <div className="p-6 flex-1 flex flex-col bg-gradient-to-br from-slate-900/50 to-cyan-950/50 backdrop-blur-sm relative">
-                {/* Source badge */}
-                <div className="flex items-start justify-between mb-4">
-                  <span className="relative text-xs font-mono font-black uppercase tracking-wider text-cyan-300 bg-cyan-950/80 px-3 py-1.5 border-2 border-cyan-600 backdrop-blur-sm"
-                    style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)' }}>
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-2">
+                  <span className="text-xs font-semibold text-brand-orange-dark uppercase">
                     {article.source}
-                    <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-shimmer" />
                   </span>
-                  <span className="text-xs font-mono text-cyan-400 bg-slate-900/60 px-2 py-1 border border-cyan-700">
+                  <span className="text-xs text-chocolate-400">
                     {new Date(article.pubDate).toLocaleDateString('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: '2-digit'
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
                     })}
                   </span>
                 </div>
-
-                {/* Title */}
-                <h3 className="text-xl font-serif font-bold text-cyan-50 mb-3 line-clamp-3 group-hover:text-gold-300 transition-colors duration-300 leading-tight">
+                <h3 className="text-lg font-serif font-bold text-white mb-2 line-clamp-3">
                   {article.title}
                 </h3>
-
-                {/* Description */}
                 {article.description && (
-                  <p className="text-sm text-cyan-200/80 line-clamp-2 mb-4 leading-relaxed">
+                  <p className="text-sm text-gray-300 line-clamp-2 mb-3">
                     {article.description}
                   </p>
                 )}
-
-                {/* Read more with arrow */}
-                <div className="mt-auto flex items-center justify-between pt-4 border-t border-cyan-800">
-                  <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider group-hover:text-gold-400 transition-colors">
-                    Read Article
-                  </span>
-                  <div className="w-8 h-8 flex items-center justify-center border-2 border-cyan-600 group-hover:border-gold-400 group-hover:bg-gold-400/20 transition-all">
-                    <span className="text-cyan-400 group-hover:text-gold-400 text-lg font-bold group-hover:translate-x-1 transition-transform inline-block">→</span>
-                  </div>
+                <div className="mt-auto flex items-center text-brand-orange-dark text-sm font-medium">
+                  Read more →
                 </div>
               </div>
             </a>
           ))}
         </div>
 
-        {/* What's Trending Section - Pulse Monitor */}
+        {/* What's Trending Section */}
         {trending.filter(item => !item.isSports && !item.isTrump).length > 0 && (
-          <div className="mb-16 pt-12 border-t-4 border-double border-cyan-600 relative">
-            {/* Animated grid background */}
-            <div className="absolute inset-0 opacity-5 pointer-events-none">
-              <div className="absolute inset-0" style={{
-                backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent)',
-                backgroundSize: '50px 50px'
-              }} />
+          <div className="mb-12 pt-8 border-t-2 border-gray-700">
+            <div className="mb-6">
+              <h2 className="text-3xl font-serif font-bold text-white mb-2">What's Trending</h2>
+              <p className="text-gray-300">Popular topics from Google, Reddit & YouTube</p>
             </div>
 
-            <div className="mb-10 relative">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="relative">
-                  <div className="w-12 h-12 border-4 border-cyan-600 flex items-center justify-center bg-slate-900">
-                    <div className="w-4 h-4 bg-gold-400 animate-pulse" style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }} />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-5xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400 mb-1 tracking-tight" style={{
-                    textShadow: '0 0 30px rgba(251, 191, 36, 0.3)'
-                  }}>
-                    PULSE MONITOR
-                  </h2>
-                  <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-gradient-to-r from-gold-600 to-transparent" />
-                    <p className="text-xs font-mono uppercase tracking-widest text-gold-400 font-bold">
-                      Global Conversation Tracker
-                    </p>
-                    <div className="h-px flex-1 bg-gradient-to-l from-gold-600 to-transparent" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {trending.filter(item => !item.isSports && !item.isTrump).map((item, index) => (
                 <a
                   key={index}
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative bg-gradient-to-br from-slate-900 to-slate-950 border-2 border-gold-600 p-5 hover:border-cyan-400 hover:shadow-lg hover:shadow-gold-600/30 transition-all duration-300"
-                  style={{
-                    boxShadow: '0 0 15px rgba(251, 191, 36, 0.15)',
-                    animation: `fadeIn 0.5s ease-out ${index * 0.08}s backwards`
-                  }}
+                  className="bg-gradient-to-br from-gray-800 to-gold-50 rounded-lg shadow-md border-2 border-brand-orange-dark p-4 hover:shadow-xl hover:border-brand-orange-dark hover:-translate-y-1 transition-all duration-200"
                 >
-                  {/* Corner indicators */}
-                  <div className="absolute top-0 left-0 w-2 h-2 bg-gold-400" />
-                  <div className="absolute top-0 right-0 w-2 h-2 bg-gold-400" />
-                  <div className="absolute bottom-0 left-0 w-2 h-2 bg-gold-400" />
-                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-gold-400" />
-
-                  <div className="flex items-start justify-between mb-3">
-                    <span className={`text-xs font-mono font-bold uppercase px-2 py-1 border ${
-                      item.source === 'Google Trends' ? 'border-blue-400 text-blue-300 bg-blue-950/50' :
-                      item.source === 'Reddit' ? 'border-orange-400 text-orange-300 bg-orange-950/50' :
-                      'border-red-400 text-red-300 bg-red-950/50'
+                  <div className="flex items-start justify-between mb-2">
+                    <span className={`text-xs font-semibold uppercase px-2 py-1 rounded ${
+                      item.source === 'Google Trends' ? 'bg-blue-100 text-blue-700' :
+                      item.source === 'Reddit' ? 'bg-orange-100 text-orange-700' :
+                      'bg-red-100 text-red-700'
                     }`}>
                       {item.source}
                     </span>
                     {item.traffic && (
-                      <span className="text-xs font-mono text-gold-400 bg-slate-900/80 px-2 py-1 border border-gold-600">{item.traffic}</span>
+                      <span className="text-xs text-chocolate-400">{item.traffic}</span>
                     )}
                   </div>
-                  <h3 className="text-sm font-serif font-bold text-cyan-50 line-clamp-2 mb-2 group-hover:text-gold-300 transition-colors">
+                  <h3 className="text-sm font-semibold text-white line-clamp-2">
                     {item.title}
                   </h3>
                   {item.subreddit && (
-                    <p className="text-xs font-mono text-gold-400 mt-2 border-t border-gold-900 pt-2">r/{item.subreddit}</p>
+                    <p className="text-xs text-gray-300 mt-1">r/{item.subreddit}</p>
                   )}
-
-                  {/* Hover scan line */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold-400 to-transparent h-full animate-scan" />
-                  </div>
                 </a>
               ))}
             </div>
@@ -1268,7 +1151,7 @@ function NewsView() {
 
         {/* AI News Section - Futuristic Retro Aesthetic */}
         {aiArticles.length > 0 && (
-          <div className="mb-12 pt-12 border-t-4 border-double border-cyan-600 relative overflow-hidden">
+          <div className="mb-12 pt-12 border-t-4 border-double border-brand-orange relative overflow-hidden">
             {/* Animated background grid */}
             <div className="absolute inset-0 opacity-5 pointer-events-none">
               <div className="absolute inset-0" style={{
@@ -1281,27 +1164,27 @@ function NewsView() {
             <div className="mb-10 relative">
               <div className="flex items-center gap-4 mb-4">
                 <div className="relative">
-                  <Sparkles className="w-12 h-12 text-cyan-600 animate-pulse" />
-                  <div className="absolute inset-0 blur-xl bg-cyan-400 opacity-30 animate-pulse" />
+                  <Sparkles className="w-12 h-12 text-brand-orange animate-pulse" />
+                  <div className="absolute inset-0 blur-xl bg-brand-orange-dark opacity-30 animate-pulse" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-5xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 via-blue-600 to-cyan-700 mb-1 tracking-tight" style={{
+                  <h2 className="text-5xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-orange-dark via-blue-600 to-brand-orange mb-1 tracking-tight" style={{
                     textShadow: '0 0 30px rgba(6, 182, 212, 0.3)'
                   }}>
                     NEURAL FEED
                   </h2>
                   <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-gradient-to-r from-cyan-600 to-transparent" />
-                    <p className="text-xs font-mono uppercase tracking-widest text-cyan-700 font-bold">
+                    <div className="h-px flex-1 bg-gradient-to-r from-brand-orange-dark to-transparent" />
+                    <p className="text-xs font-mono uppercase tracking-widest text-brand-orange font-bold">
                       Artificial Intelligence Transmissions
                     </p>
-                    <div className="h-px flex-1 bg-gradient-to-l from-cyan-600 to-transparent" />
+                    <div className="h-px flex-1 bg-gradient-to-l from-brand-orange-dark to-transparent" />
                   </div>
                 </div>
                 {/* Pulse indicator */}
-                <div className="flex items-center gap-2 px-4 py-2 bg-cyan-50 border-2 border-cyan-600 rounded-full">
-                  <div className="w-2 h-2 rounded-full bg-cyan-600 animate-pulse" />
-                  <span className="text-xs font-mono font-bold text-cyan-900">{aiArticles.length} ACTIVE</span>
+                <div className="flex items-center gap-2 px-4 py-2 bg-brand-orange-dark border-2 border-brand-orange rounded-full">
+                  <div className="w-2 h-2 rounded-full bg-brand-orange-dark animate-pulse" />
+                  <span className="text-xs font-mono font-bold text-brand-orange">{aiArticles.length} ACTIVE</span>
                 </div>
               </div>
             </div>
@@ -1314,17 +1197,17 @@ function NewsView() {
                   href={article.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative bg-gradient-to-br from-slate-900 to-cyan-950 rounded-none border-4 border-cyan-600 overflow-hidden hover:border-gold-400 transition-all duration-300 flex flex-col shadow-2xl hover:shadow-cyan-600/50"
+                  className="group relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-none border-4 border-brand-orange overflow-hidden hover:border-brand-orange-dark transition-all duration-300 flex flex-col shadow-2xl hover:shadow-cyan-600/50"
                   style={{
                     boxShadow: '0 0 20px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                     animation: `slideInUp 0.6s ease-out ${index * 0.1}s backwards`
                   }}
                 >
                   {/* Corner accents */}
-                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-gold-400" />
-                  <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-gold-400" />
-                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-gold-400" />
-                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-gold-400" />
+                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-brand-orange-dark" />
+                  <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-brand-orange-dark" />
+                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-brand-orange-dark" />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-brand-orange-dark" />
 
                   {/* Scan line effect */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity pointer-events-none">
@@ -1333,14 +1216,14 @@ function NewsView() {
 
                   {/* Article Image with overlay */}
                   {article.image && (
-                    <div className="relative w-full h-48 overflow-hidden bg-slate-950">
+                    <div className="relative w-full h-48 overflow-hidden bg-gray-900">
                       <img
                         src={article.image}
                         alt={article.title}
                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
                       {/* Data stream overlay */}
                       <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity" style={{
                         backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6, 182, 212, 0.5) 2px, rgba(6, 182, 212, 0.5) 4px)'
@@ -1348,15 +1231,15 @@ function NewsView() {
                     </div>
                   )}
 
-                  <div className="p-6 flex-1 flex flex-col bg-gradient-to-br from-slate-900/50 to-cyan-950/50 backdrop-blur-sm relative">
+                  <div className="p-6 flex-1 flex flex-col bg-gradient-to-br from-gray-900/50 to-gray-800/50 backdrop-blur-sm relative">
                     {/* Source badge with circuit pattern */}
                     <div className="flex items-start justify-between mb-4">
-                      <span className="relative text-xs font-mono font-black uppercase tracking-wider text-cyan-300 bg-cyan-950/80 px-3 py-1.5 border-2 border-cyan-600 backdrop-blur-sm"
+                      <span className="relative text-xs font-mono font-black uppercase tracking-wider text-brand-orange bg-brand-orange-dark/80 px-3 py-1.5 border-2 border-brand-orange backdrop-blur-sm"
                         style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)' }}>
                         {article.source}
                         <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-shimmer" />
                       </span>
-                      <span className="text-xs font-mono text-cyan-400 bg-slate-900/60 px-2 py-1 border border-cyan-700">
+                      <span className="text-xs font-mono text-brand-orange bg-gray-800/60 px-2 py-1 border border-brand-orange">
                         {new Date(article.pubDate).toLocaleDateString('en-GB', {
                           day: '2-digit',
                           month: '2-digit',
@@ -1366,24 +1249,24 @@ function NewsView() {
                     </div>
 
                     {/* Title with glitch effect on hover */}
-                    <h3 className="text-xl font-serif font-bold text-cyan-50 mb-3 line-clamp-3 group-hover:text-gold-300 transition-colors duration-300 leading-tight">
+                    <h3 className="text-xl font-serif font-bold text-brand-orange mb-3 line-clamp-3 group-hover:text-brand-orange-dark transition-colors duration-300 leading-tight">
                       {article.title}
                     </h3>
 
                     {/* Description */}
                     {article.description && (
-                      <p className="text-sm text-cyan-200/80 line-clamp-2 mb-4 leading-relaxed">
+                      <p className="text-sm text-brand-orange/80 line-clamp-2 mb-4 leading-relaxed">
                         {article.description}
                       </p>
                     )}
 
                     {/* Read more with arrow */}
-                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-cyan-800">
-                      <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider group-hover:text-gold-400 transition-colors">
+                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-brand-orange">
+                      <span className="text-xs font-mono font-bold text-brand-orange uppercase tracking-wider group-hover:text-brand-orange-dark transition-colors">
                         Access Data
                       </span>
-                      <div className="w-8 h-8 flex items-center justify-center border-2 border-cyan-600 group-hover:border-gold-400 group-hover:bg-gold-400/20 transition-all">
-                        <span className="text-cyan-400 group-hover:text-gold-400 text-lg font-bold group-hover:translate-x-1 transition-transform inline-block">→</span>
+                      <div className="w-8 h-8 flex items-center justify-center border-2 border-brand-orange group-hover:border-brand-orange-dark group-hover:bg-brand-orange-dark/20 transition-all">
+                        <span className="text-brand-orange group-hover:text-brand-orange-dark text-lg font-bold group-hover:translate-x-1 transition-transform inline-block">→</span>
                       </div>
                     </div>
                   </div>
@@ -1433,78 +1316,44 @@ function NewsView() {
           </div>
         )}
 
-        {/* Trump Dump Section - Quarantine Zone */}
+        {/* Trump Dump Section */}
         {allTrumpContent.length > 0 && (
-          <div className="mb-16 pt-12 border-t-4 border-double border-red-900 relative bg-gradient-to-br from-red-950/20 to-slate-950">
-            {/* Warning stripes */}
-            <div className="absolute inset-0 opacity-5 pointer-events-none">
-              <div className="absolute inset-0" style={{
-                backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(239, 68, 68, 0.3) 10px, rgba(239, 68, 68, 0.3) 20px)'
-              }} />
-            </div>
-
-            <div className="mb-8 relative">
+          <div className="mb-12 pt-8 border-t-2 border-gray-700">
+            <div className="mb-6">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 border-4 border-red-600 bg-slate-900 flex items-center justify-center">
-                    <X className="w-8 h-8 text-red-500" />
-                  </div>
-                  <div>
-                    <h2 className="text-4xl font-serif font-black text-red-500 mb-1 tracking-tight" style={{
-                      textShadow: '0 0 20px rgba(239, 68, 68, 0.3)'
-                    }}>
-                      QUARANTINE ZONE
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="h-px w-24 bg-gradient-to-r from-red-600 to-transparent" />
-                      <p className="text-xs font-mono uppercase tracking-widest text-red-400 font-bold">
-                        Filtered Content Container
-                      </p>
-                    </div>
-                  </div>
+                <div>
+                  <h2 className="text-3xl font-serif font-bold text-white mb-2">The Trump Dump</h2>
+                  <p className="text-gray-300">Trump-related content quarantined for your sanity</p>
                 </div>
                 <button
                   onClick={() => setShowTrumpDump(!showTrumpDump)}
-                  className="relative px-6 py-3 bg-slate-900 text-red-400 border-2 border-red-600 font-mono font-bold uppercase tracking-wider hover:bg-red-950 hover:text-red-300 transition-all"
-                  style={{
-                    clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)'
-                  }}
+                  className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-900 transition-colors font-medium"
                 >
-                  {showTrumpDump ? 'SEAL CONTAINER' : `UNSEAL (${allTrumpContent.length})`}
+                  {showTrumpDump ? 'Hide' : `Show (${allTrumpContent.length})`}
                 </button>
               </div>
             </div>
 
             {showTrumpDump && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-70">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-60">
                 {allTrumpContent.map((item, index) => (
                   <a
                     key={index}
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative bg-gradient-to-br from-slate-900 to-red-950/30 border-2 border-red-900 p-5 hover:border-red-700 transition-all duration-300"
-                    style={{
-                      boxShadow: '0 0 10px rgba(127, 29, 29, 0.2)',
-                      animation: `fadeIn 0.4s ease-out ${index * 0.05}s backwards`
-                    }}
+                    className="bg-gray-100 rounded-lg shadow-md border-2 border-gray-300 p-4 hover:shadow-xl hover:border-gray-400 transition-all"
                   >
-                    {/* Warning corners */}
-                    <div className="absolute top-0 left-0 w-2 h-2 bg-red-600" />
-                    <div className="absolute top-0 right-0 w-2 h-2 bg-red-600" />
-                    <div className="absolute bottom-0 left-0 w-2 h-2 bg-red-600" />
-                    <div className="absolute bottom-0 right-0 w-2 h-2 bg-red-600" />
-
-                    <div className="flex items-start justify-between mb-3">
-                      <span className="text-xs font-mono font-bold bg-red-950/80 text-red-300 uppercase px-2 py-1 border border-red-800">
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="text-xs font-semibold bg-gray-200 text-gray-700 uppercase px-2 py-1 rounded">
                         {item.source}
                       </span>
                     </div>
-                    <h3 className="text-sm font-serif font-bold text-gray-400 line-clamp-2 group-hover:text-red-300 transition-colors">
+                    <h3 className="text-sm font-semibold text-white line-clamp-2">
                       {item.title}
                     </h3>
                     {item.description && (
-                      <p className="text-xs text-gray-500 mt-2 line-clamp-2">
+                      <p className="text-xs text-gray-600 mt-2 line-clamp-2">
                         {item.description}
                       </p>
                     )}
@@ -1515,98 +1364,35 @@ function NewsView() {
           </div>
         )}
 
-        {/* Today's Papers Section - Archive Terminal */}
-        <div className="mb-16 pt-12 border-t-4 border-double border-cyan-600 relative">
-          {/* Grid background */}
-          <div className="absolute inset-0 opacity-5 pointer-events-none">
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(6, 182, 212, .3) 25%, rgba(6, 182, 212, .3) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, .3) 75%, rgba(6, 182, 212, .3) 76%, transparent 77%, transparent)',
-              backgroundSize: '50px 50px'
-            }} />
-          </div>
-
-          <div className="mb-10 relative">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="relative">
-                <Newspaper className="w-12 h-12 text-cyan-500" />
-                <div className="absolute inset-0 blur-xl bg-cyan-400 opacity-30 animate-pulse" />
-              </div>
-              <div className="flex-1">
-                <h2 className="text-5xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 mb-1 tracking-tight" style={{
-                  textShadow: '0 0 30px rgba(6, 182, 212, 0.3)'
-                }}>
-                  PRINT ARCHIVE
-                </h2>
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-gradient-to-r from-cyan-600 to-transparent" />
-                  <p className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
-                    Digital Newspaper Repository
-                  </p>
-                  <div className="h-px flex-1 bg-gradient-to-l from-cyan-600 to-transparent" />
-                </div>
-              </div>
-            </div>
+        {/* Today's Papers Section */}
+        <div className="mb-12 pt-8 border-t-2 border-gray-700">
+          <div className="mb-6">
+            <h2 className="text-3xl font-serif font-bold text-white mb-2">Today's Papers</h2>
+            <p className="text-gray-300">Browse latest newspaper editions</p>
           </div>
 
           <a
             href="https://oceanofpdf.com/magazines-newspapers/"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative block bg-gradient-to-br from-slate-900 to-cyan-950 border-4 border-cyan-600 p-10 hover:border-gold-400 hover:shadow-2xl hover:shadow-cyan-600/50 transition-all duration-300"
-            style={{
-              boxShadow: '0 0 30px rgba(6, 182, 212, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.1)'
-            }}
+            className="block bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg shadow-xl border-2 border-brand-orange-dark p-8 hover:shadow-2xl hover:border-brand-orange-dark hover:-translate-y-1 transition-all duration-200"
           >
-            {/* Corner accents */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-gold-400" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-gold-400" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-gold-400" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-gold-400" />
-
-            {/* Scan line effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400 to-transparent h-full animate-scan" />
-            </div>
-
-            <div className="flex items-center justify-between relative">
-              <div className="flex items-center gap-6">
-                <div className="w-20 h-20 border-4 border-cyan-600 bg-slate-950 flex items-center justify-center group-hover:border-gold-400 transition-colors">
-                  <Newspaper className="w-12 h-12 text-cyan-400 group-hover:text-gold-400 transition-colors" />
-                </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Newspaper className="w-16 h-16 text-brand-orange-dark" />
                 <div>
-                  <h3 className="text-3xl font-serif font-black text-cyan-50 mb-2 group-hover:text-gold-300 transition-colors">
-                    ACCESS NEWSPAPER DATABASE
+                  <h3 className="text-2xl font-serif font-bold text-white mb-2">
+                    View All Newspaper Editions
                   </h3>
-                  <p className="text-cyan-300 font-mono text-sm tracking-wide">
-                    Guardian • NY Times • Washington Post • New Yorker • Financial Times • Telegraph
+                  <p className="text-brand-orange-dark">
+                    Guardian, NY Times, Washington Post, New Yorker & more
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="px-4 py-2 bg-cyan-950/80 border-2 border-cyan-600 group-hover:border-gold-400 transition-colors">
-                  <span className="text-xs font-mono font-bold text-cyan-300 uppercase">External Link</span>
-                </div>
-                <div className="w-12 h-12 border-2 border-cyan-600 group-hover:border-gold-400 flex items-center justify-center bg-slate-950 group-hover:bg-gold-400/20 transition-all">
-                  <ExternalLink className="w-6 h-6 text-cyan-400 group-hover:text-gold-400 transition-colors" />
-                </div>
-              </div>
+              <ExternalLink className="w-8 h-8 text-brand-orange-dark" />
             </div>
           </a>
         </div>
-
-        {/* Add global fadeIn keyframe */}
-        <style>{`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}</style>
       </div>
     </div>
   );
@@ -1697,7 +1483,7 @@ function QuickTasksInner() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-4">
-        <Loader2 className="w-5 h-5 animate-spin text-gold-500" />
+        <Loader2 className="w-5 h-5 animate-spin text-brand-orange-dark" />
       </div>
     );
   }
@@ -1712,11 +1498,11 @@ function QuickTasksInner() {
             value={newTaskText}
             onChange={(e) => setNewTaskText(e.target.value)}
             placeholder="Add a quick task..."
-            className="flex-1 px-4 py-2 border-2 border-gold-300 rounded-lg focus:outline-none focus:border-gold-500 text-chocolate-900"
+            className="flex-1 px-4 py-2 border-2 border-brand-orange-dark rounded-lg focus:outline-none focus:border-brand-orange-dark text-white"
           />
           <button
             type="submit"
-            className="px-6 py-2 bg-gold-600 text-white rounded-lg hover:bg-gold-700 transition-colors font-medium"
+            className="px-6 py-2 bg-brand-orange-dark text-white rounded-lg hover:bg-brand-orange-dark transition-colors font-medium"
           >
             Add
           </button>
@@ -1728,7 +1514,7 @@ function QuickTasksInner() {
         {tasks.map(task => (
           <div
             key={task.id}
-            className="flex items-center gap-3 bg-white rounded-lg p-3 border border-gold-200 hover:border-gold-400 transition-colors group"
+            className="flex items-center gap-3 bg-gray-900 rounded-lg p-3 border border-brand-orange-dark hover:border-brand-orange-dark transition-colors group"
           >
             <button
               onClick={() => toggleTask(task)}
@@ -1737,12 +1523,12 @@ function QuickTasksInner() {
               {task.completed ? (
                 <CheckCircle2 className="w-5 h-5 text-green-600" />
               ) : (
-                <Circle className="w-5 h-5 text-gray-400 hover:text-gold-600 transition-colors" />
+                <Circle className="w-5 h-5 text-gray-400 hover:text-brand-orange-dark transition-colors" />
               )}
             </button>
             <span
               className={`flex-1 ${
-                task.completed ? 'line-through text-gray-400' : 'text-chocolate-900'
+                task.completed ? 'line-through text-gray-400' : 'text-white'
               }`}
             >
               {task.text}
@@ -1758,7 +1544,7 @@ function QuickTasksInner() {
       </div>
 
       {tasks.length === 0 && (
-        <p className="text-center text-chocolate-600 py-4">
+        <p className="text-center text-gray-300 py-4">
           No quick tasks yet. Add one above to get started!
         </p>
       )}
@@ -1839,9 +1625,9 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
       {/* Left Sidebar - Weather & News */}
       <div className="w-80 flex-shrink-0">
         <div className="sticky top-4 space-y-6">
-          <div className="bg-gradient-to-br from-turquoise-700 to-turquoise-900 rounded-lg shadow-lg border-2 border-gold-500 p-6">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
             <h2 className="text-xl font-serif font-bold mb-4 flex items-center text-white">
-              <Sun className="w-5 h-5 mr-2 text-gold-300" />
+              <Sun className="w-5 h-5 mr-2 text-brand-orange-dark" />
               Today
             </h2>
             <WeatherWidget />
@@ -1855,10 +1641,10 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
         {/* Goals Section - Front and Center */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-serif font-bold text-chocolate-900">Your Goals</h2>
+            <h2 className="text-3xl font-serif font-bold text-white">Your Goals</h2>
             <button
               onClick={onNewGoal}
-              className="flex items-center space-x-2 bg-gold-600 text-white px-6 py-3 rounded-lg hover:bg-gold-700 transition-colors shadow-md font-medium"
+              className="flex items-center space-x-2 bg-brand-orange-dark text-white px-6 py-3 rounded-lg hover:bg-brand-orange-dark transition-colors shadow-md font-medium"
             >
               <Plus className="w-5 h-5" />
               <span>New Goal</span>
@@ -1866,15 +1652,15 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
           </div>
 
           {goals.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-lg shadow-md border-2 border-chocolate-200">
+            <div className="text-center py-16 bg-gray-900 rounded-lg shadow-md border-2 border-gray-700">
               <Target className="w-16 h-16 text-chocolate-300 mx-auto mb-4" />
-              <h3 className="text-2xl font-serif font-bold mb-2 text-chocolate-900">No goals yet</h3>
-              <p className="text-chocolate-600 mb-6">
+              <h3 className="text-2xl font-serif font-bold mb-2 text-white">No goals yet</h3>
+              <p className="text-gray-300 mb-6">
                 Start your journey by creating your first goal with Purpoise
               </p>
               <button
                 onClick={onNewGoal}
-                className="inline-flex items-center space-x-2 bg-gold-600 text-white px-8 py-4 rounded-lg hover:bg-gold-700 transition-colors shadow-lg font-medium text-lg"
+                className="inline-flex items-center space-x-2 bg-brand-orange-dark text-white px-8 py-4 rounded-lg hover:bg-brand-orange-dark transition-colors shadow-lg font-medium text-lg"
               >
                 <Plus className="w-6 h-6" />
                 <span>Add Your First Goal</span>
@@ -1890,31 +1676,31 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
                   <div
                     key={goal.id}
                     onClick={() => onSelectGoal(goal)}
-                    className="bg-white rounded-lg shadow-md border-2 border-chocolate-200 p-6 cursor-pointer hover:shadow-xl hover:border-turquoise-500 hover:-translate-y-1 transition-all duration-200"
+                    className="bg-gray-900 rounded-lg shadow-md border-2 border-gray-700 p-6 cursor-pointer hover:shadow-xl hover:border-brand-orange-dark hover:-translate-y-1 transition-all duration-200"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-xl font-serif font-bold flex-1 text-chocolate-900">
+                      <h3 className="text-xl font-serif font-bold flex-1 text-white">
                         {goal.title}
                       </h3>
                       <div className={`w-4 h-4 rounded-full ${RAG_COLORS[goal.rag_status || 'green']}`} />
                     </div>
 
-                    <p className="text-chocolate-600 text-sm mb-4 line-clamp-2">
+                    <p className="text-gray-300 text-sm mb-4 line-clamp-2">
                       {goal.description}
                     </p>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-chocolate-600">Progress</span>
-                        <span className="font-bold text-turquoise-700">{progress}%</span>
+                        <span className="text-gray-300">Progress</span>
+                        <span className="font-bold text-brand-orange-dark">{progress}%</span>
                       </div>
-                      <div className="w-full bg-chocolate-100 rounded-full h-2">
+                      <div className="w-full bg-gray-900 rounded-full h-2">
                         <div
-                          className="bg-gradient-to-r from-turquoise-500 to-turquoise-600 rounded-full h-2 transition-all duration-300"
+                          className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-full h-2 transition-all duration-300"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
-                      <div className="text-sm text-chocolate-600">
+                      <div className="text-sm text-gray-300">
                         {stats.completed} of {stats.total} tasks completed
                       </div>
                     </div>
@@ -1936,8 +1722,8 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
         )}
 
         {/* Focus for the Week - Compact Version */}
-        <div className="bg-gradient-to-r from-gold-50 to-turquoise-50 rounded-lg shadow-lg border-2 border-gold-500 p-6">
-          <h2 className="text-2xl font-serif font-bold mb-4 flex items-center text-chocolate-900">
+        <div className="bg-gradient-to-r from-gold-50 to-gray-700 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
+          <h2 className="text-2xl font-serif font-bold mb-4 flex items-center text-white">
             {digest.type === 'focus' ? '🎯 Your Focus for the Week' : '⭐ Weekly Review'}
           </h2>
 
@@ -1947,20 +1733,20 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
               <ul className="space-y-2">
                 {digest.tasks.map((task, idx) => (
                   <li key={idx} className="flex items-start space-x-2">
-                    <span className="text-gold-600 font-bold">•</span>
+                    <span className="text-brand-orange-dark font-bold">•</span>
                     <button
                       onClick={() => onSelectGoal(task.goal)}
-                      className="text-left hover:text-turquoise-600 transition-colors"
+                      className="text-left hover:text-brand-orange-dark transition-colors"
                     >
-                      <span className="font-medium text-chocolate-900">{task.text}</span>
-                      <span className="text-sm text-chocolate-600 ml-2">({task.goalTitle})</span>
+                      <span className="font-medium text-white">{task.text}</span>
+                      <span className="text-sm text-gray-300 ml-2">({task.goalTitle})</span>
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
           ) : (
-            <p className="text-chocolate-600 mb-4">
+            <p className="text-gray-300 mb-4">
               {digest.type === 'focus'
                 ? 'No tasks due this week. Time to plan ahead!'
                 : 'No tasks completed this week yet. Keep going!'}
@@ -1968,9 +1754,9 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
           )}
 
           {/* Quick Tasks Section */}
-          <div className="pt-4 border-t-2 border-gold-300">
-            <h3 className="text-xl font-serif font-bold mb-4 flex items-center text-chocolate-900">
-              <CheckCircle2 className="w-5 h-5 mr-2 text-gold-600" />
+          <div className="pt-4 border-t-2 border-brand-orange-dark">
+            <h3 className="text-xl font-serif font-bold mb-4 flex items-center text-white">
+              <CheckCircle2 className="w-5 h-5 mr-2 text-brand-orange-dark" />
               Quick Tasks
             </h3>
 
@@ -1982,25 +1768,25 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
       {/* Tarot Sidebar */}
       {!cardsLoading && dailyCards.length > 0 && showTarot && (
         <div className="w-96 flex-shrink-0">
-          <div className="bg-gradient-to-br from-chocolate-700 to-chocolate-900 rounded-lg shadow-lg border-2 border-gold-500 p-6 sticky top-4">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6 sticky top-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-serif font-bold flex items-center text-white">
-                <Sparkles className="w-5 h-5 mr-2 text-gold-300" />
+                <Sparkles className="w-5 h-5 mr-2 text-brand-orange-dark" />
                 Daily Tarot
               </h2>
               <button
                 onClick={() => setShowTarot(false)}
-                className="p-1 hover:bg-white/10 rounded transition-colors"
+                className="p-1 hover:bg-gray-900/10 rounded transition-colors"
               >
-                <X className="w-5 h-5 text-gold-300" />
+                <X className="w-5 h-5 text-brand-orange-dark" />
               </button>
             </div>
-            <p className="text-xs text-gold-200 mb-4">
+            <p className="text-xs text-brand-orange-dark mb-4">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             </p>
             <div className="space-y-3 mb-4">
               {dailyCards.map((card, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-gold-500/30">
+                <div key={index} className="bg-gray-900/10 backdrop-blur-sm rounded-lg p-3 border border-brand-orange-dark/30">
                   <div className="flex gap-3 mb-2">
                     {card.image_url ? (
                       <img
@@ -2012,9 +1798,9 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
                       <div className="text-3xl">🎴</div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-gold-300 mb-1">{positions[index]}</p>
+                      <p className="text-xs font-semibold text-brand-orange-dark mb-1">{positions[index]}</p>
                       <p className="text-sm font-bold text-white">{card.name}</p>
-                      {card.suit && <p className="text-xs text-gold-200">{card.suit}</p>}
+                      {card.suit && <p className="text-xs text-brand-orange-dark">{card.suit}</p>}
                     </div>
                   </div>
                 </div>
@@ -2026,12 +1812,12 @@ function DashboardView({ goals, onSelectGoal, onNewGoal, calculateProgress, getT
               href="https://sidhe.netlify.app/daily"
               target="_blank"
               rel="noopener noreferrer"
-              className="block mt-4 text-center text-sm text-gold-300 hover:text-gold-200 underline"
+              className="block mt-4 text-center text-sm text-brand-orange-dark hover:text-brand-orange-dark underline"
             >
               View Detailed Interpretations →
             </a>
 
-            <p className="text-xs text-gold-200/70 mt-3 text-center">
+            <p className="text-xs text-brand-orange-dark/70 mt-3 text-center">
               Celtic Seasonal Tarot from Sídhe
             </p>
           </div>
@@ -2072,17 +1858,17 @@ function NewsDigestWidget() {
   }, []);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-4 mt-6">
+    <div className="bg-gray-900 rounded-lg shadow-lg border-2 border-brand-orange-dark p-4 mt-6">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-serif font-bold flex items-center">
-          <Newspaper className="w-5 h-5 mr-2 text-vintage-orange" />
+          <Newspaper className="w-5 h-5 mr-2 text-brand-orange-dark" />
           News Digest
         </h3>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center py-4">
-          <Loader2 className="w-5 h-5 animate-spin text-vintage-orange" />
+          <Loader2 className="w-5 h-5 animate-spin text-brand-orange-dark" />
         </div>
       ) : error ? (
         <div className="text-center py-4 text-sm text-gray-500">
@@ -2100,11 +1886,11 @@ function NewsDigestWidget() {
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-2 hover:bg-gray-50 rounded-lg transition-colors group"
+              className="block p-2 hover:bg-gray-800 rounded-lg transition-colors group"
             >
               <div className="flex items-start space-x-2">
-                <div className="w-1 h-1 rounded-full bg-vintage-orange mt-2 flex-shrink-0" />
-                <p className="text-sm text-gray-700 group-hover:text-vintage-orange transition-colors line-clamp-2">
+                <div className="w-1 h-1 rounded-full bg-brand-orange-dark mt-2 flex-shrink-0" />
+                <p className="text-sm text-gray-700 group-hover:text-brand-orange-dark transition-colors line-clamp-2">
                   {item.title}
                 </p>
               </div>
@@ -2127,15 +1913,15 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
   const weeklyTasks = weeklyStage?.tasks || [];
 
   return (
-    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-vintage-orange p-6">
+    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-serif font-bold flex items-center">
-          <Repeat className="w-6 h-6 mr-2 text-vintage-orange" />
+          <Repeat className="w-6 h-6 mr-2 text-brand-orange-dark" />
           Recurring Tasks
         </h2>
         <button
           onClick={() => onSelectGoal(recurringGoal)}
-          className="text-sm px-3 py-1 bg-vintage-orange text-white rounded-lg hover:bg-opacity-90 transition-colors"
+          className="text-sm px-3 py-1 bg-brand-orange-dark text-white rounded-lg hover:bg-opacity-90 transition-colors"
         >
           Manage
         </button>
@@ -2155,7 +1941,7 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
                 <button
                   key={idx}
                   onClick={() => toggleTask(task, dailyStage.id)}
-                  className={`w-full flex items-center space-x-3 p-2 bg-white rounded-lg hover:bg-gray-50 transition-all text-left ${
+                  className={`w-full flex items-center space-x-3 p-2 bg-gray-900 rounded-lg hover:bg-gray-800 transition-all text-left ${
                     isAnimating ? 'scale-105 ring-2 ring-vintage-orange ring-opacity-50' : ''
                   }`}
                   style={{
@@ -2166,7 +1952,7 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
                     {task.completed ? (
                       <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
                     ) : (
-                      <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange flex-shrink-0" />
+                      <Circle className="w-5 h-5 text-gray-400 hover:text-brand-orange-dark flex-shrink-0" />
                     )}
                   </div>
                   <span className={task.completed ? 'line-through text-gray-400' : ''}>
@@ -2191,7 +1977,7 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
                 <button
                   key={idx}
                   onClick={() => toggleTask(task, weeklyStage.id)}
-                  className={`w-full flex items-center space-x-3 p-2 bg-white rounded-lg hover:bg-gray-50 transition-all text-left ${
+                  className={`w-full flex items-center space-x-3 p-2 bg-gray-900 rounded-lg hover:bg-gray-800 transition-all text-left ${
                     isAnimating ? 'scale-105 ring-2 ring-vintage-orange ring-opacity-50' : ''
                   }`}
                   style={{
@@ -2202,7 +1988,7 @@ function RecurringTasksWidget({ goals, onSelectGoal, toggleTask, animatingTasks 
                     {task.completed ? (
                       <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
                     ) : (
-                      <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange flex-shrink-0" />
+                      <Circle className="w-5 h-5 text-gray-400 hover:text-brand-orange-dark flex-shrink-0" />
                     )}
                   </div>
                   <span className={task.completed ? 'line-through text-gray-400' : ''}>
@@ -2279,7 +2065,7 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
             type="text"
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
-            className="flex-1 text-4xl font-serif font-bold border-2 border-vintage-orange rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-vintage-orange"
+            className="flex-1 text-4xl font-serif font-bold border-2 border-brand-orange-dark rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-vintage-orange"
           />
         ) : (
           <h1 className="text-4xl font-serif font-bold flex-1">{goal.title}</h1>
@@ -2296,13 +2082,13 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
       </div>
 
       {/* Goal Info Card */}
-      <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-6">
+      <div className="bg-gray-900 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
         {isEditing ? (
           <textarea
             value={editDescription}
             onChange={(e) => setEditDescription(e.target.value)}
             rows={3}
-            className="w-full text-gray-700 mb-6 border-2 border-vintage-orange rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-vintage-orange"
+            className="w-full text-gray-700 mb-6 border-2 border-brand-orange-dark rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-vintage-orange"
           />
         ) : (
           <p className="text-gray-700 mb-6">{goal.description}</p>
@@ -2313,7 +2099,7 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
             <button
               onClick={handleSaveEdit}
               disabled={saving}
-              className="px-4 py-2 bg-vintage-orange text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-brand-orange-dark text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50"
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
@@ -2330,11 +2116,11 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="font-medium">Overall Progress</span>
-            <span className="text-2xl font-bold text-vintage-orange">{progress}%</span>
+            <span className="text-2xl font-bold text-brand-orange-dark">{progress}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
-              className="bg-vintage-orange rounded-full h-3 transition-all duration-300"
+              className="bg-brand-orange-dark rounded-full h-3 transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -2373,7 +2159,7 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
       {/* Stages and Tasks */}
       <div className="space-y-6">
         {goal.stages?.map((stage, stageIdx) => (
-          <div key={stage.id} className="bg-white rounded-lg shadow-md border-2 border-gray-200 p-6">
+          <div key={stage.id} className="bg-gray-900 rounded-lg shadow-md border-2 border-gray-200 p-6">
             <h2 className="text-2xl font-serif font-bold mb-4">
               Stage {stageIdx + 1}: {stage.name}
             </h2>
@@ -2384,7 +2170,7 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
                   <button
                     key={task.id}
                     onClick={() => toggleTask(task, stage.id)}
-                    className={`w-full flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-all text-left ${
+                    className={`w-full flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-all text-left ${
                       isAnimating ? 'scale-105 ring-2 ring-vintage-orange ring-opacity-50' : ''
                     }`}
                     style={{
@@ -2395,7 +2181,7 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
                       {task.completed ? (
                         <CheckCircle2 className="w-5 h-5 text-green-600" />
                       ) : (
-                        <Circle className="w-5 h-5 text-gray-400 hover:text-vintage-orange" />
+                        <Circle className="w-5 h-5 text-gray-400 hover:text-brand-orange-dark" />
                       )}
                     </div>
                     <div className="flex-1">
@@ -2412,7 +2198,7 @@ function GoalDetailView({ goal, onBack, onDelete, onUpdateRAG, toggleTask, calcu
                           </span>
                         )}
                         {task.category === 'habit' && task.streak > 0 && (
-                          <span className="text-xs font-bold text-vintage-orange">
+                          <span className="text-xs font-bold text-brand-orange-dark">
                             🔥 {task.streak} day streak
                           </span>
                         )}
@@ -2468,7 +2254,7 @@ function CalendarView({ goals, currentDate, setCurrentDate }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg border-2 border-vintage-orange p-6">
+    <div className="bg-gray-900 rounded-lg shadow-lg border-2 border-brand-orange-dark p-6">
       {/* Calendar Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-3xl font-serif font-bold">
@@ -2515,10 +2301,10 @@ function CalendarView({ goals, currentDate, setCurrentDate }) {
             <div
               key={day}
               className={`aspect-square border-2 rounded-lg p-2 ${
-                isToday ? 'border-vintage-orange bg-orange-50' : 'border-gray-200'
+                isToday ? 'border-brand-orange-dark bg-orange-50' : 'border-gray-200'
               }`}
             >
-              <div className={`text-sm font-bold mb-1 ${isToday ? 'text-vintage-orange' : ''}`}>
+              <div className={`text-sm font-bold mb-1 ${isToday ? 'text-brand-orange-dark' : ''}`}>
                 {day}
               </div>
               <div className="space-y-1">
@@ -2755,10 +2541,10 @@ function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b-2 border-vintage-orange">
+        <div className="flex items-center justify-between p-6 border-b-2 border-brand-orange-dark">
           <div className="flex items-center space-x-3">
             <img
               src="/porpoise-logo.jpg"
@@ -2796,8 +2582,8 @@ function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
                 <div
                   className={`max-w-[80%] rounded-lg p-4 ${
                     msg.role === 'user'
-                      ? 'bg-vintage-orange text-white'
-                      : 'bg-gray-100 text-dark-brown'
+                      ? 'bg-brand-orange-dark text-white'
+                      : 'bg-gray-100 text-white'
                   }`}
                 >
                   {isJSON ? (
@@ -2814,7 +2600,7 @@ function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
           {loading && (
             <div className="flex justify-start">
               <div className="bg-gray-100 rounded-lg p-4">
-                <Loader2 className="w-5 h-5 animate-spin text-vintage-orange" />
+                <Loader2 className="w-5 h-5 animate-spin text-brand-orange-dark" />
               </div>
             </div>
           )}
@@ -2831,13 +2617,13 @@ function NewGoalModal({ onClose, onGoalCreated, userId, goals }) {
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
               placeholder="Type your response..."
-              className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-vintage-orange"
+              className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-brand-orange-dark"
               disabled={loading}
             />
             <button
               onClick={sendMessage}
               disabled={loading || !input.trim()}
-              className="px-6 py-3 bg-vintage-orange text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-brand-orange-dark text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Send className="w-5 h-5" />
             </button>
