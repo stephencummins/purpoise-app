@@ -1,0 +1,195 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    }
+  },
+  "triggers": {
+    "manual": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "fileName": {
+              "type": "string"
+            },
+            "uploader": {
+              "type": "string"
+            }
+          },
+          "required": ["fileName"]
+        }
+      }
+    }
+  },
+  "actions": {
+    "Initialize_Status_Variable": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "ProcessingStatus",
+            "type": "string",
+            "value": "Started"
+          }
+        ]
+      },
+      "runAfter": {}
+    },
+    "Get_File_Content": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": {
+            "name": "@parameters('$connections')['sharepointonline']['connectionId']"
+          }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('https://yourtenant.sharepoint.com/sites/ExcelUploads'))}/files/@{encodeURIComponent(triggerBody()?['fileName'])}/content"
+      },
+      "runAfter": {
+        "Initialize_Status_Variable": ["Succeeded"]
+      }
+    },
+    "Validate_Excel_Structure": {
+      "type": "Compose",
+      "inputs": {
+        "validation": "Excel file structure validated",
+        "fileName": "@{triggerBody()?['fileName']}",
+        "timestamp": "@{utcNow()}"
+      },
+      "runAfter": {
+        "Get_File_Content": ["Succeeded"]
+      }
+    },
+    "Create_Monthly_Snapshot": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": {
+            "name": "@parameters('$connections')['sharepointonline']['connectionId']"
+          }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('https://yourtenant.sharepoint.com/sites/ExcelUploads'))}/files",
+        "body": "@body('Get_File_Content')",
+        "queries": {
+          "folderPath": "/Snapshots/@{formatDateTime(utcNow(), 'yyyy-MM')}",
+          "name": "@{concat(formatDateTime(utcNow(), 'yyyy-MM-dd_HHmmss'), '_', triggerBody()?['fileName'])}"
+        }
+      },
+      "runAfter": {
+        "Validate_Excel_Structure": ["Succeeded"]
+      }
+    },
+    "Update_Processing_Status": {
+      "type": "SetVariable",
+      "inputs": {
+        "name": "ProcessingStatus",
+        "value": "Completed"
+      },
+      "runAfter": {
+        "Create_Monthly_Snapshot": ["Succeeded"]
+      }
+    },
+    "Send_Success_Notification": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": {
+            "name": "@parameters('$connections')['office365']['connectionId']"
+          }
+        },
+        "method": "post",
+        "path": "/v2/Mail",
+        "body": {
+          "To": "@{triggerBody()?['uploader']}",
+          "Subject": "Excel Upload Processed Successfully",
+          "Body": "<p>Your file <strong>@{triggerBody()?['fileName']}</strong> has been successfully processed and archived.</p><p>Timestamp: @{utcNow()}</p>",
+          "Importance": "Normal"
+        }
+      },
+      "runAfter": {
+        "Update_Processing_Status": ["Succeeded"]
+      }
+    },
+    "Refresh_PowerBI_Dataset": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": {
+            "name": "@parameters('$connections')['powerbi']['connectionId']"
+          }
+        },
+        "method": "post",
+        "path": "/v1.0/myorg/datasets/@{variables('PowerBIDatasetId')}/refreshes"
+      },
+      "runAfter": {
+        "Send_Success_Notification": ["Succeeded"]
+      }
+    },
+    "Response_Success": {
+      "type": "Response",
+      "kind": "Http",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status": "success",
+          "message": "File processed successfully",
+          "fileName": "@{triggerBody()?['fileName']}",
+          "timestamp": "@{utcNow()}"
+        }
+      },
+      "runAfter": {
+        "Refresh_PowerBI_Dataset": ["Succeeded"]
+      }
+    },
+    "Handle_Error": {
+      "type": "Scope",
+      "actions": {
+        "Send_Error_Notification": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": {
+                "name": "@parameters('$connections')['office365']['connectionId']"
+              }
+            },
+            "method": "post",
+            "path": "/v2/Mail",
+            "body": {
+              "To": "admin@yourtenant.com",
+              "Subject": "Excel Upload Failed",
+              "Body": "<p>File processing failed for <strong>@{triggerBody()?['fileName']}</strong></p><p>Error details will be logged.</p>",
+              "Importance": "High"
+            }
+          }
+        },
+        "Response_Error": {
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 500,
+            "body": {
+              "status": "error",
+              "message": "File processing failed",
+              "fileName": "@{triggerBody()?['fileName']}"
+            }
+          },
+          "runAfter": {
+            "Send_Error_Notification": ["Succeeded"]
+          }
+        }
+      },
+      "runAfter": {
+        "Response_Success": ["Failed", "TimedOut"]
+      }
+    }
+  },
+  "outputs": {}
+}

@@ -1,0 +1,232 @@
+// ============================================
+// Excel Uploader - Power Fx Formulas
+// ============================================
+// Copy these formulas into your Power Apps canvas app
+
+// ============================================
+// APP ONSTART
+// ============================================
+// App.OnStart
+Set(varUploading, false);
+Set(varProgress, 0);
+Set(varStatusMessage, "");
+Set(varIsError, false);
+Set(varSelectedFile, Blank());
+
+// ============================================
+// UPLOAD BUTTON - OnSelect
+// ============================================
+// UploadButton.OnSelect
+
+// Validate file is selected
+If(
+    IsEmpty(FileAttachment.Attachments),
+
+    // No file selected
+    Set(varIsError, true);
+    Set(varStatusMessage, "Please select an Excel file before uploading.");,
+
+    // File selected - proceed with upload
+    Set(varUploading, true);
+    Set(varProgress, 10);
+    Set(varIsError, false);
+    Set(varStatusMessage, "Uploading file...");
+
+    // Get the first attachment
+    Set(varSelectedFile, First(FileAttachment.Attachments));
+
+    // Validate file extension
+    If(
+        !EndsWith(Lower(varSelectedFile.Name), ".xlsx"),
+
+        // Invalid file type
+        Set(varUploading, false);
+        Set(varIsError, true);
+        Set(varStatusMessage, "Invalid file type. Please upload an Excel (.xlsx) file.");,
+
+        // Valid file - upload to SharePoint
+        Set(varProgress, 30);
+
+        // Add file to SharePoint library
+        Patch(
+            ExcelUploads,
+            Defaults(ExcelUploads),
+            {
+                Name: varSelectedFile.Name,
+                File: {
+                    DisplayName: varSelectedFile.Name,
+                    Value: varSelectedFile.Value
+                },
+                Status: "Pending",
+                UploadedBy: User().FullName
+            }
+        );
+
+        Set(varProgress, 60);
+        Set(varStatusMessage, "Triggering processing flow...");
+
+        // Trigger Power Automate flow
+        ExcelUploaderFlow.Run(
+            varSelectedFile.Name,
+            User().Email,
+            Text(Now(), "yyyy-mm-ddThh:mm:ss")
+        );
+
+        Set(varProgress, 100);
+        Set(varUploading, false);
+        Set(varStatusMessage,
+            "File '" & varSelectedFile.Name & "' uploaded successfully. Processing will complete shortly."
+        );
+
+        // Clear the attachment control
+        Reset(FileAttachment);
+    )
+)
+
+// ============================================
+// ATTACHMENT CONTROL - OnChange
+// ============================================
+// FileAttachment.OnChange
+
+// Clear any previous error messages when new file selected
+Set(varStatusMessage, "");
+Set(varIsError, false);
+
+// Validate immediately on selection
+If(
+    CountRows(FileAttachment.Attachments) > 0,
+    If(
+        !EndsWith(Lower(First(FileAttachment.Attachments).Name), ".xlsx"),
+        Set(varIsError, true);
+        Set(varStatusMessage, "Invalid file type. Please select an Excel (.xlsx) file.");
+    )
+)
+
+// ============================================
+// GALLERY - OnSelect (for re-processing)
+// ============================================
+// RecentUploadsGallery.OnSelect
+
+If(
+    ThisItem.Status <> "Processed",
+
+    // Allow re-trigger of flow for pending items
+    Notify(
+        "Re-triggering processing for " & ThisItem.Name,
+        NotificationType.Information
+    );
+
+    ExcelUploaderFlow.Run(
+        ThisItem.Name,
+        User().Email,
+        Text(Now(), "yyyy-mm-ddThh:mm:ss")
+    )
+)
+
+// ============================================
+// REFRESH BUTTON - OnSelect (Optional)
+// ============================================
+// RefreshButton.OnSelect
+
+Refresh(ExcelUploads);
+Notify("Upload list refreshed", NotificationType.Success);
+
+// ============================================
+// DELETE BUTTON IN GALLERY - OnSelect
+// ============================================
+// DeleteButton.OnSelect (inside gallery template)
+
+Remove(ExcelUploads, ThisItem);
+Notify(
+    "File '" & ThisItem.Name & "' removed from list",
+    NotificationType.Success
+);
+
+// ============================================
+// ERROR HANDLING WRAPPER
+// ============================================
+// Use this pattern for robust error handling
+
+IfError(
+    // Your upload/patch operation here
+    Patch(ExcelUploads, ...),
+
+    // On error
+    Set(varUploading, false);
+    Set(varIsError, true);
+    Set(varStatusMessage,
+        "Upload failed: " & FirstError.Message & ". Please try again or contact support."
+    );,
+
+    // On success
+    Set(varStatusMessage, "Upload completed successfully!")
+)
+
+// ============================================
+// PROGRESS INDICATOR FORMULAS
+// ============================================
+// ProgressBar.Width (alternative to slider)
+(Parent.Width - 40) * (varProgress / 100)
+
+// ProgressLabel.Text
+Text(varProgress, "0") & "% Complete"
+
+// ============================================
+// STATUS STYLING
+// ============================================
+// StatusMessage.Color
+If(
+    varIsError,
+    RGBA(164, 38, 44, 1),    // Error red
+    If(
+        varProgress = 100,
+        RGBA(16, 124, 16, 1), // Success green
+        RGBA(50, 49, 48, 1)   // Normal text
+    )
+)
+
+// StatusMessage.Font
+If(varProgress = 100 || varIsError, Font.'Segoe UI Semibold', Font.'Segoe UI')
+
+// ============================================
+// FILE SIZE VALIDATION (Optional)
+// ============================================
+// Add to upload validation
+
+If(
+    varSelectedFile.Size > 25000000,  // 25MB limit
+    Set(varIsError, true);
+    Set(varStatusMessage, "File too large. Maximum size is 25MB.");
+    Set(varUploading, false);
+)
+
+// ============================================
+// RECENT UPLOADS GALLERY FORMULAS
+// ============================================
+// Items property
+Sort(
+    Filter(
+        ExcelUploads,
+        UploadedBy = User().FullName
+    ),
+    Created,
+    SortOrder.Descending
+)
+
+// Status icon formula
+Switch(
+    ThisItem.Status,
+    "Processed", Icon.CheckMark,
+    "Error", Icon.Cancel,
+    "Pending", Icon.Clock,
+    Icon.Document
+)
+
+// Status icon color
+Switch(
+    ThisItem.Status,
+    "Processed", RGBA(16, 124, 16, 1),
+    "Error", RGBA(164, 38, 44, 1),
+    "Pending", RGBA(255, 170, 0, 1),
+    RGBA(50, 49, 48, 1)
+)

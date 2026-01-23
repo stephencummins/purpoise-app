@@ -1,0 +1,175 @@
+// Power BI DAX Measures for Excel Uploader Variance Analysis
+// Add these measures to your Power BI report connected to the Excel data
+
+// ============================================
+// CURRENT MONTH CALCULATIONS
+// ============================================
+
+CurrentMonthValue =
+CALCULATE(
+    SUM('ExcelData'[Value]),
+    FILTER(
+        'ExcelData',
+        MONTH('ExcelData'[Date]) = MONTH(TODAY()) &&
+        YEAR('ExcelData'[Date]) = YEAR(TODAY())
+    )
+)
+
+// ============================================
+// PREVIOUS MONTH CALCULATIONS
+// ============================================
+
+PreviousMonthValue =
+CALCULATE(
+    SUM('ExcelData'[Value]),
+    FILTER(
+        'ExcelData',
+        MONTH('ExcelData'[Date]) = MONTH(TODAY()) - 1 &&
+        YEAR('ExcelData'[Date]) = YEAR(TODAY())
+    )
+)
+
+// Handle year boundary (January looking at December of previous year)
+PreviousMonthValueYearAware =
+VAR CurrentMonth = MONTH(TODAY())
+VAR CurrentYear = YEAR(TODAY())
+VAR PrevMonth = IF(CurrentMonth = 1, 12, CurrentMonth - 1)
+VAR PrevYear = IF(CurrentMonth = 1, CurrentYear - 1, CurrentYear)
+RETURN
+CALCULATE(
+    SUM('ExcelData'[Value]),
+    FILTER(
+        'ExcelData',
+        MONTH('ExcelData'[Date]) = PrevMonth &&
+        YEAR('ExcelData'[Date]) = PrevYear
+    )
+)
+
+// ============================================
+// VARIANCE CALCULATIONS
+// ============================================
+
+Variance = [CurrentMonthValue] - [PreviousMonthValue]
+
+VariancePercent =
+DIVIDE(
+    [Variance],
+    [PreviousMonthValue],
+    0
+)
+
+// Formatted variance percentage
+VariancePercentFormatted =
+VAR VarPct = [VariancePercent]
+RETURN
+IF(
+    VarPct >= 0,
+    "+" & FORMAT(VarPct, "0.0%"),
+    FORMAT(VarPct, "0.0%")
+)
+
+// ============================================
+// TREND INDICATORS
+// ============================================
+
+TrendIndicator =
+VAR VarValue = [Variance]
+RETURN
+SWITCH(
+    TRUE(),
+    VarValue > 0, "▲ Increase",
+    VarValue < 0, "▼ Decrease",
+    "→ No Change"
+)
+
+TrendColor =
+VAR VarValue = [Variance]
+RETURN
+SWITCH(
+    TRUE(),
+    VarValue > 0, "Green",
+    VarValue < 0, "Red",
+    "Gray"
+)
+
+// ============================================
+// YEAR-TO-DATE CALCULATIONS
+// ============================================
+
+YTDValue =
+CALCULATE(
+    SUM('ExcelData'[Value]),
+    DATESYTD('ExcelData'[Date])
+)
+
+PreviousYTDValue =
+CALCULATE(
+    SUM('ExcelData'[Value]),
+    SAMEPERIODLASTYEAR(DATESYTD('ExcelData'[Date]))
+)
+
+YTDVariance = [YTDValue] - [PreviousYTDValue]
+
+YTDVariancePercent =
+DIVIDE(
+    [YTDVariance],
+    [PreviousYTDValue],
+    0
+)
+
+// ============================================
+// ROLLING AVERAGES
+// ============================================
+
+Rolling3MonthAverage =
+CALCULATE(
+    AVERAGE('ExcelData'[Value]),
+    DATESINPERIOD(
+        'ExcelData'[Date],
+        MAX('ExcelData'[Date]),
+        -3,
+        MONTH
+    )
+)
+
+Rolling12MonthAverage =
+CALCULATE(
+    AVERAGE('ExcelData'[Value]),
+    DATESINPERIOD(
+        'ExcelData'[Date],
+        MAX('ExcelData'[Date]),
+        -12,
+        MONTH
+    )
+)
+
+// ============================================
+// SNAPSHOT TRACKING
+// ============================================
+
+LatestSnapshotDate =
+MAX('ExcelData'[SnapshotDate])
+
+DaysSinceLastUpload =
+DATEDIFF(
+    [LatestSnapshotDate],
+    TODAY(),
+    DAY
+)
+
+// ============================================
+// CATEGORY BREAKDOWN
+// ============================================
+
+CategoryTotal =
+CALCULATE(
+    SUM('ExcelData'[Value]),
+    ALLEXCEPT('ExcelData', 'ExcelData'[Category])
+)
+
+CategoryPercentOfTotal =
+DIVIDE(
+    [CategoryTotal],
+    CALCULATE(SUM('ExcelData'[Value]), ALL('ExcelData')),
+    0
+)
